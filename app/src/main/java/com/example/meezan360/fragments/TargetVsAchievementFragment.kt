@@ -32,6 +32,8 @@ class TargetVsAchievementFragment : Fragment() {
         val title = "Target"
 
 
+
+
         //input data
         for (i in 0..5) {
             valueList.add(i * 100.1)
