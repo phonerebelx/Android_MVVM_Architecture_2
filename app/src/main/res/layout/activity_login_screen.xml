@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_background"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/_30sdp"
+    android:paddingEnd="@dimen/_30sdp"
+    tools:context=".activities.LoginScreen">
+
+    <ImageView
+        android:id="@+id/ivLogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:src="@drawable/logo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvLoginTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:gravity="center"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_32ssp"
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
+
+
+    <EditText
+        android:id="@+id/etEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:backgroundTint="@color/white"
+        android:hint="Email Address"
+        android:inputType="textEmailAddress"
+        android:textColorHint="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/tvLoginTitle" />
+
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:backgroundTint="@color/white"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:textColorHint="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <TextView
+        android:id="@+id/tvForgetPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:gravity="end"
+        android:text="@string/forget_password"
+        android:textColor="@color/golden"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnLogin"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_38sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:background="@drawable/custom_login_button"
+        android:gravity="center"
+        android:text="Login"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvForgetPassword" />
+
+
+    <ImageView
+        android:id="@+id/ivBiometric"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:src="@drawable/biometric"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+
+    <TextView
+        android:id="@+id/tvRegisterNow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:gravity="center"
+        android:text="@string/register_now"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivBiometric" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

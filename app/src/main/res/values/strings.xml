@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Meezan360</string>
+
+    <!--    nav drawer items-->
+    <string name="dashboard">Dashboard</string>
+    <string name="reports">Reports</string>
+    <string name="other_reports">Other Reports</string>
+    <string name="premium">Premium</string>
+    <string name="sales_management">Sales Management</string>
+    <string name="map">Map</string>
+    <string name="pipelining_and_funnel">Pipelining &amp; Funnel Management</string>
+    <string name="campaign_management">Campaign Management &amp; Tracker</string>
+    <string name="score_card">Score Card</string>
+    <string name="user_profiling">User Profiling</string>
+    <string name="employee_360">Employee 360</string>
+    <string name="customer_360">Customer 360</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="PB">PB</string>
+    <string name="BDO">BDO</string>
+    <string name="SQC">SQC</string>
+    <string name="calls">Calls</string>
+    <string name="visits">Visits</string>
+
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+    <!--    Login Screen-->
+    <string name="login">Login</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="register_now">Register Now!</string>
+    <string name="swipe_up_to_log_in">Swipe Up to Log In</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="target_vs_achievement">Target vs Achievement</string>
+</resources>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/purple_curve_background"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDashboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:text="@string/dashboard"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_16ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@+id/tvDashboard"
+                tools:itemCount="3"
+                tools:listitem="@layout/detail_item" />
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="@dimen/_20sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnPEDeposit"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:background="@drawable/custom_button_purple_gradient"
+                android:text="PE-Deposit"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pieChart" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnAVGDeposit"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:background="@drawable/custom_button_grey_gradient"
+                android:text="AVG-Deposit"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pieChart" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_6sdp"
+                app:cardCornerRadius="@dimen/_10sdp"
+                app:cardElevation="@dimen/_3sdp"
+                app:contentPadding="@dimen/_7sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnPEDeposit">
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/viewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_10sdp" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+</ScrollView>
