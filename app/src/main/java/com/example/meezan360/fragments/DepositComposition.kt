@@ -38,7 +38,6 @@ class DepositComposition : Fragment() {
         var pieEntryValueCASA = 75f
         // Input data and fit data into pie chart entry
         val pieEntries = mutableListOf<PieEntry>()
-
         pieEntries.add(PieEntry(pieEntryValueCA))
         pieEntries.add(PieEntry(100 - pieEntryValueCA))
 

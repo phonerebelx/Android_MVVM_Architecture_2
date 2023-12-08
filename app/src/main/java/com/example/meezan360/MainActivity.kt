@@ -8,11 +8,13 @@ import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.circlemenu.adapter.MyAdapter
 import com.example.circlemenu.model.DetailModel
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.databinding.ActivityMainBinding
+import com.example.meezan360.fragments.*
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -45,22 +47,39 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         binding.pieChart.setOnChartValueSelectedListener(this)
         binding.btnPEDeposit.setOnClickListener(this)
         binding.btnAVGDeposit.setOnClickListener(this)
         showPieChart()
-        footerSetupUp()
+
+        footerSetupUp("Deposit")
         setupRecyclerView()
 
     }
 
-    private fun footerSetupUp() {
+    private fun footerSetupUp(item: String) {
+
+        val fragmentsList: List<Fragment> = when (item) {
+            "Deposit" -> listOf(TargetVsAchievementFragment(), DepositComposition())
+            "Cross Sell" -> listOf(
+                DepositComposition(),
+                TargetVsAchievementFragment(),
+                DepositCompositionTD()
+            )
+            "Profitability" -> listOf(
+                MoMTargetVsAchievementFragment()
+            )
+            "Controls" -> listOf(
+                OnOffBranchesFragment()
+            )
+            // Add cases for other pie chart items...
+            else -> emptyList() // Default empty list if no match found
+        }
 
         viewPagerAdapter = FragmentPagerAdapter(supportFragmentManager, lifecycle)
-        viewPagerAdapter?.itemCount = 3
+        viewPagerAdapter?.setFragmentsForItem(item, fragmentsList)
         binding.viewpager.adapter = viewPagerAdapter
+
     }
 
     private fun setupRecyclerView() {
@@ -115,6 +134,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             binding.pieChart.centerText = mCenterText
             // Do something with the center text, e.g., display it in a TextView
 
+            footerSetupUp(mCenterText) //
+
             lastSelectedSliceIndex = currentIndex // Update the last selected slice index
             binding.pieChart.invalidate() // Refresh the chart
         }
@@ -165,12 +186,15 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             legend.isEnabled = false
             description.isEnabled = false
             setCenterTextSize(20f)
+            holeRadius = 60f //to fix the white border of center of circle
             setCenterTextColor(Color.parseColor("#765CB4"))
             data = PieData(pieDataSet)
+            highlightValue(0f, 0) //Select First element by default i.e. Deposit
             invalidate()
         }
 
     }
+
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
@@ -178,6 +202,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
                 binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
             }
+
             R.id.btnAVGDeposit -> {
                 binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
