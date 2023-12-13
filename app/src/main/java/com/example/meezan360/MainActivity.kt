@@ -62,9 +62,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
         val fragmentsList: List<Fragment> = when (item) {
             "Deposit" -> listOf(TargetVsAchievementFragment(), DepositComposition())
             "Cross Sell" -> listOf(
-                DepositComposition(),
-                TargetVsAchievementFragment(),
-                DepositCompositionTD()
+                DepositComposition(), TargetVsAchievementFragment(), DepositCompositionTD()
             )
             "Profitability" -> listOf(
                 MoMTargetVsAchievementFragment()
@@ -72,6 +70,22 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             "Controls" -> listOf(
                 OnOffBranchesFragment()
             )
+            "Premium" -> listOf(
+                ProductWiseChartFragment()
+            )
+            "Cash" -> listOf(
+                CustomerDepositFragment()
+            )
+            "ADC" -> listOf(
+                TopBottomBranches()
+            )
+            "Wealth" -> listOf(
+                DepositTrendFragment()
+            )
+            "Compliance" -> listOf(
+                MonthlyReportFragment()
+            )
+
             // Add cases for other pie chart items...
             else -> emptyList() // Default empty list if no match found
         }

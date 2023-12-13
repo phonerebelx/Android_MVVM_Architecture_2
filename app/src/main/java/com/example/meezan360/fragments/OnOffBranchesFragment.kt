@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentOnOffBranchesBinding
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -23,7 +25,7 @@ class OnOffBranchesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = FragmentOnOffBranchesBinding.inflate(layoutInflater)
 
@@ -57,6 +59,9 @@ class OnOffBranchesFragment : Fragment() {
         val gradientColor: List<GradientColor> =
             listOf(GradientColor(startColor2, endColor2), GradientColor(endColor, startColor))
 
+        barDataSet.setDrawValues(true)
+        barDataSet.valueTextColor = Color.WHITE
+        barDataSet.valueTextSize = 6f
 
         barDataSet.setGradientColor(startColor, endColor)
         barDataSet.gradientColors = gradientColor
@@ -64,6 +69,14 @@ class OnOffBranchesFragment : Fragment() {
 
         val barData = BarData(barDataSet)
         barData.barWidth = 0.3f
+
+        val legend: Legend = binding.barChart.legend
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        legend.textColor = Color.parseColor("#676767")
+        legend.xEntrySpace = 25f
+        val l1 = LegendEntry("ON Branches", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#6348A0"))
+        val l2 = LegendEntry("OFF Branches", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#E8544F"))
+        legend.setCustom(arrayOf(l1, l2))
 
         val labels = arrayOf(
             "CA",
@@ -73,6 +86,8 @@ class OnOffBranchesFragment : Fragment() {
         )
 
         binding.barChart.apply {
+            setDrawValueAboveBar(false)
+            extraBottomOffset = 10f
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
             description.isEnabled = false

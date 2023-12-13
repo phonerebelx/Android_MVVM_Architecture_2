@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentTargetVsAchievementBinding
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
@@ -32,8 +34,8 @@ class TargetVsAchievementFragment : Fragment() {
     }
 
     private fun showBarChart() {
-        val values = arrayOf("Saving", "Current", "CASA", "Term Deposit")
-        val valueList = listOf(100.0, 150.0, 200.0, 120.0) // Sample data, replace with your values
+        val valueList =
+            listOf(1700.0, 7500.0, 1017.0, 4500.0) // Sample data, replace with your values
 
         val entries: ArrayList<BarEntry> = ArrayList()
 
@@ -56,46 +58,54 @@ class TargetVsAchievementFragment : Fragment() {
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val percentage = (value / totalSum) * 100
-                return "%.1f%%".format(percentage)
+                val formatted = "%.1f%%".format(percentage)
+                return "${value.toInt()}($formatted)"
             }
         }
 
         barDataSet.setDrawValues(true)
-        barDataSet.valueTextSize = 12f
-        barDataSet.valueTextColor = Color.BLACK
+        barDataSet.valueTextSize = 8f
+        barDataSet.valueTextColor = Color.WHITE
 
         val mData = BarData(barDataSet)
-        mData.barWidth = 0.5f
+        mData.barWidth = 0.7f
         mData.isHighlightEnabled = false
 
-
-        //Display the axis on the left (contains the labels 1*, 2* and so on)
+        //Display the axis on the left
         val xAxis = binding.horizontalBarChart.xAxis
         xAxis.setDrawGridLines(false)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawAxisLine(false)
         xAxis.labelCount = 4
 
-        //Now add the labels to be added on the vertical axis
-        val mValues = arrayOf("Saving", "Current", "CASA", "Term Deposit")
-        xAxis.valueFormatter = object : IndexAxisValueFormatter(mValues) {
-            override fun getFormattedValue(value: Float): String {
-                return if (value >= 0 && value.toInt() < mValues.size) {
-                    mValues[value.toInt()]
-                } else {
-                    ""
-                }
-            }
-        }
+        val labels = setupLegend()
 
         binding.horizontalBarChart.apply {
+            axisLeft.axisMaximum =
+                10000f //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
+            axisLeft.axisMinimum = 0f
+            setDrawValueAboveBar(false)
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
             data = mData
             description.isEnabled = false
+            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
 
             invalidate()
         }
+    }
+
+    private fun setupLegend(): Array<String> {
+        val legend: Legend = binding.horizontalBarChart.legend
+        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+        legend.textColor = Color.parseColor("#676767")
+        legend.xEntrySpace = 25f
+        val l1 = LegendEntry(
+            "Target", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#E8544F")
+        )
+        legend.setCustom(arrayOf(l1))
+
+        return arrayOf("Term Deposit", "CASA", "Saving", "Current")
     }
 
     private fun showPieChart() {
