@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:paddingStart="@dimen/_30sdp"
     android:paddingEnd="@dimen/_30sdp"
-    tools:context=".activities.LoginScreen">
+    tools:context=".ui.activities.LoginScreen">
 
     <ImageView
         android:id="@+id/ivLogo"

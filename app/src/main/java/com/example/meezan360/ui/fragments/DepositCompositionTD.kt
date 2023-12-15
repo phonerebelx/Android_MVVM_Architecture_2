@@ -1,4 +1,4 @@
-package com.example.meezan360.fragments
+package com.example.meezan360.ui.fragments
 
 import PieChartBuilder
 import android.graphics.Color

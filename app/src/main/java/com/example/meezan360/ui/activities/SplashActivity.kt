@@ -1,4 +1,4 @@
-package com.example.meezan360.activities
+package com.example.meezan360.ui.activities
 
 import android.content.Intent
 import android.os.Build

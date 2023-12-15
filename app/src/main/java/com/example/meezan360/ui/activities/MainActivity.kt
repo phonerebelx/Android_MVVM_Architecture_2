@@ -1,4 +1,4 @@
-package com.example.meezan360
+package com.example.meezan360.ui.activities
 
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -12,9 +12,20 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.circlemenu.adapter.MyAdapter
 import com.example.circlemenu.model.DetailModel
+import com.example.meezan360.R
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.databinding.ActivityMainBinding
-import com.example.meezan360.fragments.*
+import com.example.meezan360.ui.fragments.CustomerDepositFragment
+import com.example.meezan360.ui.fragments.DepositComposition
+import com.example.meezan360.ui.fragments.DepositCompositionTD
+import com.example.meezan360.ui.fragments.DepositTrendFragment
+import com.example.meezan360.ui.fragments.MoMTargetVsAchievementFragment
+import com.example.meezan360.ui.fragments.MonthlyReportFragment
+import com.example.meezan360.ui.fragments.OnOffBranchesFragment
+import com.example.meezan360.ui.fragments.ProductWiseChartFragment
+import com.example.meezan360.ui.fragments.TargetVsAchievementFragment
+import com.example.meezan360.ui.fragments.TierWiseDepositFragment
+import com.example.meezan360.ui.fragments.TopBottomBranches
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -53,7 +64,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
         showPieChart()
 
         footerSetupUp("Deposit")
-        setupRecyclerView()
+        setupHeader()
 
     }
 
@@ -85,6 +96,9 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             "Compliance" -> listOf(
                 MonthlyReportFragment()
             )
+            "Advances" -> listOf(
+                TierWiseDepositFragment()
+            )
 
             // Add cases for other pie chart items...
             else -> emptyList() // Default empty list if no match found
@@ -96,7 +110,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
     }
 
-    private fun setupRecyclerView() {
+    private fun setupHeader() {
         detailList.add(DetailModel("Total", "1,534", "", "BIn"))
         detailList.add(DetailModel("CASA", "659,213", "55.98%", "MIn"))
         detailList.add(DetailModel("Current", "719,715", "46.9%", "MIn"))

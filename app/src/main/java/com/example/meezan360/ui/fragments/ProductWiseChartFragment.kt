@@ -1,4 +1,4 @@
-package com.example.meezan360.fragments
+package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -63,8 +63,6 @@ class ProductWiseChartFragment : Fragment() {
             setDrawSliceText(false) //text inside pie charts
             rotationAngle = 180f
             maxAngle = 180f
-            holeRadius = 50f
-            setHoleColor(Color.parseColor("#BBBBBB"))
             legend.isEnabled = false
             data = pieData
             invalidate()

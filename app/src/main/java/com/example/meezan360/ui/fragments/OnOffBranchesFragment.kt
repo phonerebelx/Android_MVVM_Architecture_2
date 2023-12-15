@@ -1,4 +1,4 @@
-package com.example.meezan360.fragments
+package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -92,6 +92,7 @@ class OnOffBranchesFragment : Fragment() {
             axisRight.isEnabled = false
             description.isEnabled = false
             xAxis.setDrawGridLines(false)
+            xAxis.setDrawAxisLine(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = Color.parseColor("#676767")
             xAxis.labelCount = valueList.size
