@@ -1,39 +1,36 @@
 package com.example.meezan360.ui.activities
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings.Secure
+import android.telephony.TelephonyManager
+import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivityLoginScreenBinding
-import com.example.meezan360.datamodule.di.NetworkModule
-import com.example.meezan360.datamodule.di.dataModule
 import com.example.meezan360.datamodule.network.ResponseModel
-import com.example.meezan360.datamodule.repository.DataRepository
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.MyViewModel
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import okhttp3.internal.platform.android.BouncyCastleSocketAdapter.Companion.factory
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext.startKoin
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class LoginScreen : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityLoginScreenBinding
-    private lateinit var viewModel: MyViewModel
+    private val myViewModel: MyViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.TRANSPARENT;
-
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
-//        DataRepository(NetworkModule(applicationContext))
-//        viewModel = ViewModelProvider(this)[MyViewModel::class.java]
-//        response()
+
+        response()
 
         setContentView(binding.root)
 
@@ -49,21 +46,40 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
         when (p0?.id) {
             R.id.btnLogin -> {
 
-//                viewModel.viewModelScope.launch {
-//                    viewModel.loginRequest("waqas", "12345678", "321321")
-//                }
+                val email = binding.etEmail.text.toString() //waqas
+                val password = Utils.md5(binding.etPassword.text.toString()) //3zH+fS2agritJwMfv/7wEQ==:MTIzNDU2Nzg5MTAxMTEyMQ==
+                val deviceId = Secure.getString(
+                    applicationContext.contentResolver,
+                    Secure.ANDROID_ID
+                ) //321321
 
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)
+                        .show()
+                    return
+                }
+
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(applicationContext, "Please Enter password", Toast.LENGTH_SHORT)
+                        .show()
+                    return
+                }
+
+                myViewModel.viewModelScope.launch {
+                    myViewModel.loginRequest(
+                        email,
+                        password,
+                        deviceId
+                    )
+                }
+
             }
         }
     }
 
     private fun response() {
-
-        viewModel.viewModelScope.launch {
-            viewModel.loginData.collectLatest { it ->
-
+        lifecycleScope.launchWhenStarted {
+            myViewModel.loginData.collect {
                 when (it) {
                     is ResponseModel.Error -> {
                         Toast.makeText(
@@ -73,11 +89,14 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
                         ).show()
                     }
 
-                    is ResponseModel.Idle -> Toast.makeText(
-                        applicationContext,
-                        "Idle: " + it.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    is ResponseModel.Idle -> {
+
+                    }
+//                        Toast.makeText(
+//                        applicationContext,
+//                        "Idle: " + it.message,
+//                        Toast.LENGTH_SHORT
+//                    ).show()
 
                     is ResponseModel.Loading -> Toast.makeText(
                         applicationContext,
@@ -85,13 +104,14 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    is ResponseModel.Success -> Toast.makeText(
-                        applicationContext,
-                        "Success: " + it.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    is ResponseModel.Success -> {
+                        val intent = Intent(this@LoginScreen, MainActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
+
             }
         }
+
     }
 }

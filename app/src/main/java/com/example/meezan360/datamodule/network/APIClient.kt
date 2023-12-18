@@ -14,7 +14,7 @@ class APIClient {
         fun create(context: Context): APIService {
 
             val client = OkHttpClient.Builder().apply {
-                addInterceptor(BaseHeadersInterceptor())
+//                addInterceptor(BaseHeadersInterceptor())
                 addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             }.build()
 

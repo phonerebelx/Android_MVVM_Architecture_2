@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.datamodule.network.ResponseModel
 import com.example.meezan360.datamodule.repository.DataRepository
+import com.example.meezan360.model.LoginModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -11,7 +12,8 @@ import retrofit2.Response
 class MyViewModel(private var dataRepo: DataRepository?) : ViewModel() {
 
     val loginData =
-        MutableStateFlow<ResponseModel<Response<String>>>(ResponseModel.Idle("Idle State"))
+        MutableStateFlow<ResponseModel<Response<LoginModel>>>(ResponseModel.Idle("Idle State"))
+
     suspend fun loginRequest(loginId: String, password: String, deviceId: String) {
         loginData.emit(ResponseModel.Loading())
         dataRepo?.getLoginRequest(loginId, password, deviceId)?.collect {
