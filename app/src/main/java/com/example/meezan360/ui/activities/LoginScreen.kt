@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.Secure
 import android.text.TextUtils
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivityLoginScreenBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
@@ -49,8 +51,8 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
         when (p0?.id) {
             R.id.btnLogin -> {
 
-                val email = binding.etEmail.text.toString() //waqas
-                val password = Utils.encryptPass(
+                var email = binding.etEmail.text.toString() //waqas
+                var password = Utils.encryptPass(
                     "23423532",
                     "1234567891011121",
                     binding.etPassword.text.toString()
@@ -59,6 +61,12 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
                     applicationContext.contentResolver,
                     Secure.ANDROID_ID
                 )
+
+                if(BuildConfig.DEBUG){
+                    email = "waqas"
+                    password = Utils.encryptPass("23423532",
+                        "1234567891011121","Uhf@1234")
+                }
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)

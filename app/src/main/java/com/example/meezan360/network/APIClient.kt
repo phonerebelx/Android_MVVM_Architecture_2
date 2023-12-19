@@ -37,6 +37,7 @@ class BaseHeadersInterceptor(private val sharedPreferencesManager: SharedPrefere
             val token = sharedPreferencesManager.getToken()
             if (!token.isNullOrBlank()) {
                 header("Authorization", "Bearer $token")
+                header("response-type", "1")
             }
         }.build()
         return chain.proceed(request)

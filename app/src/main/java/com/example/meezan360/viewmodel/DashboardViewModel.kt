@@ -1,0 +1,40 @@
+package com.example.meezan360.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.meezan360.datamodule.repository.DataRepository
+import com.example.meezan360.model.KPIModel
+import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
+import com.example.meezan360.network.ResponseModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import retrofit2.Response
+
+class DashboardViewModel(private var dataRepo: DataRepository?) : ViewModel() {
+
+     val dashboardByKPI =
+        MutableStateFlow<ResponseModel<Response<DashboardByKPIModel>>>(ResponseModel.Idle("Idle State"))
+
+    val checkVersioning =
+        MutableStateFlow<ResponseModel<Response<KPIModel>>>(ResponseModel.Idle("Idle State"))
+
+    suspend fun checkVersioning() {
+        checkVersioning.emit(ResponseModel.Loading())
+        dataRepo?.getCheckVersioning()?.collect {
+            viewModelScope.launch {
+                if (it.isSuccessful) checkVersioning.emit(ResponseModel.Success(it))
+                else checkVersioning.emit(ResponseModel.Error(it.message()))
+            }
+        }
+    }
+
+    suspend fun getDashboardByKpi(kpiId: String) {
+        dashboardByKPI.emit(ResponseModel.Loading())
+        dataRepo?.getDashboardByKpi(kpiId)?.collect {
+            viewModelScope.launch {
+                if (it.isSuccessful) dashboardByKPI.emit(ResponseModel.Success(it))
+                else dashboardByKPI.emit(ResponseModel.Error(it.message()))
+            }
+        }
+    }
+}
