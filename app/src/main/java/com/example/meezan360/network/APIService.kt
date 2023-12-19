@@ -1,8 +1,7 @@
-package com.example.meezan360.datamodule.network
+package com.example.meezan360.network
 
+import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
-import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -15,4 +14,8 @@ interface APIService {
         @Query("password") password: String,
         @Query("device_id") deviceId: String,
     ): Response<LoginModel>
+
+    @GET("360/CheckVersioning")
+    suspend fun checkVersioning(
+    ): Response<KPIModel>
 }

@@ -1,8 +1,8 @@
 package com.example.meezan360
 
 import android.app.Application
-import com.example.meezan360.datamodule.di.appModule
-import com.example.meezan360.datamodule.di.dataModule
+import com.example.meezan360.di.appModule
+import com.example.meezan360.di.dataModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

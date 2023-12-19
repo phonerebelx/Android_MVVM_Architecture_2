@@ -1,4 +1,4 @@
-package com.example.meezan360.datamodule.network
+package com.example.meezan360.network
 
 sealed class ResponseModel<T>(
     val data: T? = null,

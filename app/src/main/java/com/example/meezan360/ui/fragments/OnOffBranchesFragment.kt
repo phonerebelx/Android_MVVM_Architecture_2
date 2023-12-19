@@ -66,7 +66,6 @@ class OnOffBranchesFragment : Fragment() {
         barDataSet.setGradientColor(startColor, endColor)
         barDataSet.gradientColors = gradientColor
 
-
         val barData = BarData(barDataSet)
         barData.barWidth = 0.3f
 

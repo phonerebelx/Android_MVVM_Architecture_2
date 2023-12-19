@@ -6,15 +6,19 @@ import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.circlemenu.adapter.MyAdapter
 import com.example.circlemenu.model.DetailModel
 import com.example.meezan360.R
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.databinding.ActivityMainBinding
+import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.fragments.CustomerDepositFragment
 import com.example.meezan360.ui.fragments.DepositComposition
 import com.example.meezan360.ui.fragments.DepositCompositionTD
@@ -26,12 +30,15 @@ import com.example.meezan360.ui.fragments.ProductWiseChartFragment
 import com.example.meezan360.ui.fragments.TargetVsAchievementFragment
 import com.example.meezan360.ui.fragments.TierWiseDepositFragment
 import com.example.meezan360.ui.fragments.TopBottomBranches
+import com.example.meezan360.viewmodel.MyViewModel
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickListener {
 
@@ -52,11 +59,17 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
     //for bottom footer
     private var viewPagerAdapter: FragmentPagerAdapter? = null
 
+    private val myViewModel: MyViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        handleAPIResponse()
+        myViewModel.viewModelScope.launch {
+            myViewModel.checkVersioning()
+        }
 
         binding.pieChart.setOnChartValueSelectedListener(this)
         binding.btnPEDeposit.setOnClickListener(this)
@@ -75,27 +88,35 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             "Cross Sell" -> listOf(
                 DepositComposition(), TargetVsAchievementFragment(), DepositCompositionTD()
             )
+
             "Profitability" -> listOf(
                 MoMTargetVsAchievementFragment()
             )
+
             "Controls" -> listOf(
                 OnOffBranchesFragment()
             )
+
             "Premium" -> listOf(
                 ProductWiseChartFragment()
             )
+
             "Cash" -> listOf(
                 CustomerDepositFragment()
             )
+
             "ADC" -> listOf(
                 TopBottomBranches()
             )
+
             "Wealth" -> listOf(
                 DepositTrendFragment()
             )
+
             "Compliance" -> listOf(
                 MonthlyReportFragment()
             )
+
             "Advances" -> listOf(
                 TierWiseDepositFragment()
             )
@@ -237,6 +258,42 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
             }
         }
+    }
+
+    private fun handleAPIResponse() {
+        lifecycleScope.launchWhenStarted {
+            myViewModel.loginData.collect {
+                when (it) {
+                    is ResponseModel.Error -> {
+                        Toast.makeText(
+                            applicationContext,
+                            "error: " + it.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    is ResponseModel.Idle -> {
+                    }
+
+                    is ResponseModel.Loading -> Toast.makeText(
+                        applicationContext,
+                        "Loading: " + it.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    is ResponseModel.Success -> {
+
+                        Toast.makeText(
+                            applicationContext,
+                            "Success: " + it.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+            }
+        }
+
     }
 
 }

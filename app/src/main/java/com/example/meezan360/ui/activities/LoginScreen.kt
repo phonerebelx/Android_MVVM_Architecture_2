@@ -2,10 +2,10 @@ package com.example.meezan360.ui.activities
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings.Secure
-import android.telephony.TelephonyManager
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
@@ -14,10 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivityLoginScreenBinding
-import com.example.meezan360.datamodule.network.ResponseModel
+import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.MyViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -25,18 +27,19 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityLoginScreenBinding
     private val myViewModel: MyViewModel by viewModel()
+    private val sharedPreferenceManager: SharedPreferencesManager by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.statusBarColor = Color.TRANSPARENT;
+        window.statusBarColor = Color.TRANSPARENT
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
 
-        response()
+        handleAPIResponse()
 
         setContentView(binding.root)
 
         initViews()
     }
-
 
     private fun initViews() {
         binding.btnLogin.setOnClickListener(this)
@@ -47,11 +50,15 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
             R.id.btnLogin -> {
 
                 val email = binding.etEmail.text.toString() //waqas
-                val password = Utils.md5(binding.etPassword.text.toString()) //3zH+fS2agritJwMfv/7wEQ==:MTIzNDU2Nzg5MTAxMTEyMQ==
+                val password = Utils.encryptPass(
+                    "23423532",
+                    "1234567891011121",
+                    binding.etPassword.text.toString()
+                )
                 val deviceId = Secure.getString(
                     applicationContext.contentResolver,
                     Secure.ANDROID_ID
-                ) //321321
+                )
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)
@@ -68,7 +75,7 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
                 myViewModel.viewModelScope.launch {
                     myViewModel.loginRequest(
                         email,
-                        password,
+                        password!!,
                         deviceId
                     )
                 }
@@ -77,7 +84,7 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun response() {
+    private fun handleAPIResponse() {
         lifecycleScope.launchWhenStarted {
             myViewModel.loginData.collect {
                 when (it) {
@@ -105,8 +112,12 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
                     ).show()
 
                     is ResponseModel.Success -> {
+
+                        sharedPreferenceManager.saveToken(it.data?.body()?.token)
+
                         val intent = Intent(this@LoginScreen, MainActivity::class.java)
                         startActivity(intent)
+                        finish()
                     }
                 }
 

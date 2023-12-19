@@ -1,4 +1,4 @@
-package com.example.meezan360.datamodule.di
+package com.example.meezan360.di
 
 import com.example.meezan360.viewmodel.MyViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
