@@ -1,7 +1,6 @@
 package com.example.meezan360.network
 
-import android.content.Context
-import android.content.SharedPreferences
+
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

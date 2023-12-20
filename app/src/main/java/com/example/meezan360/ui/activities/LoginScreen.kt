@@ -62,10 +62,12 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
                     Secure.ANDROID_ID
                 )
 
-                if(BuildConfig.DEBUG){
+                if (BuildConfig.DEBUG) {
                     email = "waqas"
-                    password = Utils.encryptPass("23423532",
-                        "1234567891011121","Uhf@1234")
+                    password = Utils.encryptPass(
+                        "23423532",
+                        "1234567891011121", "Uhf@1234"
+                    )
                 }
 
                 if (TextUtils.isEmpty(email)) {
@@ -113,11 +115,12 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
 //                        Toast.LENGTH_SHORT
 //                    ).show()
 
-                    is ResponseModel.Loading -> Toast.makeText(
-                        applicationContext,
-                        "Loading: " + it.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    is ResponseModel.Loading ->
+                        Toast.makeText(
+                            applicationContext,
+                            "Loading.. ",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                     is ResponseModel.Success -> {
 

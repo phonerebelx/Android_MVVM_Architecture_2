@@ -16,7 +16,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 
-class DepositComposition : Fragment() {
+class Pie2Bar2Fragment : Fragment() {
 
     private lateinit var binding: FragmentDepositCompositionBinding
 
@@ -59,13 +59,14 @@ class DepositComposition : Fragment() {
         binding.pieChartCA.apply {
             description.text = "CA"
             description.xOffset = -70f
-            description.yOffset = 40f
+            description.yOffset = 30f
             description.textSize = 12f
             centerText = "75%"
             extraRightOffset = 70f
             setHoleColor(Color.parseColor("#E0E0E0"))
             setCenterTextSize(20f)
             setCenterTextColor(Color.parseColor("#7B7878"))
+            setTouchEnabled(false) //to stop rotation
             data = PieData(pieDataSet)
             invalidate()
         }
@@ -82,13 +83,14 @@ class DepositComposition : Fragment() {
         binding.pieChartCASA.apply {
             description.text = "CASA"
             description.xOffset = 290f
-            description.yOffset = 40f
+            description.yOffset = 30f
             description.textSize = 12f
             centerText = "75%"
             extraLeftOffset = 70f
             setHoleColor(Color.parseColor("#E0E0E0"))
             setCenterTextSize(20f)
             setCenterTextColor(Color.parseColor("#7B7878"))
+            setTouchEnabled(false) //to stop rotation
             data = PieData(pieDataSet2)
             invalidate()
         }

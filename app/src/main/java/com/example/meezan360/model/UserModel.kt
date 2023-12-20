@@ -1,6 +1,6 @@
 package com.example.meezan360.model
 
-data class User(
+data class UserModel(
     val branch_name: String,
     val company_id: String,
     val designation_id: String,

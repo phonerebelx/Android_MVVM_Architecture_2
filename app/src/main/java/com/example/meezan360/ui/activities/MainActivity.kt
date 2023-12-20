@@ -13,15 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.circlemenu.adapter.MyAdapter
-import com.example.circlemenu.model.DetailModel
+import com.example.meezan360.adapter.MyAdapter
 import com.example.meezan360.R
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.databinding.ActivityMainBinding
 import com.example.meezan360.model.Kpi
+import com.example.meezan360.model.dashboardByKpi.FooterModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.fragments.CustomerDepositFragment
-import com.example.meezan360.ui.fragments.DepositComposition
+import com.example.meezan360.ui.fragments.Pie2Bar2Fragment
 import com.example.meezan360.ui.fragments.DepositCompositionTD
 import com.example.meezan360.ui.fragments.DepositTrendFragment
 import com.example.meezan360.ui.fragments.MoMTargetVsAchievementFragment
@@ -31,6 +31,7 @@ import com.example.meezan360.ui.fragments.ProductWiseChartFragment
 import com.example.meezan360.ui.fragments.TargetVsAchievementFragment
 import com.example.meezan360.ui.fragments.TierWiseDepositFragment
 import com.example.meezan360.ui.fragments.TopBottomBranches
+import com.example.meezan360.utils.CardMapToFragment
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -38,7 +39,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -57,8 +57,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
     //for top header
     private lateinit var adapter: MyAdapter
-    private var detailList: ArrayList<DetailModel> = arrayListOf()
-
 
     //for bottom footer
     private var viewPagerAdapter: FragmentPagerAdapter? = null
@@ -69,7 +67,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         myViewModel.viewModelScope.launch {
             myViewModel.checkVersioning()
@@ -84,12 +81,24 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
     }
 
-    private fun footerSetupUp(item: String) {
+    private fun footerSetupUp(item: String, footerData: List<FooterModel>?, defaultDeposit: Int) {
+
+        val cardTypeList: ArrayList<String> = arrayListOf()
+        val footerList = footerData?.get(defaultDeposit)?.data
+        footerList?.forEachIndexed { index, footer ->
+            cardTypeList.add(footerList[index].card_type)
+        }
+
+//        CardMapToFragment.getFragment(cardTypeList[0])
 
         val fragmentsList: List<Fragment> = when (item) {
-            "Deposit" -> listOf(TargetVsAchievementFragment(), DepositComposition())
+            "Deposit" -> listOf(
+                CardMapToFragment.`2pie_2bar`.fragment,
+                CardMapToFragment.DepositCompositionTD.fragment
+            )
+
             "Cross Sell" -> listOf(
-                DepositComposition(), TargetVsAchievementFragment(), DepositCompositionTD()
+                Pie2Bar2Fragment(), TargetVsAchievementFragment(), DepositCompositionTD()
             )
 
             "Profitability" -> listOf(
@@ -124,7 +133,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 TierWiseDepositFragment()
             )
 
-            // Add cases for other pie chart items...
             else -> emptyList() // Default empty list if no match found
         }
 
@@ -135,19 +143,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
     }
 
     private fun setupHeader(selectedKpiIndex: Int?) {
-
         myViewModel.viewModelScope.launch { myViewModel.getDashboardByKpi(selectedKpiIndex.toString()) }
-
-//        detailList.add(DetailModel("Total", "1,534", "", "BIn"))
-//        detailList.add(DetailModel("CASA", "659,213", "55.98%", "MIn"))
-//        detailList.add(DetailModel("Current", "719,715", "46.9%", "MIn"))
-//        detailList.add(DetailModel("Saving", "552,237", "35.98%", "MIn"))
-//        detailList.add(DetailModel("Term Deposit", "262,767", "17.12%", "MIn"))
-
-//        binding.recyclerView.layoutManager =
-//            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-//        adapter = MyAdapter(detailList)
-//        binding.recyclerView.adapter = adapter
     }
 
 
@@ -187,10 +183,9 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             // Update the center text based on the selected entry
             val mCenterText = iconsList[currentIndex].second
             binding.pieChart.centerText = mCenterText
-            // Do something with the center text, e.g., display it in a TextView
 
             setupHeader(kpi?.get(currentIndex)?.kpi_id)
-            footerSetupUp(mCenterText) //
+//            footerSetupUp(mCenterText, footerData)
 
             lastSelectedSliceIndex = currentIndex // Update the last selected slice index
             binding.pieChart.invalidate() // Refresh the chart
@@ -199,19 +194,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
 
     private fun showPieChart(kpi: List<Kpi>?) {
-
-//        icons = mutableMapOf(
-//            R.drawable.deposit_icon to "Deposit",
-//            R.drawable.cross_sell_icon to "Cross Sell",
-//            R.drawable.profitability to "Profitability",
-//            R.drawable.controls_icon to "Controls",
-//            R.drawable.premium_icon to "Premium",
-//            R.drawable.cash_icon to "Cash",
-//            R.drawable.adc_icon to "ADC",
-//            R.drawable.wealth_icon to "Wealth",
-//            R.drawable.compliance_icon to "Compliance",
-//            R.drawable.advances_icon to "Advances"
-//        )
 
         iconsData = arrayListOf(
             R.drawable.deposit_icon,
@@ -312,7 +294,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
                     is ResponseModel.Loading -> Toast.makeText(
                         this@MainActivity,
-                        "Loading: " + it.message,
+                        "Loading..",
                         Toast.LENGTH_SHORT
                     ).show()
 
@@ -320,22 +302,13 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
                         kpi = it.data?.body()?.kpis
                         showPieChart(kpi)
-
-                        footerSetupUp("Deposit")
-//                        it.data?.body()?.kpis?.size
-
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Success: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 }
             }
         }
 
         lifecycleScope.launch {
-            myViewModel.dashboardByKPI.collect() {
+            myViewModel.dashboardByKPI.collect {
                 when (it) {
                     is ResponseModel.Error -> {
                         Toast.makeText(
@@ -346,36 +319,33 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                     }
 
                     is ResponseModel.Idle -> {
-
                     }
 
                     is ResponseModel.Loading -> {
                         Toast.makeText(
                             this@MainActivity,
-                            "Loading: " + it.message,
+                            "Loading.. ",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
 
                     is ResponseModel.Success -> {
 
-                        val myData = it.data?.body()?.top_boxes
-
-                        myData?.forEachIndexed { index, topBoxe ->
-                            detailList.add(
-                                DetailModel(
-                                    myData[index].title,
-                                    myData[index].value,
-                                    myData[index].percentage,
-                                    myData[index].uom
-                                )
-                            )
-                        }
-
+                        //for header
+                        val topBoxesData = it.data?.body()?.top_boxes
                         binding.recyclerView.layoutManager =
-                            LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-                        adapter = MyAdapter(detailList)
+                            LinearLayoutManager(
+                                this@MainActivity,
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )
+                        adapter = MyAdapter(topBoxesData)
                         binding.recyclerView.adapter = adapter
+
+                        //for footer
+                        val footerData = it.data?.body()?.footer
+
+//                        footerSetupUp("Deposit",footerData)
                     }
                 }
             }
