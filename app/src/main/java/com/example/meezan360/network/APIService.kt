@@ -3,6 +3,7 @@ package com.example.meezan360.network
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
+import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -24,4 +25,11 @@ interface APIService {
     suspend fun getDashboardByKpi(
         @Query("kpi_id") kpiId: String,
     ): Response<DashboardByKPIModel>
+
+    @GET("360/GetFooterGraphs")
+    suspend fun getFooterGraphs(
+        @Query("kpi_id") kpiId: String,
+        @Query("tag_name") tagName: String,
+        @Query("card_id") cardId: String,
+    ): Response<JsonObject>
 }

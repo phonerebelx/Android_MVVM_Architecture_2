@@ -1,10 +1,7 @@
 package com.example.meezan360.ui.activities
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.Secure
 import android.text.TextUtils
@@ -19,7 +16,7 @@ import com.example.meezan360.databinding.ActivityLoginScreenBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.Utils
-import com.example.meezan360.viewmodel.MyViewModel
+import com.example.meezan360.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginScreen : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityLoginScreenBinding
-    private val myViewModel: MyViewModel by viewModel()
+    private val myViewModel: LoginViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +92,7 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleAPIResponse() {
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             myViewModel.loginData.collect {
                 when (it) {
                     is ResponseModel.Error -> {
@@ -115,12 +112,12 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
 //                        Toast.LENGTH_SHORT
 //                    ).show()
 
-                    is ResponseModel.Loading ->
-                        Toast.makeText(
-                            applicationContext,
-                            "Loading.. ",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    is ResponseModel.Loading ->{}
+//                        Toast.makeText(
+//                            applicationContext,
+//                            "Loading.. ",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
 
                     is ResponseModel.Success -> {
 

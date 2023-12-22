@@ -7,10 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.meezan360.databinding.FragmentOnOffBranchesBinding
+import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -18,7 +18,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.model.GradientColor
 
 
-class OnOffBranchesFragment : Fragment() {
+class StackChartFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentOnOffBranchesBinding
 

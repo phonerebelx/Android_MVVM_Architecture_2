@@ -23,22 +23,22 @@ class MyAdapter(private val itemList: List<TopBoxesModel>?) :
         val myPos = itemList?.get(position)
 
         var valueColor = Color.parseColor("#676767")
-        if (!TextUtils.isEmpty(myPos?.value_color)) {
-            valueColor = Color.parseColor(myPos?.value_color)
+        if (!TextUtils.isEmpty(myPos?.valueColor)) {
+            valueColor = Color.parseColor(myPos?.valueColor)
         }
 
         var percentageColor = Color.parseColor("#765CB4")
-        if (!TextUtils.isEmpty(myPos?.percentage_color)) {
-            percentageColor = Color.parseColor(myPos?.percentage_color)
+        if (!TextUtils.isEmpty(myPos?.percentageColor)) {
+            percentageColor = Color.parseColor(myPos?.percentageColor)
         }
 
         var uomColor = Color.parseColor("#1F753E")
-        if (!TextUtils.isEmpty(myPos?.uom_color)) {
-            uomColor = Color.parseColor(myPos?.uom_color)
+        if (!TextUtils.isEmpty(myPos?.uomColor)) {
+            uomColor = Color.parseColor(myPos?.uomColor)
         }
 
         holder.tvTitle.text = myPos?.title
-        holder.tvTitle.setTextColor(Color.parseColor(myPos?.title_color))
+        holder.tvTitle.setTextColor(Color.parseColor(myPos?.titleColor))
         holder.tvAmount.text = myPos?.value
         holder.tvAmount.setTextColor(valueColor)
         holder.tvPercentage.text = myPos?.percentage

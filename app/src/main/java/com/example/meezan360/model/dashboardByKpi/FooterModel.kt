@@ -1,6 +1,10 @@
 package com.example.meezan360.model.dashboardByKpi
 
+import com.google.gson.annotations.SerializedName
+
 data class FooterModel(
-    val `data`: List<DataModel>,
-    val tab_name: String
+    @SerializedName("data")
+    val dataModel: List<DataModel>,
+    @SerializedName("tab_name")
+    val tabName: String
 )

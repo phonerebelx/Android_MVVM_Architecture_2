@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 
-class MonthlyReportFragment : Fragment() {
+class CombineBarChartFragment : Fragment() {
 
     private lateinit var binding: FragmentMonthlyReportBinding
 

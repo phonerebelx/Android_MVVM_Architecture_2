@@ -4,13 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.datamodule.repository.DataRepository
-import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class MyViewModel(private var dataRepo: DataRepository?) : ViewModel() {
+class LoginViewModel(private var dataRepo: DataRepository?) : ViewModel() {
 
     val loginData =
         MutableStateFlow<ResponseModel<Response<LoginModel>>>(ResponseModel.Idle("Idle State"))

@@ -9,10 +9,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class FragmentPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    private var fragmentsMap = HashMap<String, List<Fragment>>()
+    private var fragmentsMap = HashMap<String, ArrayList<Fragment>>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setFragmentsForItem(item: String, fragments: List<Fragment>) {
+    fun setFragmentsForItem(item: String, fragments: ArrayList<Fragment>) {
         fragmentsMap[item] = fragments
         notifyDataSetChanged()
     }

@@ -1,6 +1,9 @@
 package com.example.meezan360.model
 
+import com.google.gson.annotations.SerializedName
+
 data class KPIModel(
     val kpis: List<Kpi>,
-    val latest_version: String
+    @SerializedName("latest_version")
+    val latestVersion: String
 )

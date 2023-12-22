@@ -21,7 +21,6 @@ val dataModule = module {
     //
 
     single(named("data_repo")) { DataRepository(NetworkModule(get())) }
-    single(named("dashboard_repo")) { DataRepository(NetworkModule(get())) }
 }
 
 class NetworkModule(private val sharedPreferencesManager: SharedPreferencesManager) {

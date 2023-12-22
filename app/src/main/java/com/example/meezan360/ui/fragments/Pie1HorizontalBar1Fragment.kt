@@ -5,22 +5,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentTargetVsAchievementBinding
+import com.example.meezan360.model.dashboardByKpi.DataModel
+import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class TargetVsAchievementFragment : Fragment() {
+class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentTargetVsAchievementBinding
-
+    private val myViewModel: DashboardViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +36,13 @@ class TargetVsAchievementFragment : Fragment() {
     ): View {
 
         binding = FragmentTargetVsAchievementBinding.inflate(layoutInflater)
+
+        myViewModel.viewModelScope.launch {
+            myViewModel.getFooterGraphs(kpiId.toString(), "pe_deposit", dataModel.cardId)
+        }
+        handleAPIResponse()
+
+
         showBarChart()
         showPieChart()
         return binding.root
@@ -142,6 +157,43 @@ class TargetVsAchievementFragment : Fragment() {
             invalidate()
         }
 
+
+    }
+
+    private fun handleAPIResponse() {
+        lifecycleScope.launch {
+            myViewModel.footerGraph.collect {
+                when (it) {
+                    is ResponseModel.Error -> {
+                        Toast.makeText(
+                            context,
+                            "error: " + it.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    is ResponseModel.Idle -> {
+                    }
+
+                    is ResponseModel.Loading -> {}
+//                        Toast.makeText(
+//                        context,
+//                        "Loading..",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+
+                    is ResponseModel.Success -> {
+                        Toast.makeText(
+                            context,
+                            "success",
+                            Toast.LENGTH_SHORT
+                        ).show()
+//                        kpi = it.data?.body()?.kpis
+//                        showPieChart(kpi)
+                    }
+                }
+            }
+        }
 
     }
 

@@ -1,12 +1,22 @@
 package com.example.meezan360.model.dashboardByKpi
 
+import com.google.gson.annotations.SerializedName
+
 data class TopBoxesModel(
+    @SerializedName("percentage")
     val percentage: String = "",
-    val percentage_color: String = "",
+    @SerializedName("percentage_color")
+    val percentageColor: String = "",
+    @SerializedName("title")
     val title: String = "",
-    val title_color: String = "",
+    @SerializedName("title_color")
+    val titleColor: String = "",
+    @SerializedName("uom")
     val uom: String = "",
-    val uom_color: String = "",
+    @SerializedName("uom_color")
+    val uomColor: String = "",
+    @SerializedName("value")
     val value: String = "",
-    val value_color: String = ""
+    @SerializedName("value_color")
+    val valueColor: String = ""
 )

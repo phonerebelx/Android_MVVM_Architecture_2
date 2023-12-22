@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.meezan360.databinding.FragmentTopBottomBranchesBinding
+import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -15,7 +16,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 
 
-class TopBottomBranches : Fragment() {
+class HorizontalBarFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentTopBottomBranchesBinding
 

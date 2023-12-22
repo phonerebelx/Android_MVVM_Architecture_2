@@ -15,7 +15,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
-class CustomerDepositFragment : Fragment() {
+class InvertedBarChartFragment : Fragment() {
 
     private lateinit var binding: FragmentCustomerDepositBinding
 

@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.meezan360.databinding.FragmentProductWiseChartBinding
+import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 
 
-class ProductWiseChartFragment : Fragment() {
+class HalfPieFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentProductWiseChartBinding
 
@@ -59,6 +60,7 @@ class ProductWiseChartFragment : Fragment() {
         pieData.setDrawValues(false)
 
         binding.pieChart.apply {
+            isRotationEnabled = false
             description.isEnabled = false
             setDrawSliceText(false) //text inside pie charts
             rotationAngle = 180f

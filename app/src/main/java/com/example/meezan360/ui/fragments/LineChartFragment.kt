@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.meezan360.databinding.FragmentDepositTrendBinding
+import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -14,7 +15,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
 
-class DepositTrendFragment : Fragment() {
+class LineChartFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
     private lateinit var binding: FragmentDepositTrendBinding
 
     override fun onCreateView(

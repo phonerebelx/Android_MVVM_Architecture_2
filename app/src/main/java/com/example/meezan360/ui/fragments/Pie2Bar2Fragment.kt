@@ -5,20 +5,34 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentDepositCompositionBinding
+import com.example.meezan360.model.dashboardByKpi.DataModel
+import com.example.meezan360.model.footerGraph.Pie2Bar2Model
+import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.google.gson.Gson
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class Pie2Bar2Fragment : Fragment() {
+
+class Pie2Bar2Fragment(private var kpiId: Int?, private var dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentDepositCompositionBinding
+
+    private val myViewModel: DashboardViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +41,14 @@ class Pie2Bar2Fragment : Fragment() {
 
         binding = FragmentDepositCompositionBinding.inflate(layoutInflater)
 
+        myViewModel.viewModelScope.launch {
+            myViewModel.getFooterGraphs(kpiId.toString(), "pe_deposit", dataModel.cardId)
+        }
+
+        handleAPIResponse()
+
         showPieChart()
+
 
         return binding.root
     }
@@ -118,6 +139,46 @@ class Pie2Bar2Fragment : Fragment() {
 
         legend.setCustom(arrayOf(l1, l2, l3))
         legend.isEnabled = true
+
+    }
+
+    private fun handleAPIResponse() {
+
+        lifecycleScope.launch {
+            myViewModel.footerGraph.collect {
+                when (it) {
+                    is ResponseModel.Error -> {
+                        Toast.makeText(
+                            context,
+                            "error: " + it.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    is ResponseModel.Idle -> {
+                    }
+
+                    is ResponseModel.Loading -> {}
+//                        Toast.makeText(
+//                        context,
+//                        "Loading..",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+
+                    is ResponseModel.Success -> {
+
+                        val responseBody: String = it.data?.body().toString()
+                        val json = JSONObject(responseBody)
+                        val graph1 = json.get("graph1")
+                        val responseObject: Pie2Bar2Model = Gson().fromJson(
+                            json.optJSONObject("graph1")?.toString(),
+                            Pie2Bar2Model::class.java
+                        )
+
+                    }
+                }
+            }
+        }
 
     }
 

@@ -1,23 +1,17 @@
 package com.example.meezan360.ui.fragments
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.anychart.AnyChart
-import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
-import com.anychart.charts.Pyramid
-import com.anychart.core.ui.Legend
-import com.anychart.enums.Align
-import com.anychart.enums.LegendLayout
 import com.example.meezan360.databinding.FragmentTierWiseDepositBinding
-import com.github.mikephil.charting.components.LegendEntry
+import com.example.meezan360.model.dashboardByKpi.DataModel
 
 
-class TierWiseDepositFragment : Fragment() {
+class TierChartFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentTierWiseDepositBinding
 

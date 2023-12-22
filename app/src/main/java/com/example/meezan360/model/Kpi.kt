@@ -1,11 +1,20 @@
 package com.example.meezan360.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Kpi(
-    val clear_cacha: Boolean,
-    val is_default: Boolean,
-    val key_name: String,
-    val kpi_id: Int,
-    val last_sync_date: String,
+    @SerializedName("clear_cacha")
+    val clearCache: Boolean,
+    @SerializedName("is_default")
+    val isDefault: Boolean,
+    @SerializedName("key_name")
+    val keyName: String,
+    @SerializedName("kpi_id")
+    val kpiId: Int,
+    @SerializedName("last_sync_date")
+    val lastSyncDate: String,
+    @SerializedName("name")
     val name: String,
-    val table_id: Int
+    @SerializedName("table_id")
+    val tableId: Int
 )

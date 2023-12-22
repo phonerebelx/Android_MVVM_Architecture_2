@@ -1,15 +1,28 @@
 package com.example.meezan360.model
 
+import com.google.gson.annotations.SerializedName
+
 data class UserModel(
-    val branch_name: String,
-    val company_id: String,
-    val designation_id: String,
-    val email_address: String,
-    val emp_code: String,
-    val full_name: String,
-    val last_login_time: String,
-    val phone_number: String,
-    val role_name: String,
-    val user_id: String,
-    val user_type: String
+    @SerializedName("branch_name")
+    val branchName: String,
+    @SerializedName("company_id")
+    val companyId: String,
+    @SerializedName("designation_id")
+    val designationId: String,
+    @SerializedName("email_address")
+    val emailAddress: String,
+    @SerializedName("emp_code")
+    val empCode: String,
+    @SerializedName("full_name")
+    val fullName: String,
+    @SerializedName("last_login_time")
+    val lastLoginTime: String,
+    @SerializedName("phone_number")
+    val phoneNumber: String,
+    @SerializedName("role_name")
+    val roleName: String,
+    @SerializedName("user_id")
+    val userId: String,
+    @SerializedName("user_type")
+    val userType: String
 )

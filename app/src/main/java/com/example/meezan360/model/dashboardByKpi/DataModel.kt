@@ -1,10 +1,18 @@
 package com.example.meezan360.model.dashboardByKpi
 
+import com.google.gson.annotations.SerializedName
+
 data class DataModel(
-    val card_id: String,
-    val card_title: String,
-    val card_type: String,
-    val card_type_id: String,
-    val is_percent: String,
-    val is_vertical_legend: String
+    @SerializedName("card_id")
+    val cardId: String,
+    @SerializedName("card_title")
+    val cardTitle: String,
+    @SerializedName("card_type")
+    val cardType: String,
+    @SerializedName("card_type_id")
+    val cardTypeId: String,
+    @SerializedName("is_percent")
+    val isPercent: String,
+    @SerializedName("is_vertical_legend")
+    val isVerticalLegend: String
 )
