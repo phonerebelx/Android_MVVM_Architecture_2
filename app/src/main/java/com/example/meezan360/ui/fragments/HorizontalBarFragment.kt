@@ -16,7 +16,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 
 
-class HorizontalBarFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
+class HorizontalBarFragment(kpiId: Int?, tagName: String, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentTopBottomBranchesBinding
 

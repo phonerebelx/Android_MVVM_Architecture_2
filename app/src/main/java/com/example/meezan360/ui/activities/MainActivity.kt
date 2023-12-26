@@ -28,6 +28,7 @@ import com.example.meezan360.ui.fragments.Pie1HorizontalBar1Fragment
 import com.example.meezan360.ui.fragments.Pie2Bar2Fragment
 import com.example.meezan360.ui.fragments.StackChartFragment
 import com.example.meezan360.ui.fragments.TierChartFragment
+import com.example.meezan360.utils.Constants
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -60,6 +61,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
     private val myViewModel: DashboardViewModel by viewModel()
 
+    private var tagName: String = Constants.general
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -78,28 +81,65 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
     private fun footerSetupUp(item: String, footerData: List<FooterModel>?, defaultDeposit: Int) {
 
-        val footerList = footerData?.get(defaultDeposit)?.data
+        val footerList = footerData?.get(defaultDeposit)?.dataModel
         val fragmentsList: ArrayList<Fragment> = arrayListOf()
 
         footerList?.forEachIndexed { index, footer ->
             //to access fragments by passing cardType to Enum
             when (footerList[index].cardType) {
-                "2pie_2bar" -> fragmentsList.add(Pie2Bar2Fragment(kpiId, footerList[index]))
-                "1pie_1horizontal_bar" -> fragmentsList.add(
-                    Pie1HorizontalBar1Fragment(
+                "2pie_2bar" -> fragmentsList.add(
+                    Pie2Bar2Fragment(
                         kpiId,
+                        tagName,
                         footerList[index]
                     )
                 )
 
-                "bar_chart" -> fragmentsList.add(BarChartFragment(kpiId, footerList[index]))
-                "stack_chart" -> fragmentsList.add(StackChartFragment(kpiId, footerList[index]))
-                "tier_chart" -> fragmentsList.add(TierChartFragment(kpiId, footerList[index]))
-                "half_pie" -> fragmentsList.add(HalfPieFragment(kpiId, footerList[index]))
-                "line_chart" -> fragmentsList.add(LineChartFragment(kpiId, footerList[index]))
+                "1pie_1horizontal_bar" -> fragmentsList.add(
+                    Pie1HorizontalBar1Fragment(
+                        kpiId,
+                        tagName,
+                        footerList[index]
+                    )
+                )
+
+                "bar_chart" -> fragmentsList.add(
+                    BarChartFragment(
+                        kpiId,
+                        tagName,
+                        footerList[index]
+                    )
+                )
+
+                "stack_chart" -> fragmentsList.add(
+                    StackChartFragment(
+                        kpiId,
+                        tagName,
+                        footerList[index]
+                    )
+                )
+
+                "tier_chart" -> fragmentsList.add(
+                    TierChartFragment(
+                        kpiId,
+                        tagName,
+                        footerList[index]
+                    )
+                )
+
+                "half_pie" -> fragmentsList.add(HalfPieFragment(kpiId, tagName, footerList[index]))
+                "line_chart" -> fragmentsList.add(
+                    LineChartFragment(
+                        kpiId,
+                        tagName,
+                        footerList[index]
+                    )
+                )
+
                 "horizontal_bar" -> fragmentsList.add(
                     HorizontalBarFragment(
                         kpiId,
+                        tagName,
                         footerList[index]
                     )
                 )
@@ -160,6 +200,13 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             kpiId = kpi?.get(currentIndex)?.kpiId
             setupHeader(kpiId)
 //            footerSetupUp(mCenterText, footerData)
+
+            tagName = if (kpiId == 1) {
+                Constants.peDeposit
+            } else {
+                Constants.general
+            }
+
 
             lastSelectedSliceIndex = currentIndex // Update the last selected slice index
             binding.pieChart.invalidate() // Refresh the chart
@@ -241,11 +288,13 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             R.id.btnPEDeposit -> {
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
                 binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
+                tagName = Constants.peDeposit
             }
 
             R.id.btnAVGDeposit -> {
                 binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
+                tagName = Constants.avgDeposit
 
             }
         }
@@ -266,7 +315,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                     is ResponseModel.Idle -> {
                     }
 
-                    is ResponseModel.Loading ->{
+                    is ResponseModel.Loading -> {
 //                        Toast.makeText(
 //                        this@MainActivity,
 //                        "Loading..",
@@ -322,6 +371,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                         val footerData = it.data?.body()?.footer
 
                         footerSetupUp("Deposit", footerData, 0)
+
                     }
                 }
             }

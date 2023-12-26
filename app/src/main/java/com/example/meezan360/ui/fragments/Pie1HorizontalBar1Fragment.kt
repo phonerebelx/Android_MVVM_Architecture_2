@@ -12,20 +12,31 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentTargetVsAchievementBinding
+import com.example.meezan360.model.graphs.Pie1HorizontalBar1Model
 import com.example.meezan360.model.dashboardByKpi.DataModel
+import com.example.meezan360.model.footerGraph.HorizontalGraphModel
+import com.example.meezan360.model.footerGraph.PieGraphModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.viewmodel.DashboardViewModel
+import com.github.mikephil.charting.charts.HorizontalBarChart
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataModel) : Fragment() {
+class Pie1HorizontalBar1Fragment(
+    private var kpiId: Int?,
+    private var tagName: String,
+    private var dataModel: DataModel
+) : Fragment() {
 
     private lateinit var binding: FragmentTargetVsAchievementBinding
     private val myViewModel: DashboardViewModel by viewModel()
@@ -36,40 +47,32 @@ class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataMod
     ): View {
 
         binding = FragmentTargetVsAchievementBinding.inflate(layoutInflater)
-
+        binding.tvTitle.text = dataModel.cardTitle
         myViewModel.viewModelScope.launch {
-            myViewModel.getFooterGraphs(kpiId.toString(), "pe_deposit", dataModel.cardId)
+            myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
         }
         handleAPIResponse()
 
-
-        showBarChart()
-        showPieChart()
         return binding.root
     }
 
-    private fun showBarChart() {
-        val valueList =
-            listOf(1700.0, 7500.0, 1017.0, 4500.0) // Sample data, replace with your values
+    private fun showBarChart(
+        graph2: HorizontalGraphModel?,
+        horizontalBarChart: HorizontalBarChart
+    ) {
 
-        val entries: ArrayList<BarEntry> = ArrayList()
+        val entries: ArrayList<BarEntry> = arrayListOf()
+        val colors: ArrayList<Int> = arrayListOf()
 
-        // Fit the data into a bar
-        for (i in valueList.indices) {
-            val barEntry = BarEntry(i.toFloat(), valueList[i].toFloat())
-            entries.add(barEntry)
+        graph2?.barChartModel?.forEachIndexed { index, horizontalBarChartDataModel ->
+            entries.add(BarEntry(index.toFloat(),graph2.barChartModel[index].value.toFloat()))
+            colors.add(Color.parseColor(graph2.barChartModel[index].valueColor))
         }
 
         val barDataSet = BarDataSet(entries, "Target")
+        barDataSet.colors = colors
 
-        barDataSet.colors = listOf(
-            ContextCompat.getColor(requireContext(), R.color.purple_light),
-            ContextCompat.getColor(requireContext(), R.color.green),
-            ContextCompat.getColor(requireContext(), R.color.golden),
-            ContextCompat.getColor(requireContext(), R.color.grey),
-        )
-
-        val totalSum = valueList.sum()
+        val totalSum = entriesList.sum()
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 val percentage = (value / totalSum) * 100
@@ -87,7 +90,7 @@ class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataMod
         mData.isHighlightEnabled = false
 
         //Display the axis on the left
-        val xAxis = binding.horizontalBarChart.xAxis
+        val xAxis = horizontalBarChart.xAxis
         xAxis.setDrawGridLines(false)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawAxisLine(false)
@@ -95,9 +98,9 @@ class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataMod
 
         val labels = setupLegend()
 
-        binding.horizontalBarChart.apply {
+        horizontalBarChart.apply {
             axisLeft.axisMaximum =
-                10000f //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
+                2698483f //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
             axisLeft.axisMinimum = 0f
             setDrawValueAboveBar(false)
             axisLeft.isEnabled = false
@@ -123,29 +126,24 @@ class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataMod
         return arrayOf("Term Deposit", "CASA", "Saving", "Current")
     }
 
-    private fun showPieChart() {
+    private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
 
-        val pieEntryValueCA = 75f
-        // Input data and fit data into pie chart entry
+        val pieEntryValueCA = graph1?.pieChartModel?.value
         val pieEntries = mutableListOf<PieEntry>()
 
-        pieEntries.add(PieEntry(pieEntryValueCA))
+        pieEntries.add(PieEntry(pieEntryValueCA!!))
         pieEntries.add(PieEntry(100 - pieEntryValueCA))
 
         val colors: ArrayList<Int> = ArrayList()
-        colors.add(Color.parseColor("#1E90E2"))
+        colors.add(Color.parseColor(graph1.pieChartModel.color))
         colors.add(Color.parseColor("#FAFAFA"))
 
-        // Collecting the entries with label name
         val pieDataSet = PieDataSet(pieEntries, "")
-        // Setting text size of the value (hide text values)
         pieDataSet.valueTextSize = 0f
-        // Providing color list for coloring different entries
         pieDataSet.colors = colors
         pieDataSet.selectionShift = 0f
 
-
-        binding.pieChart.apply {
+        pieChart.apply {
             legend.isEnabled = false
             description.isEnabled = false
             centerText = "75%"
@@ -156,7 +154,6 @@ class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataMod
             data = PieData(pieDataSet)
             invalidate()
         }
-
 
     }
 
@@ -183,13 +180,17 @@ class Pie1HorizontalBar1Fragment(var kpiId: Int?, private var dataModel: DataMod
 //                    ).show()
 
                     is ResponseModel.Success -> {
-                        Toast.makeText(
-                            context,
-                            "success",
-                            Toast.LENGTH_SHORT
-                        ).show()
-//                        kpi = it.data?.body()?.kpis
-//                        showPieChart(kpi)
+
+                        val responseBody: String = it.data?.body()?.toString() ?: ""
+
+                        val pie1Bar1Model: Pie1HorizontalBar1Model? = try {
+                            Gson().fromJson(responseBody, Pie1HorizontalBar1Model::class.java)
+                        } catch (e: JsonSyntaxException) {
+                            null
+                        }
+
+                        showPieChart(pie1Bar1Model?.graph1, binding.pieChart)
+                        showBarChart(pie1Bar1Model?.graph2, binding.horizontalBarChart)
                     }
                 }
             }

@@ -15,7 +15,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
 
-class LineChartFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
+class LineChartFragment(kpiId: Int?, tagName: String, dataModel: DataModel) : Fragment() {
     private lateinit var binding: FragmentDepositTrendBinding
 
     override fun onCreateView(

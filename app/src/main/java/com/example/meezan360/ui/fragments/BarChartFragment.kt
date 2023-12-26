@@ -23,7 +23,11 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class BarChartFragment(var kpiId: Int?, private var dataModel: DataModel) : Fragment() {
+class BarChartFragment(
+    var kpiId: Int?,
+    private var tagName: String,
+    private var dataModel: DataModel
+) : Fragment() {
 
     private lateinit var binding: FragmentMomTargetVsAchievementBinding
     private val myViewModel: DashboardViewModel by viewModel()
@@ -33,11 +37,12 @@ class BarChartFragment(var kpiId: Int?, private var dataModel: DataModel) : Frag
     ): View {
 
         binding = FragmentMomTargetVsAchievementBinding.inflate(layoutInflater)
+        binding.tvTitle.text = dataModel.cardTitle
         myViewModel.viewModelScope.launch {
-            myViewModel.getFooterGraphs(kpiId.toString(), "pe_deposit", dataModel.cardId)
+            myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
         }
         handleAPIResponse()
-        showCombineChart()
+//        showCombineChart()
         return binding.root
     }
 
@@ -137,20 +142,14 @@ class BarChartFragment(var kpiId: Int?, private var dataModel: DataModel) : Frag
                     }
 
                     is ResponseModel.Loading -> {}
-//                        Toast.makeText(
-//                        context,
-//                        "Loading..",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
 
                     is ResponseModel.Success -> {
-                        Toast.makeText(
-                            context,
-                            "success",
-                            Toast.LENGTH_SHORT
-                        ).show()
-//                        kpi = it.data?.body()?.kpis
-//                        showPieChart(kpi)
+//                        Toast.makeText(
+//                            context,
+//                            "success",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+
                     }
                 }
             }

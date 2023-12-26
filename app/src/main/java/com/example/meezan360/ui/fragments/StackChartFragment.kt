@@ -18,7 +18,7 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.model.GradientColor
 
 
-class StackChartFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
+class StackChartFragment(kpiId: Int?, tagName: String, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentOnOffBranchesBinding
 

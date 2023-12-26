@@ -13,7 +13,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 
 
-class HalfPieFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
+class HalfPieFragment(kpiId: Int?, tagName: String, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentProductWiseChartBinding
 

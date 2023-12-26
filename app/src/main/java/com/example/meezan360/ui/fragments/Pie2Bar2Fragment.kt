@@ -6,29 +6,39 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentDepositCompositionBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
-import com.example.meezan360.model.footerGraph.Pie2Bar2Model
+import com.example.meezan360.model.footerGraph.PieGraphModel
+import com.example.meezan360.model.footerGraph.BarGraphModel
+import com.example.meezan360.model.graphs.Pie2Bar2Model
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.viewmodel.DashboardViewModel
+import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class Pie2Bar2Fragment(private var kpiId: Int?, private var dataModel: DataModel) : Fragment() {
+class Pie2Bar2Fragment(
+    private var kpiId: Int?,
+    private var tagName: String,
+    private var dataModel: DataModel
+) : Fragment() {
 
     private lateinit var binding: FragmentDepositCompositionBinding
 
@@ -40,106 +50,101 @@ class Pie2Bar2Fragment(private var kpiId: Int?, private var dataModel: DataModel
     ): View {
 
         binding = FragmentDepositCompositionBinding.inflate(layoutInflater)
-
+        binding.tvTitle.text = dataModel.cardTitle
         myViewModel.viewModelScope.launch {
-            myViewModel.getFooterGraphs(kpiId.toString(), "pe_deposit", dataModel.cardId)
+            myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
         }
 
         handleAPIResponse()
 
-        showPieChart()
-
-
         return binding.root
     }
 
-    private fun showPieChart() {
+    private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
 
-        val pieEntryValueCA = 75f
-        var pieEntryValueCASA = 75f
-        // Input data and fit data into pie chart entry
-        val pieEntries = mutableListOf<PieEntry>()
-        pieEntries.add(PieEntry(pieEntryValueCA))
-        pieEntries.add(PieEntry(100 - pieEntryValueCA))
+        val pieEntryValueCA = graph1?.pieChartModel?.value
+
+        val pieEntriesCA = mutableListOf<PieEntry>()
+        pieEntriesCA.add(PieEntry(pieEntryValueCA!!))
+        pieEntriesCA.add(PieEntry(100 - pieEntryValueCA))
 
         val colors: ArrayList<Int> = ArrayList()
-        colors.add(Color.parseColor("#856BC1"))
+        colors.add(Color.parseColor(graph1.pieChartModel.color))
         colors.add(Color.parseColor("#FAFAFA"))
 
-        // Collecting the entries with label name
-        val pieDataSet = PieDataSet(pieEntries, "")
-        // Setting text size of the value (hide text values)
+        val pieDataSet = PieDataSet(pieEntriesCA, "")
         pieDataSet.valueTextSize = 0f
-        // Providing color list for coloring different entries
         pieDataSet.colors = colors
         pieDataSet.selectionShift = 0f
 
-        setLegends(binding.pieChartCA, R.color.purple_light, Legend.LegendHorizontalAlignment.RIGHT)
-        setLegends(binding.pieChartCASA, R.color.green, Legend.LegendHorizontalAlignment.LEFT)
-
-        binding.pieChartCA.apply {
-            description.text = "CA"
-            description.xOffset = -70f
-            description.yOffset = 30f
-            description.textSize = 12f
-            centerText = "75%"
-            extraRightOffset = 70f
+        pieChart.apply {
+            description.isEnabled = false
+            legend.isEnabled = false
+            centerText = "$pieEntryValueCA%"
             setHoleColor(Color.parseColor("#E0E0E0"))
-            setCenterTextSize(20f)
+            setCenterTextSize(14f)
             setCenterTextColor(Color.parseColor("#7B7878"))
             setTouchEnabled(false) //to stop rotation
             data = PieData(pieDataSet)
             invalidate()
         }
-
-        val colors2: ArrayList<Int> = ArrayList()
-        colors2.add(Color.parseColor("#1F753E"))
-        colors2.add(Color.parseColor("#FAFAFA"))
-
-        val pieDataSet2 = PieDataSet(pieEntries, "")
-        pieDataSet2.colors = colors2
-        pieDataSet2.valueTextSize = 0f
-        pieDataSet2.selectionShift = 0f
-
-        binding.pieChartCASA.apply {
-            description.text = "CASA"
-            description.xOffset = 290f
-            description.yOffset = 30f
-            description.textSize = 12f
-            centerText = "75%"
-            extraLeftOffset = 70f
-            setHoleColor(Color.parseColor("#E0E0E0"))
-            setCenterTextSize(20f)
-            setCenterTextColor(Color.parseColor("#7B7878"))
-            setTouchEnabled(false) //to stop rotation
-            data = PieData(pieDataSet2)
-            invalidate()
-        }
-
     }
 
-    private fun setLegends(
-        pieChart: PieChart,
-        mColorRes: Int,
-        alignment: Legend.LegendHorizontalAlignment,
-    ) {
-        val legend: Legend = pieChart.legend
+    private fun showBarChart(graph2: BarGraphModel?, horizontalBarChart: HorizontalBarChart) {
 
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-        legend.horizontalAlignment = alignment
-        legend.orientation = Legend.LegendOrientation.VERTICAL
-        legend.yEntrySpace = 5f
-        legend.xOffset = 10f
+        val labels = ArrayList<String>()
+        val yVals1 = ArrayList<BarEntry>()
+        val colors: ArrayList<Int> = arrayListOf()
 
-        val legendColor = ContextCompat.getColor(requireContext(), mColorRes)
+        graph2?.barChartModel?.forEachIndexed { index, _ ->
+            labels.add(graph2.barChartModel[index].key.toString())
+            yVals1.add(BarEntry(index.toFloat(), graph2.barChartModel[index].value))
+            colors.add(Color.parseColor(graph2.barChartModel[index].valueColor))
+        }
 
-        val l1 = LegendEntry("90%", Legend.LegendForm.LINE, 90f, 15f, null, legendColor)
-        val l2 = LegendEntry("60%", Legend.LegendForm.LINE, 60f, 15f, null, legendColor)
-        val l3 = LegendEntry("80%", Legend.LegendForm.LINE, 80f, 15f, null, legendColor)
+        val xl: XAxis = horizontalBarChart.xAxis
+        xl.position = XAxis.XAxisPosition.BOTTOM
+        xl.setDrawAxisLine(true)
+        xl.setDrawGridLines(false)
+        xl.valueFormatter = object : IndexAxisValueFormatter(labels) {
+            override fun getFormattedValue(value: Float): String {
+                return if (value >= 0 && value.toInt() < labels.size) {
+                    labels[value.toInt()]
+                } else {
+                    ""
+                }
+            }
+        }
+        xl.granularity = 1f
 
-        legend.setCustom(arrayOf(l1, l2, l3))
-        legend.isEnabled = true
+        val yl: YAxis = horizontalBarChart.axisLeft
+        yl.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
+        yl.setDrawGridLines(false)
+        yl.isEnabled = false
+        yl.axisMinimum = 0f
 
+        val yr: YAxis = horizontalBarChart.axisRight
+        yr.isEnabled = false
+
+        val set1 = BarDataSet(yVals1, graph2?.label)
+        set1.colors = colors
+        val dataSets = ArrayList<IBarDataSet>()
+        dataSets.add(set1)
+        val barData = BarData(dataSets)
+        barData.setValueTextSize(10f)
+        barData.barWidth = .9f
+
+        horizontalBarChart.apply {
+            setDrawBarShadow(false)
+            setDrawValueAboveBar(true)
+            setTouchEnabled(false)
+            setDrawGridBackground(false)
+            setPinchZoom(false)
+            data = barData
+            description.isEnabled = false
+            legend.isEnabled = false
+            invalidate()
+        }
     }
 
     private fun handleAPIResponse() {
@@ -155,25 +160,25 @@ class Pie2Bar2Fragment(private var kpiId: Int?, private var dataModel: DataModel
                         ).show()
                     }
 
-                    is ResponseModel.Idle -> {
-                    }
+                    is ResponseModel.Idle -> {}
 
                     is ResponseModel.Loading -> {}
-//                        Toast.makeText(
-//                        context,
-//                        "Loading..",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
 
                     is ResponseModel.Success -> {
 
-                        val responseBody: String = it.data?.body().toString()
-                        val json = JSONObject(responseBody)
-                        val graph1 = json.get("graph1")
-                        val responseObject: Pie2Bar2Model = Gson().fromJson(
-                            json.optJSONObject("graph1")?.toString(),
-                            Pie2Bar2Model::class.java
-                        )
+                        val responseBody: String = it.data?.body()?.toString() ?: ""
+
+                        val pie2Bar2Model: Pie2Bar2Model? = try {
+                            Gson().fromJson(responseBody, Pie2Bar2Model::class.java)
+                        } catch (e: JsonSyntaxException) {
+                            null
+                        }
+
+                        showPieChart(pie2Bar2Model?.graph1, binding.pieChartCA)
+                        showPieChart(pie2Bar2Model?.graph3, binding.pieChartCASA)
+                        showBarChart(pie2Bar2Model?.graph2, binding.horizontalBarChart)
+                        showBarChart(pie2Bar2Model?.graph4, binding.horizontalBarChart2)
+
 
                     }
                 }

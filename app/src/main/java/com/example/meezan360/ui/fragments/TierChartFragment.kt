@@ -11,7 +11,7 @@ import com.example.meezan360.databinding.FragmentTierWiseDepositBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
 
 
-class TierChartFragment(kpiId: Int?, dataModel: DataModel) : Fragment() {
+class TierChartFragment(kpiId: Int?, tagName: String, dataModel: DataModel) : Fragment() {
 
     private lateinit var binding: FragmentTierWiseDepositBinding
 
