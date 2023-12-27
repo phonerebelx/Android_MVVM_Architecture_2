@@ -4,6 +4,7 @@ import com.example.meezan360.di.NetworkModule
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -37,7 +38,7 @@ class DataRepository(private var networkModule: NetworkModule) {
         kpiId: String,
         tagName: String,
         cardId: String,
-    ): Flow<Response<JsonObject>> {
+    ): Flow<Response<JsonElement>> {
         return flow {
             val response = networkModule.sourceOfNetwork().getFooterGraphs(kpiId, tagName, cardId)
             emit(response)

@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.meezan360.adapter.MyAdapter
+import com.example.meezan360.adapter.TopBoxesAdapter
 import com.example.meezan360.R
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.databinding.ActivityMainBinding
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
     private lateinit var iconsData: ArrayList<Int>
 
     //for top header
-    private lateinit var adapter: MyAdapter
+    private lateinit var adapter: TopBoxesAdapter
 
     //for bottom footer
     private var viewPagerAdapter: FragmentPagerAdapter? = null
@@ -364,7 +364,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                                 LinearLayoutManager.HORIZONTAL,
                                 false
                             )
-                        adapter = MyAdapter(topBoxesData)
+                        adapter = TopBoxesAdapter(topBoxesData)
                         binding.recyclerView.adapter = adapter
 
                         //for footer

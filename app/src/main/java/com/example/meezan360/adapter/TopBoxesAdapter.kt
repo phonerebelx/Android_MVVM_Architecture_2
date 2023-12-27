@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 
-class MyAdapter(private val itemList: List<TopBoxesModel>?) :
-    RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+class TopBoxesAdapter(private val itemList: List<TopBoxesModel>?) :
+    RecyclerView.Adapter<TopBoxesAdapter.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
