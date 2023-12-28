@@ -6,15 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.meezan360.R
 import com.example.meezan360.adapter.BarChartAdapter
 import com.example.meezan360.databinding.FragmentMomTargetVsAchievementBinding
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
-import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
@@ -27,7 +28,6 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,31 +41,31 @@ class BarChartFragment(
     private lateinit var binding: FragmentMomTargetVsAchievementBinding
     private val myViewModel: DashboardViewModel by viewModel()
     private lateinit var adapter: BarChartAdapter
-    private var listItems: ArrayList<TopBoxesModel> = arrayListOf()
-
+    private val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
+    private var rotationAngle: Float = 0f
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
         binding = FragmentMomTargetVsAchievementBinding.inflate(layoutInflater)
 
-        setupRecyclerView()
-
         binding.tvTitle.text = dataModel.cardTitle
         myViewModel.viewModelScope.launch {
             myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
         }
+
+        rotationAngle = if (dataModel.isVerticalLegend == "1")
+            -90f
+        else
+            -0f
+
+
         handleAPIResponse()
-//        showCombineChart()
+
         return binding.root
     }
 
-    private fun setupRecyclerView() {
-        listItems.add(TopBoxesModel(title = "CA"))
-        listItems.add(TopBoxesModel(title = "SA"))
-        listItems.add(TopBoxesModel(title = "CASA"))
-        listItems.add(TopBoxesModel(title = "TD"))
-        listItems.add(TopBoxesModel(title = "Total"))
+    private fun setupRecyclerView(listItems: ArrayList<String>) {
 
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
@@ -73,8 +73,9 @@ class BarChartFragment(
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-        adapter = BarChartAdapter(listItems, this)
+        adapter = BarChartAdapter(requireContext(), listItems, this)
         binding.recyclerView.adapter = adapter
+
     }
 
     private fun showCombineChart(
@@ -100,7 +101,6 @@ class BarChartFragment(
         val barData = BarData(barDataSet)
         barData.barWidth = 0.5f
 
-
         // Scatter chart (to place squares on top of each bar)
         val scatterDataSet = ScatterDataSet(scatterEntries, "Scatter Chart")
         scatterDataSet.setScatterShape(ScatterChart.ScatterShape.SQUARE)
@@ -118,7 +118,7 @@ class BarChartFragment(
         // Legend and chart settings...
         val legend: Legend = combineChart.legend
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-        legend.textColor = Color.parseColor("#676767")
+        legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
         legend.xEntrySpace = 25f
         val l1 = LegendEntry(
             "Target", Legend.LegendForm.SQUARE, 8f, 0f, null, colorsTarget[0]
@@ -135,10 +135,11 @@ class BarChartFragment(
             xAxis.spaceMin = barData.barWidth / 2f // First bar to show properly
             xAxis.spaceMax = barData.barWidth / 2f // Last bar to show properly
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            xAxis.labelRotationAngle = rotationAngle
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.labelCount = entries.size
             xAxis.textSize = 7f
-            xAxis.textColor = Color.parseColor("#676767")
+            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
             axisLeft.isEnabled = false
@@ -167,31 +168,36 @@ class BarChartFragment(
 
                     is ResponseModel.Success -> {
                         val responseBody = it.data?.body()
-                        val jsonArray = responseBody?.asJsonArray?.get(0).toString()
+                        val listItems: ArrayList<String> = arrayListOf()
 
-                        //recycler view here //get all labels and to send to recycler view
-                        //position
-
-//                        val jsonArray = responseBody?.asJsonArray?.get(0).toString()
-
-                        val graphModel: HorizontalGraphModel? = try {
-                            Gson().fromJson(jsonArray, HorizontalGraphModel::class.java)
-                        } catch (e: JsonSyntaxException) {
-                            null
+                        responseBody?.asJsonArray?.forEachIndexed { index, _ ->
+                            val jsonArray = responseBody.asJsonArray.get(index).toString()
+                            graphModel.add(
+                                Gson().fromJson(
+                                    jsonArray,
+                                    HorizontalGraphModel::class.java
+                                )
+                            )
+                            graphModel[index].label?.let { it1 -> listItems.add(it1) }
                         }
-                        if (graphModel?.barChartModel != null) {
-                            showCombineChart(graphModel.barChartModel, binding.combineChart)
-                        }
+                        setupRecyclerView(listItems)
+
+                        showCombineChart(
+                            graphModel[0].barChartModel,
+                            binding.combineChart
+                        )
+
                     }
                 }
             }
         }
-
     }
 
-    override fun onClick(item: TopBoxesModel?, position: Int) {
-
+    override fun onClick(item: String?, position: Int) {
+        showCombineChart(graphModel[position].barChartModel, binding.combineChart)
     }
-
 
 }
+
+
+

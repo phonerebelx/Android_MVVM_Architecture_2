@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentCustomerDepositBinding
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
@@ -69,7 +71,7 @@ class InvertedBarChartFragment : Fragment() {
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.textColor = Color.parseColor("#676767")
+            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.labelCount = valueList.size
             xAxis.textSize = 7f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
@@ -84,7 +86,7 @@ class InvertedBarChartFragment : Fragment() {
     private fun setupLegend(): Array<String> {
         val legend: Legend = binding.barChart.legend
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-        legend.textColor = Color.parseColor("#676767")
+        legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
         legend.xEntrySpace = 25f
         val l1 = LegendEntry(
             "Increase", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#6348A0")

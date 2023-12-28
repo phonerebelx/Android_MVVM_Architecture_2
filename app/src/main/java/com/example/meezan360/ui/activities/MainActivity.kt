@@ -111,6 +111,14 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                     )
                 )
 
+                "stack_with_toggle" -> fragmentsList.add(
+                    StackChartFragment(
+                        kpiId,
+                        tagName,
+                        footerList[index]
+                    )
+                )
+
                 "stack_chart" -> fragmentsList.add(
                     StackChartFragment(
                         kpiId,
@@ -364,7 +372,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                                 LinearLayoutManager.HORIZONTAL,
                                 false
                             )
-                        adapter = TopBoxesAdapter(topBoxesData)
+                        adapter = TopBoxesAdapter(applicationContext, topBoxesData)
                         binding.recyclerView.adapter = adapter
 
                         //for footer

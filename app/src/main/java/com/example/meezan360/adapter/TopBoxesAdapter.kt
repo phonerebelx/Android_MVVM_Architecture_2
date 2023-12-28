@@ -1,16 +1,18 @@
 package com.example.meezan360.adapter
 
+import android.content.Context
 import android.graphics.Color
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 
-class TopBoxesAdapter(private val itemList: List<TopBoxesModel>?) :
+class TopBoxesAdapter(val context: Context,private val itemList: List<TopBoxesModel>?) :
     RecyclerView.Adapter<TopBoxesAdapter.ViewHolder>() {
 
 
@@ -22,7 +24,7 @@ class TopBoxesAdapter(private val itemList: List<TopBoxesModel>?) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val myPos = itemList?.get(position)
 
-        var valueColor = Color.parseColor("#676767")
+        var valueColor = ContextCompat.getColor(context, R.color.grey2)
         if (!TextUtils.isEmpty(myPos?.valueColor)) {
             valueColor = Color.parseColor(myPos?.valueColor)
         }

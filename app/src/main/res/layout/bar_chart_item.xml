@@ -6,7 +6,7 @@
     android:layout_height="@dimen/_20sdp"
     android:layout_margin="@dimen/_5sdp"
     app:cardCornerRadius="@dimen/_10sdp"
-    app:cardElevation="@dimen/_3sdp">
+    app:cardElevation="@dimen/_2sdp">
 
     <TextView
         android:id="@+id/text"
@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
+        android:textColor="@color/grey2"
         android:text="CA" />
 
 

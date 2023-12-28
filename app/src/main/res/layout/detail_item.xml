@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="659,213"
-            android:textColor="#676767"
+            android:textColor="@color/grey2"
             android:textSize="14sp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

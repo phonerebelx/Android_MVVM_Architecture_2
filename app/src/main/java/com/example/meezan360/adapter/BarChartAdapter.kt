@@ -1,18 +1,21 @@
 package com.example.meezan360.adapter
 
+import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 
 class BarChartAdapter(
-    private val itemList: List<TopBoxesModel>?,
+    val context: Context,
+    private val itemList: List<String>?,
     private var onItemClick: OnItemClickListener
 ) :
     RecyclerView.Adapter<BarChartAdapter.ViewHolder>() {
@@ -26,18 +29,19 @@ class BarChartAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = itemList?.get(position)
-        holder.text.text = item?.title
+        holder.text.text = item
 
         if (position == selectedPosition) {
             holder.cardView.setCardBackgroundColor(Color.parseColor("#856BC1"))
             holder.text.setTextColor(Color.WHITE)
         } else {
             holder.cardView.setCardBackgroundColor(Color.WHITE)
-            holder.text.setTextColor(Color.BLACK)
+            holder.text.setTextColor(ContextCompat.getColor(context, R.color.grey2))
         }
 
         holder.text.setOnClickListener {
             selectedPosition = holder.adapterPosition
+            notifyDataSetChanged()
             onItemClick.onClick(item, position)
         }
 

@@ -62,31 +62,33 @@ class Pie2Bar2Fragment(
 
     private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
 
-        val pieEntryValueCA = graph1?.pieChartModel?.value
+        graph1?.let {
+            val pieEntryValueCA = graph1.pieChartModel.value
 
-        val pieEntriesCA = mutableListOf<PieEntry>()
-        pieEntriesCA.add(PieEntry(pieEntryValueCA!!))
-        pieEntriesCA.add(PieEntry(100 - pieEntryValueCA))
+            val pieEntriesCA = mutableListOf<PieEntry>()
+            pieEntriesCA.add(PieEntry(pieEntryValueCA))
+            pieEntriesCA.add(PieEntry(100 - pieEntryValueCA))
 
-        val colors: ArrayList<Int> = ArrayList()
-        colors.add(Color.parseColor(graph1.pieChartModel.color))
-        colors.add(Color.parseColor("#FAFAFA"))
+            val colors: ArrayList<Int> = ArrayList()
+            colors.add(Color.parseColor(graph1.pieChartModel.color))
+            colors.add(Color.parseColor("#FAFAFA"))
 
-        val pieDataSet = PieDataSet(pieEntriesCA, "")
-        pieDataSet.valueTextSize = 0f
-        pieDataSet.colors = colors
-        pieDataSet.selectionShift = 0f
+            val pieDataSet = PieDataSet(pieEntriesCA, "")
+            pieDataSet.valueTextSize = 0f
+            pieDataSet.colors = colors
+            pieDataSet.selectionShift = 0f
 
-        pieChart.apply {
-            description.isEnabled = false
-            legend.isEnabled = false
-            centerText = "$pieEntryValueCA%"
-            setHoleColor(Color.parseColor("#E0E0E0"))
-            setCenterTextSize(14f)
-            setCenterTextColor(Color.parseColor("#7B7878"))
-            setTouchEnabled(false) //to stop rotation
-            data = PieData(pieDataSet)
-            invalidate()
+            pieChart.apply {
+                description.isEnabled = false
+                legend.isEnabled = false
+                centerText = "$pieEntryValueCA%"
+                setHoleColor(Color.parseColor("#E0E0E0"))
+                setCenterTextSize(14f)
+                setCenterTextColor(Color.parseColor("#7B7878"))
+                setTouchEnabled(false) //to stop rotation
+                data = PieData(pieDataSet)
+                invalidate()
+            }
         }
     }
 
@@ -178,7 +180,6 @@ class Pie2Bar2Fragment(
                         showPieChart(pie2Bar2Model?.graph3, binding.pieChartCASA)
                         showBarChart(pie2Bar2Model?.graph2, binding.horizontalBarChart)
                         showBarChart(pie2Bar2Model?.graph4, binding.horizontalBarChart2)
-
 
                     }
                 }

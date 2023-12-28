@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentMonthlyReportBinding
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -46,7 +48,7 @@ class CombineBarChartFragment : Fragment() {
         val barDataSets = entriesList.mapIndexed { index, entries ->
             val barDataSet = BarDataSet(entries, "Target ${index + 1}")
             barDataSet.setDrawValues(true)
-            barDataSet.valueTextColor = Color.parseColor("#676767")
+            barDataSet.valueTextColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             barDataSet.valueTextSize = 6f
             barDataSet.colors = listOf(
                 Color.parseColor("#F9C000"),
@@ -77,7 +79,7 @@ class CombineBarChartFragment : Fragment() {
             description.isEnabled = false
             xAxis.setDrawGridLines(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.textColor = Color.parseColor("#676767")
+            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.labelCount = valueLists.first().size
             xAxis.textSize = 7f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
