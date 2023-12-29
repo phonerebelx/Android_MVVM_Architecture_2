@@ -6,7 +6,7 @@ data class HorizontalBarChartDataModel(
     @SerializedName("key") var key: String,
     @SerializedName("value") var value: Float,
     @SerializedName("percentage") var percentage: Float?, //
-    @SerializedName("target") var target: Float,
+    @SerializedName("target") var target: Float?, //
     @SerializedName("value_color") var valueColor: String,
-    @SerializedName("target_color") var targetColor: String
+    @SerializedName("target_color") var targetColor: String? //
 )

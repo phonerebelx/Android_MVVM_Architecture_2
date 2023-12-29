@@ -23,6 +23,7 @@ import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.fragments.BarChartFragment
 import com.example.meezan360.ui.fragments.HalfPieFragment
 import com.example.meezan360.ui.fragments.HorizontalBarFragment
+import com.example.meezan360.ui.fragments.InvertedBarChartFragment
 import com.example.meezan360.ui.fragments.LineChartFragment
 import com.example.meezan360.ui.fragments.Pie1HorizontalBar1Fragment
 import com.example.meezan360.ui.fragments.Pie2Bar2Fragment
@@ -126,6 +127,12 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                         footerList[index]
                     )
                 )
+                "bar_chart_single_value" ->
+                    fragmentsList.add( InvertedBarChartFragment(
+                        kpiId,
+                        tagName,
+                        footerList[index]
+                    ))
 
                 "tier_chart" -> fragmentsList.add(
                     TierChartFragment(

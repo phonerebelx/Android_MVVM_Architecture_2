@@ -49,7 +49,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         myViewModel.viewModelScope.launch {
             myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
         }
-        handleAPIResponse()
+        handleAPIResponse(dataModel.cardTypeId)
 
         binding.switchTD.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked)
@@ -72,32 +72,59 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         switchTD: Boolean
     ) {
 
-        var entries: ArrayList<BarEntry> = arrayListOf()
+        val entries: ArrayList<BarEntry> = arrayListOf()
         val colors: ArrayList<Int> = arrayListOf()
         val labels = ArrayList<String>()
         var tdIndex: Int? = null
         stackChartModel.stackChartData.forEachIndexed { i, stackChartDataModel ->
-            val barEntry = BarEntry(
-                i.toFloat(),
-                floatArrayOf(
-                    stackChartDataModel.value1.toFloat(),
-                    stackChartDataModel.value2.toFloat()
-                )
-            )
-            //for switch
-            if (stackChartDataModel.key.equals("term", true)) {
+            //for TD switch
+            var index: Int? = null
+            if (stackChartDataModel.key.equals("term", true) && !switchTD) {
                 tdIndex = i
+            } else {
+                index = i
             }
-            entries.add(barEntry)
-            colors.add(Color.parseColor(stackChartDataModel.value1Color))
-            colors.add(Color.parseColor(stackChartDataModel.value2Color))
-            labels.add(stackChartDataModel.key)
+            if (index != null) {
+                val barEntry = BarEntry(
+                    index.toFloat(),
+                    floatArrayOf(
+                        stackChartModel.stackChartData[index].value1.toFloat(),
+                        stackChartModel.stackChartData[index].value2.toFloat()
+                    )
+                )
+                entries.add(barEntry)
+                colors.add(Color.parseColor(stackChartModel.stackChartData[index].value1Color))
+                colors.add(Color.parseColor(stackChartModel.stackChartData[index].value2Color))
+                labels.add(stackChartModel.stackChartData[index].key)
+            }
         }
 
-        //for switch
-        if (!switchTD) {
-            tdIndex?.let { entries.drop(it) }
-        }
+
+//        //for switch
+//        if (!switchTD) {
+//
+//            val arraytwo = ArrayList<BarEntry>()
+//            tdIndex?.let { entries.drop(it) }
+//            if (arraytwo != null) {
+//                for (i in arraytwo.indices) {
+//                    arraytwo.add(
+//                        BarEntry(
+//                            i.toFloat(), floatArrayOf(
+//                                entries.value1.toFloat(),
+//                                stackChartDataModel.value2.toFloat()
+//                            )
+//                        )
+//                    )
+//                }
+//            }
+//
+//            tdIndex?.let {
+//                entries.removeAt(it)
+//                labels.removeAt(it)
+//                colors.removeAt(it)
+//            }
+//
+//        }
 
         legendSetup(stackChartModel.legend)
 
@@ -165,7 +192,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         legend.setCustom(legendEntries)
     }
 
-    private fun handleAPIResponse() {
+    private fun handleAPIResponse(cardTypeId: String) {
         lifecycleScope.launch {
             myViewModel.footerGraph.collect {
                 when (it) {
@@ -196,12 +223,14 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                             )
                             graphModel[index].label.let { it1 -> recyclerViewItems.add(it1) }
                         }
-//                        setupRecyclerView(listItems)
 
-//                        showCombineChart(
-//                            graphModel[0].barChartModel,
-//                            binding.combineChart
-//                        )
+                        if (cardTypeId == "4") {
+                            setupRecyclerView(recyclerViewItems)
+                            binding.switchTD.visibility = View.GONE
+                        } else {
+                            binding.switchTD.visibility = View.VISIBLE
+                            binding.recyclerView.visibility = View.GONE
+                        }
 
                         showBarChart(graphModel[0], binding.barChart, false)
 
@@ -213,6 +242,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
     }
 
     override fun onClick(item: String?, position: Int) {
+        showBarChart(graphModel[position], binding.barChart, false)
 
     }
 

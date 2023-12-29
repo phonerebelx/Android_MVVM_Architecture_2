@@ -6,9 +6,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meezan360.R
+import com.example.meezan360.adapter.BarChartAdapter
 import com.example.meezan360.databinding.FragmentCustomerDepositBinding
+import com.example.meezan360.interfaces.OnItemClickListener
+import com.example.meezan360.model.dashboardByKpi.DataModel
+import com.example.meezan360.model.footerGraph.HorizontalGraphModel
+import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.viewmodel.DashboardViewModel
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
@@ -16,54 +27,55 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.gson.Gson
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class InvertedBarChartFragment : Fragment() {
+class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
+    Fragment(), OnItemClickListener {
 
     private lateinit var binding: FragmentCustomerDepositBinding
+    private val myViewModel: DashboardViewModel by viewModel()
+    private val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
+    private lateinit var adapter: BarChartAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
         binding = FragmentCustomerDepositBinding.inflate(layoutInflater)
-        showBarChart()
+        binding.tvTitle.text = dataModel.cardTitle
+        myViewModel.viewModelScope.launch {
+            myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
+        }
+        handleAPIResponse()
+
+//        showBarChart()
         return binding.root
     }
 
-    private fun showBarChart() {
-        val valueList =
-            listOf(
-                -1000.0,
-                -700.0,
-                -500.0,
-                -200.0,
-                -1000.0
-            )
+    private fun showBarChart(horizontalGraphModel: HorizontalGraphModel, barChart: BarChart) {
 
+        val valueList = ArrayList<Double>()
         val entries: ArrayList<BarEntry> = ArrayList()
+        val colors = ArrayList<Int>()
+        val labels = ArrayList<String>()
 
-        // Fit the data into a bar
-        for (i in valueList.indices) {
-            val barEntry = BarEntry(i.toFloat(), valueList[i].toFloat())
+        horizontalGraphModel.barChartModel.forEachIndexed { index, chartData ->
+            val barEntry = BarEntry(index.toFloat(), chartData.value)
             entries.add(barEntry)
+            colors.add(Color.parseColor(chartData.valueColor))
+            labels.add(chartData.key)
         }
 
         val barDataSet = BarDataSet(entries, "Target")
-
-        val colors: ArrayList<Int> = ArrayList()
-        colors.add(Color.parseColor("#BBBBBB"))
-        colors.add(Color.parseColor("#A087DA"))
-        colors.add(Color.parseColor("#EC6565"))
-        colors.add(Color.parseColor("#F9C000"))
-        colors.add(Color.parseColor("#BBBBBB"))
         barDataSet.colors = colors
-
         val barData = BarData(barDataSet)
         barData.barWidth = 0.3f
 
-        val labels = setupLegend()
+        setupLegend()
 
-        binding.barChart.apply {
+        barChart.apply {
             extraBottomOffset = 10f
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
@@ -75,7 +87,7 @@ class InvertedBarChartFragment : Fragment() {
             xAxis.labelCount = valueList.size
             xAxis.textSize = 7f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-
+            setTouchEnabled(false)
             data = barData
 
             invalidate()
@@ -83,7 +95,7 @@ class InvertedBarChartFragment : Fragment() {
 
     }
 
-    private fun setupLegend(): Array<String> {
+    private fun setupLegend() {
         val legend: Legend = binding.barChart.legend
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
@@ -98,14 +110,67 @@ class InvertedBarChartFragment : Fragment() {
             "Net Off", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#FFC400")
         )
         legend.setCustom(arrayOf(l1, l2, l3))
+    }
 
-        return arrayOf(
-            "Last Day",
-            "Increase",
-            "Decrease",
-            "Net Off",
-            "Current Day",
-        )
+    private fun handleAPIResponse() {
+        lifecycleScope.launch {
+            myViewModel.footerGraph.collect {
+                when (it) {
+                    is ResponseModel.Error -> {
+                        Toast.makeText(
+                            context,
+                            "error: " + it.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    is ResponseModel.Idle -> {}
+
+                    is ResponseModel.Loading -> {}
+
+                    is ResponseModel.Success -> {
+
+                        val responseBody = it.data?.body()
+                        val recyclerViewItems: ArrayList<String> = arrayListOf()
+
+                        responseBody?.asJsonArray?.forEachIndexed { index, _ ->
+                            val jsonArray = responseBody.asJsonArray.get(index).toString()
+                            graphModel.add(
+                                Gson().fromJson(
+                                    jsonArray,
+                                    HorizontalGraphModel::class.java
+                                )
+                            )
+                            graphModel[index].label?.let { it1 -> recyclerViewItems.add(it1) }
+                        }
+
+                        setupRecyclerView(recyclerViewItems)
+
+                        showBarChart(graphModel[0], binding.barChart)
+
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun setupRecyclerView(listItems: ArrayList<String>) {
+
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+        adapter = BarChartAdapter(requireContext(), listItems, this)
+        binding.recyclerView.adapter = adapter
+
+    }
+
+    override fun onClick(item: String?, position: Int) {
+        showBarChart(graphModel[position], binding.barChart)
+
     }
 
 

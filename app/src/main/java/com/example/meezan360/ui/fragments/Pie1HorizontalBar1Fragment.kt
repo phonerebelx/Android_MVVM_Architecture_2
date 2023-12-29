@@ -67,11 +67,11 @@ class Pie1HorizontalBar1Fragment(
             val colors: ArrayList<Int> = arrayListOf()
             val percentages: ArrayList<Float> = arrayListOf()
 
-            graph2.barChartModel.forEachIndexed { index, _ ->
-                labels.add(graph2.barChartModel[index].key)
-                entries.add(BarEntry(index.toFloat(), graph2.barChartModel[index].value.toFloat()))
-                colors.add(Color.parseColor(graph2.barChartModel[index].valueColor))
-                graph2.barChartModel[index].percentage?.let { percentages.add(it) }
+            graph2.barChartModel.forEachIndexed { index, barChartModel ->
+                labels.add(barChartModel.key)
+                entries.add(BarEntry(index.toFloat(), barChartModel.value))
+                colors.add(Color.parseColor(barChartModel.valueColor))
+                barChartModel.percentage?.let { percentages.add(it) }
             }
 
 

@@ -89,8 +89,9 @@ class BarChartFragment(
         val colorsTarget = ArrayList<Int>() //for squares
 
         for (index in barChartModel.indices) {
-            entries.add(BarEntry(index.toFloat(), barChartModel[index].value.toFloat()))
-            scatterEntries.add(Entry(index.toFloat(), barChartModel[index].target.toFloat()))
+            entries.add(BarEntry(index.toFloat(), barChartModel[index].value))
+            barChartModel[index].target?.let { Entry(index.toFloat(), it) }
+                ?.let { scatterEntries.add(it) }
             labels.add(barChartModel[index].key)
             colorsBar.add(Color.parseColor(barChartModel[index].valueColor))
             colorsTarget.add(Color.parseColor(barChartModel[index].targetColor))
