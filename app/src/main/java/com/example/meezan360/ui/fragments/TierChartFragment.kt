@@ -59,7 +59,6 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             mData.add(ValueDataEntry(tierChartDataModel.key, tierChartDataModel.value))
             colors.add(Color.parseColor(tierChartDataModel.color))
         }
-
         pyramidChart.apply {
             data(mData as List<DataEntry>?)
 //            fill(colors)
@@ -129,7 +128,7 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 context,
-                LinearLayoutManager.HORIZONTAL,
+                LinearLayoutManager.VERTICAL,
                 false
             )
         adapter = BarChartAdapter(requireContext(), listItems, this)

@@ -232,7 +232,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                             binding.recyclerView.visibility = View.GONE
                         }
 
-                        showBarChart(graphModel[0], binding.barChart, false)
+                        showBarChart(graphModel[0], binding.barChart, true)
 
                     }
                 }

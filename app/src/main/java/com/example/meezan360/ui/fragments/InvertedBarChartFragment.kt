@@ -50,7 +50,6 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
         }
         handleAPIResponse()
 
-//        showBarChart()
         return binding.root
     }
 

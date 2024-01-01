@@ -8,8 +8,9 @@ import com.google.gson.annotations.SerializedName
 data class HorizontalGraphModel(
     @SerializedName("type") var type: String,
     @SerializedName("data") var barChartModel: ArrayList<HorizontalBarChartDataModel>,
-
     //
     @SerializedName("label") var label: String?,
-    @SerializedName("description") var description: String?
+    @SerializedName("description") var description: String?,
+    //for line chart
+    @SerializedName("color") var color: String?
 )
