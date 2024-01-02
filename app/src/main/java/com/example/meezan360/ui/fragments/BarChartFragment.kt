@@ -146,6 +146,7 @@ class BarChartFragment(
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
             data = combineData
+            animateY(800)
             invalidate()
         }
     }
@@ -194,7 +195,7 @@ class BarChartFragment(
         }
     }
 
-    override fun onClick(item: String?, position: Int) {
+    override fun onClick(item: String?, position: Int, checked: Boolean?) {
         showCombineChart(graphModel[position].barChartModel, binding.combineChart)
     }
 

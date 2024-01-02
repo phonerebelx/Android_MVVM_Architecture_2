@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.interfaces.OnItemClickListener
-import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 
 class BarChartAdapter(
     val context: Context,

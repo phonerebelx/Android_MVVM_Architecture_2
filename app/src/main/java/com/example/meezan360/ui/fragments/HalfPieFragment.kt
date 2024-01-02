@@ -26,7 +26,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) : Fragment(),
     OnItemClickListener {
 
@@ -39,7 +38,7 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProductWiseChartBinding.inflate(layoutInflater)
+        binding = FragmentProductWiseChartBinding.inflate(inflater, container, false)
         binding.tvTitle.text = dataModel.cardTitle
         myViewModel.viewModelScope.launch {
             myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
@@ -77,7 +76,7 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
         binding.pieChart.apply {
             isRotationEnabled = false
             description.isEnabled = false
-            setDrawSliceText(false) //text inside pie charts
+            setDrawSliceText(false)
             rotationAngle = 180f
             maxAngle = 180f
             legend.isEnabled = false
@@ -103,7 +102,6 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
-
                         val responseBody = it.data?.body()
                         val recyclerViewItems: ArrayList<String> = arrayListOf()
 
@@ -126,38 +124,30 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
                 }
             }
         }
-
     }
 
-
     private fun setupRecyclerView(listItems: ArrayList<String>) {
-
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
-                context,
+                requireContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
         adapter = BarChartAdapter(requireContext(), listItems, this)
         binding.recyclerView.adapter = adapter
-
     }
 
     private fun setupRecyclerView2(listItems: ArrayList<TierChartDataModel>) {
-
         binding.recyclerView2.layoutManager =
             LinearLayoutManager(
-                context,
+                requireContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
         binding.recyclerView2.adapter = HalfPieAdapter(requireContext(), listItems)
-
     }
 
-
-    override fun onClick(item: String?, position: Int) {
+    override fun onClick(item: String?, position: Int, checked: Boolean?) {
         showPieChart(graphModel[position])
     }
-
 }

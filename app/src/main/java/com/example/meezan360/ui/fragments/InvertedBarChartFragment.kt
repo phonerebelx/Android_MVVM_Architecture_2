@@ -88,7 +88,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             setTouchEnabled(false)
             data = barData
-
+            animateY(800)
             invalidate()
         }
 
@@ -167,7 +167,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
 
     }
 
-    override fun onClick(item: String?, position: Int) {
+    override fun onClick(item: String?, position: Int, checked: Boolean?) {
         showBarChart(graphModel[position], binding.barChart)
 
     }

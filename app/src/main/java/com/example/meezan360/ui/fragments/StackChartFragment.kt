@@ -2,12 +2,12 @@ package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,7 +32,6 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
     Fragment(), OnItemClickListener {
 
@@ -40,11 +39,12 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
     private val myViewModel: DashboardViewModel by viewModel()
     private val graphModel: ArrayList<StackGraphModel> = arrayListOf()
     private lateinit var adapter: BarChartAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentOnOffBranchesBinding.inflate(layoutInflater)
+        binding = FragmentOnOffBranchesBinding.inflate(inflater, container, false)
         binding.tvTitle.text = dataModel.cardTitle
         myViewModel.viewModelScope.launch {
             myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
@@ -52,15 +52,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         handleAPIResponse(dataModel.cardTypeId)
 
         binding.switchTD.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
-                showBarChart(
-                    graphModel[0],
-                    binding.barChart,
-                    true
-                )
-            else
-                showBarChart(graphModel[0], binding.barChart, false)
-            //when there is switch the graphmodel will always have one main object
+            showBarChart(graphModel[0], binding.barChart, isChecked)
         }
 
         return binding.root
@@ -71,65 +63,29 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         barChart: BarChart,
         switchTD: Boolean
     ) {
-
         val entries: ArrayList<BarEntry> = arrayListOf()
         val colors: ArrayList<Int> = arrayListOf()
         val labels = ArrayList<String>()
-        var tdIndex: Int? = null
-        stackChartModel.stackChartData.forEachIndexed { i, stackChartDataModel ->
-            //for TD switch
-            var index: Int? = null
-            if (stackChartDataModel.key.equals("term", true) && !switchTD) {
-                tdIndex = i
-            } else {
-                index = i
-            }
-            if (index != null) {
+
+        stackChartModel.stackChartData.forEachIndexed { _, stackChartDataModel ->
+            if (!(stackChartDataModel.key.equals("term", true) && !switchTD)) {
                 val barEntry = BarEntry(
-                    index.toFloat(),
+                    entries.size.toFloat(),
                     floatArrayOf(
-                        stackChartModel.stackChartData[index].value1.toFloat(),
-                        stackChartModel.stackChartData[index].value2.toFloat()
+                        stackChartDataModel.value1.toFloat(),
+                        stackChartDataModel.value2.toFloat()
                     )
                 )
                 entries.add(barEntry)
-                colors.add(Color.parseColor(stackChartModel.stackChartData[index].value1Color))
-                colors.add(Color.parseColor(stackChartModel.stackChartData[index].value2Color))
-                labels.add(stackChartModel.stackChartData[index].key)
+                colors.add(Color.parseColor(stackChartDataModel.value1Color))
+                colors.add(Color.parseColor(stackChartDataModel.value2Color))
+                labels.add(stackChartDataModel.key)
             }
         }
-
-
-//        //for switch
-//        if (!switchTD) {
-//
-//            val arraytwo = ArrayList<BarEntry>()
-//            tdIndex?.let { entries.drop(it) }
-//            if (arraytwo != null) {
-//                for (i in arraytwo.indices) {
-//                    arraytwo.add(
-//                        BarEntry(
-//                            i.toFloat(), floatArrayOf(
-//                                entries.value1.toFloat(),
-//                                stackChartDataModel.value2.toFloat()
-//                            )
-//                        )
-//                    )
-//                }
-//            }
-//
-//            tdIndex?.let {
-//                entries.removeAt(it)
-//                labels.removeAt(it)
-//                colors.removeAt(it)
-//            }
-//
-//        }
 
         legendSetup(stackChartModel.legend)
 
         val barDataSet = BarDataSet(entries, "Target")
-
         barDataSet.setDrawValues(true)
         barDataSet.valueTextColor = Color.WHITE
         barDataSet.valueTextSize = 6f
@@ -146,29 +102,27 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
             description.isEnabled = false
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.position =  XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.labelCount = entries.size
             xAxis.textSize = 7f
             setTouchEnabled(false)
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             data = barData
+            animateY(800)
             invalidate()
         }
-
     }
 
     private fun setupRecyclerView(listItems: ArrayList<String>) {
-
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
-                context,
+                requireContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
         adapter = BarChartAdapter(requireContext(), listItems, this)
         binding.recyclerView.adapter = adapter
-
     }
 
     private fun legendSetup(myList: ArrayList<MyLegend>) {
@@ -176,20 +130,18 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
         legend.xEntrySpace = 25f
-        val legendEntries = ArrayList<LegendEntry>()
-        myList.forEachIndexed { index, legend ->
-            legendEntries.add(
+        legend.setCustom(
+            myList.map { legend1 ->
                 LegendEntry(
-                    myList[index].legendValue,
+                    legend1.legendValue,
                     Legend.LegendForm.CIRCLE,
                     8f,
                     0f,
                     null,
-                    Color.parseColor(myList[index].legendColor)
+                    Color.parseColor(legend1.legendColor)
                 )
-            )
-        }
-        legend.setCustom(legendEntries)
+            }
+        )
     }
 
     private fun handleAPIResponse(cardTypeId: String) {
@@ -209,7 +161,6 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
-
                         val responseBody = it.data?.body()
                         val recyclerViewItems: ArrayList<String> = arrayListOf()
 
@@ -233,18 +184,13 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                         }
 
                         showBarChart(graphModel[0], binding.barChart, true)
-
                     }
                 }
             }
         }
-
     }
 
-    override fun onClick(item: String?, position: Int) {
+    override fun onClick(item: String?, position: Int, checked: Boolean?) {
         showBarChart(graphModel[position], binding.barChart, false)
-
     }
-
-
 }

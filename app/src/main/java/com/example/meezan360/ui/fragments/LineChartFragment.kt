@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.meezan360.adapter.BarChartAdapter
+import com.example.meezan360.adapter.LineChartAdapter
 import com.example.meezan360.databinding.FragmentDepositTrendBinding
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
@@ -22,6 +22,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,8 +32,9 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
     Fragment(), OnItemClickListener {
     private lateinit var binding: FragmentDepositTrendBinding
     private val myViewModel: DashboardViewModel by viewModel()
-    private lateinit var adapter: BarChartAdapter
+    private lateinit var adapter: LineChartAdapter
     private val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
+    val positionsList = ArrayList<Int>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,34 +48,24 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         return binding.root
     }
 
-    private fun drawLineChart(tierGraphModel: HorizontalGraphModel) {
+    private fun drawLineChart(
+        tierGraphModel: ArrayList<HorizontalGraphModel>,
+        positionsList: ArrayList<Int>
+    ) {
 
-        val lineEntries = listOf(
-            Entry(2016F, 0F),
-            Entry(2017F, 25000F),
-            Entry(2018F, 0F),
-            Entry(2019F, 27000F),
-            Entry(2020F, 28000F),
-            Entry(2021F, 35000F),
-            Entry(2022F, 40000F)
-        )
-        val lineEntries2 = listOf(
-            Entry(2016F, 15000F),
-            Entry(2017F, 27000F),
-            Entry(2018F, 7F),
-            Entry(2019F, 22000F),
-            Entry(2020F, 0F),
-            Entry(2021F, 30000F),
-            Entry(2022F, 34000F)
-        )
+        val listOfDataSet: MutableList<LineDataSet> = mutableListOf()
 
-        val lineDataSet = LineDataSet(lineEntries, "")
-        val lineDataSet2 = LineDataSet(lineEntries2, "")
+        for (i in positionsList) {
+            val lineEntries = ArrayList<Entry>()
+            for (dataModel in tierGraphModel[i].barChartModel) {
+                lineEntries.add(Entry(dataModel.key.toFloat(), dataModel.value))
+            }
+            val lineDataSet = LineDataSet(lineEntries, "")
+            customizationLine(lineDataSet, Color.parseColor(tierGraphModel[i].color))
+            listOfDataSet.add(lineDataSet)
+        }
 
-        customizationLine(lineDataSet, Color.parseColor("#755AB2"))
-        customizationLine(lineDataSet2, Color.parseColor("#FCD243"))
-
-        val lineData = LineData(listOf(lineDataSet, lineDataSet2))
+        val lineData = LineData(listOfDataSet as List<ILineDataSet>?)
 
         binding.lineChart.apply {
             description.isEnabled = false
@@ -85,8 +77,9 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.isGranularityEnabled = true
             xAxis.granularity = 1.0f
-            xAxis.labelCount = lineDataSet.entryCount
+//            xAxis.labelCount = lineEntries.count()
             data = lineData
+            invalidate()
         }
 
     }
@@ -139,9 +132,10 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
                             }
                         }
 
-                        setupRecyclerView(recyclerViewItems)
+                        setupRecyclerView(graphModel)
 
-                        drawLineChart(graphModel[0])
+                        positionsList.add(0)//for first line to show
+                        drawLineChart(graphModel, positionsList)
 
                     }
                 }
@@ -150,7 +144,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
 
     }
 
-    private fun setupRecyclerView(listItems: ArrayList<String>) {
+    private fun setupRecyclerView(listItems: ArrayList<HorizontalGraphModel>) {
 
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
@@ -158,13 +152,21 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
                 LinearLayoutManager.HORIZONTAL,
                 false
             )
-        adapter = BarChartAdapter(requireContext(), listItems, this)
+        adapter = LineChartAdapter(requireContext(), listItems, this)
         binding.recyclerView.adapter = adapter
 
     }
 
-    override fun onClick(item: String?, position: Int) {
+    override fun onClick(item: String?, position: Int, checked: Boolean?) {
 
+        if (checked == true) {
+            positionsList.add(position)
+        } else {
+            positionsList.removeAll {
+                it == position
+            }
+        }
+        drawLineChart(graphModel, positionsList)
     }
 
 

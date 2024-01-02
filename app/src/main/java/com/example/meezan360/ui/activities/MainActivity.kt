@@ -127,12 +127,15 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                         footerList[index]
                     )
                 )
+
                 "bar_chart_single_value" ->
-                    fragmentsList.add( InvertedBarChartFragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
-                    ))
+                    fragmentsList.add(
+                        InvertedBarChartFragment(
+                            kpiId,
+                            tagName,
+                            footerList[index]
+                        )
+                    )
 
                 "tier_chart" -> fragmentsList.add(
                     TierChartFragment(
@@ -158,12 +161,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                         footerList[index]
                     )
                 )
-                //add else branch
             }
         }
-        //            fragmentsList.add(
-//                CardMapToFragment.valueOf(footerList[index].card_type).getFragmentInstance()
-//            )
 
         viewPagerAdapter = FragmentPagerAdapter(supportFragmentManager, lifecycle)
         viewPagerAdapter?.setFragmentsForItem(item, fragmentsList)
@@ -331,11 +330,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                     }
 
                     is ResponseModel.Loading -> {
-//                        Toast.makeText(
-//                        this@MainActivity,
-//                        "Loading..",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
                     }
 
                     is ResponseModel.Success -> {

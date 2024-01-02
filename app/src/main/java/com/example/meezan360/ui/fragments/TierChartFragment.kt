@@ -136,7 +136,7 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
 
     }
 
-    override fun onClick(item: String?, position: Int) {
+    override fun onClick(item: String?, position: Int, checked: Boolean?) {
         setupPyramidChart(graphModel[position])
 
     }

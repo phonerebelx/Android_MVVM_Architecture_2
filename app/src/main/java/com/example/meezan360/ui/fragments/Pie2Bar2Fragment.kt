@@ -145,6 +145,7 @@ class Pie2Bar2Fragment(
             data = barData
             description.isEnabled = false
             legend.isEnabled = false
+            animateY(800)
             invalidate()
         }
     }

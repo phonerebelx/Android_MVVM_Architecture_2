@@ -64,19 +64,25 @@ class Pie1HorizontalBar1Fragment(
         graph2?.let {
             val labels: ArrayList<String> = arrayListOf()
             val entries: ArrayList<BarEntry> = arrayListOf()
+            val targetEntries: ArrayList<BarEntry> = arrayListOf()
             val colors: ArrayList<Int> = arrayListOf()
+            val targetColors: ArrayList<Int> = arrayListOf()
             val percentages: ArrayList<Float> = arrayListOf()
 
             graph2.barChartModel.forEachIndexed { index, barChartModel ->
                 labels.add(barChartModel.key)
                 entries.add(BarEntry(index.toFloat(), barChartModel.value))
+                targetEntries.add(BarEntry(index.toFloat(), barChartModel.target!!))
                 colors.add(Color.parseColor(barChartModel.valueColor))
+                targetColors.add(Color.parseColor(barChartModel.targetColor))
                 barChartModel.percentage?.let { percentages.add(it) }
             }
 
-
             val barDataSet = BarDataSet(entries, "Target")
             barDataSet.colors = colors
+
+            val barDataSet2 = BarDataSet(targetEntries, "Target2")
+            barDataSet2.colors = targetColors
 
             //for text inside horizontal bars
             var index = 0
@@ -95,7 +101,7 @@ class Pie1HorizontalBar1Fragment(
             barDataSet.valueTextSize = 8f
             barDataSet.valueTextColor = Color.WHITE
 
-            val mData = BarData(barDataSet)
+            val mData = BarData(barDataSet2,barDataSet)
             mData.barWidth = 0.7f
             mData.isHighlightEnabled = false
 
@@ -133,6 +139,7 @@ class Pie1HorizontalBar1Fragment(
                 axisRight.isEnabled = false
                 data = mData
                 description.isEnabled = false
+                animateY(800)
                 invalidate()
             }
         }
