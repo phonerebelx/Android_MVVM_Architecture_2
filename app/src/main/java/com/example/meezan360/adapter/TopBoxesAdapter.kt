@@ -17,7 +17,7 @@ class TopBoxesAdapter(val context: Context,private val itemList: List<TopBoxesMo
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.detail_item, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.top_box_item, parent, false)
         return ViewHolder(v)
     }
 

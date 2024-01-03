@@ -47,7 +47,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@+id/tvDashboard"
                 tools:itemCount="3"
-                tools:listitem="@layout/detail_item" />
+                tools:listitem="@layout/top_box_item" />
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart"

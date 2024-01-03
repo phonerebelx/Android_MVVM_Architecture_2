@@ -14,27 +14,19 @@
         android:text="Tier Wise Deposit"
         android:textSize="@dimen/_12ssp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2">
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:itemCount="4"
+        tools:listitem="@layout/bar_chart_item" />
 
-        <com.anychart.AnyChartView
-            android:id="@+id/anyChartView"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_200sdp"
-            android:layout_weight="1.7" />
+    <com.anychart.AnyChartView
+        android:id="@+id/anyChartView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="4"
-            tools:listitem="@layout/bar_chart_item" />
-
-    </LinearLayout>
 
 </LinearLayout>

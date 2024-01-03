@@ -112,15 +112,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                     )
                 )
 
-                "stack_with_toggle" -> fragmentsList.add(
-                    StackChartFragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
-                    )
-                )
-
-                "stack_chart" -> fragmentsList.add(
+                "stack_chart", "stack_with_toggle" -> fragmentsList.add(
                     StackChartFragment(
                         kpiId,
                         tagName,
@@ -146,13 +138,20 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 )
 
                 "half_pie" -> fragmentsList.add(HalfPieFragment(kpiId, tagName, footerList[index]))
-                "line_chart" -> fragmentsList.add(
+                "2_axis_line_chart", "line_chart" -> fragmentsList.add(
                     LineChartFragment(
                         kpiId,
                         tagName,
                         footerList[index]
                     )
                 )
+//                "line_chart" -> fragmentsList.add(
+//                    LineChartFragment(
+//                        kpiId,
+//                        tagName,
+//                        footerList[index]
+//                    )
+//                )
 
                 "horizontal_bar" -> fragmentsList.add(
                     HorizontalBarFragment(

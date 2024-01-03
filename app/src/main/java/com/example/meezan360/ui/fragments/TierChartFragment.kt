@@ -128,7 +128,7 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 context,
-                LinearLayoutManager.VERTICAL,
+                LinearLayoutManager.HORIZONTAL,
                 false
             )
         adapter = BarChartAdapter(requireContext(), listItems, this)

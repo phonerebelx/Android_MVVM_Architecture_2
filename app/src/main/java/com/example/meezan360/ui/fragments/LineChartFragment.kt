@@ -34,7 +34,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
     private val myViewModel: DashboardViewModel by viewModel()
     private lateinit var adapter: LineChartAdapter
     private val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
-    val positionsList = ArrayList<Int>()
+    private val positionsList = ArrayList<Int>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,9 +57,12 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
 
         for (i in positionsList) {
             val lineEntries = ArrayList<Entry>()
-            for (dataModel in tierGraphModel[i].barChartModel) {
-                lineEntries.add(Entry(dataModel.key.toFloat(), dataModel.value))
+            tierGraphModel[i].barChartModel.forEachIndexed { index, dataModel ->
+                lineEntries.add(Entry(index.toFloat(), dataModel.value))
             }
+//            for (dataModel in tierGraphModel[i].barChartModel) {
+//                lineEntries.add(Entry(dataModel.key.toFloat(), dataModel.value))
+//            }
             val lineDataSet = LineDataSet(lineEntries, "")
             customizationLine(lineDataSet, Color.parseColor(tierGraphModel[i].color))
             listOfDataSet.add(lineDataSet)
