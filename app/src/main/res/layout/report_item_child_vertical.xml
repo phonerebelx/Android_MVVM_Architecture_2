@@ -8,14 +8,17 @@
     app:cardBackgroundColor="@color/purple_dark"
     app:cardCornerRadius="@dimen/_5sdp">
 
+
+
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHorizontalChild"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="6"
-        tools:listitem="@layout/report_item_child" />
+        tools:listitem="@layout/report_item_child_horizontal" />
 
 
 </com.google.android.material.card.MaterialCardView>

@@ -3,6 +3,7 @@ package com.example.meezan360.network
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
+import com.example.meezan360.model.reports.DepositObject
 import com.google.gson.JsonElement
 import retrofit2.Response
 import retrofit2.http.GET
@@ -32,4 +33,8 @@ interface APIService {
         @Query("tag_name") tagName: String,
         @Query("card_id") cardId: String,
     ): Response<JsonElement>
+
+    @GET("360/GetDepositDetails")
+    suspend fun getDepositDetails(
+    ): Response<DepositObject>
 }

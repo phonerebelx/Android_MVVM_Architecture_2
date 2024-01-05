@@ -1,9 +1,11 @@
 package com.example.meezan360.ui.activities
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
@@ -80,7 +82,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
         binding.btnAVGDeposit.setOnClickListener(this)
     }
 
-    private fun footerSetupUp(item: String, footerData: List<FooterModel>?, defaultDeposit: Int) {
+    private fun footerSetupUp(footerData: List<FooterModel>?, defaultDeposit: Int) {
 
         val footerList = footerData?.get(defaultDeposit)?.dataModel
         val fragmentsList: ArrayList<Fragment> = arrayListOf()
@@ -90,81 +92,57 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             when (footerList[index].cardType) {
                 "2pie_2bar" -> fragmentsList.add(
                     Pie2Bar2Fragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
+                        kpiId, tagName, footerList[index]
                     )
                 )
 
                 "1pie_1horizontal_bar" -> fragmentsList.add(
                     Pie1HorizontalBar1Fragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
+                        kpiId, tagName, footerList[index]
                     )
                 )
 
                 "bar_chart" -> fragmentsList.add(
                     BarChartFragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
+                        kpiId, tagName, footerList[index]
                     )
                 )
 
                 "stack_chart", "stack_with_toggle" -> fragmentsList.add(
                     StackChartFragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
+                        kpiId, tagName, footerList[index]
                     )
                 )
 
-                "bar_chart_single_value" ->
-                    fragmentsList.add(
-                        InvertedBarChartFragment(
-                            kpiId,
-                            tagName,
-                            footerList[index]
-                        )
+                "bar_chart_single_value" -> fragmentsList.add(
+                    InvertedBarChartFragment(
+                        kpiId, tagName, footerList[index]
                     )
+                )
 
                 "tier_chart" -> fragmentsList.add(
                     TierChartFragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
+                        kpiId, tagName, footerList[index]
                     )
                 )
 
                 "half_pie" -> fragmentsList.add(HalfPieFragment(kpiId, tagName, footerList[index]))
                 "2_axis_line_chart", "line_chart" -> fragmentsList.add(
                     LineChartFragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
+                        kpiId, tagName, footerList[index]
                     )
                 )
-//                "line_chart" -> fragmentsList.add(
-//                    LineChartFragment(
-//                        kpiId,
-//                        tagName,
-//                        footerList[index]
-//                    )
-//                )
 
                 "horizontal_bar" -> fragmentsList.add(
                     HorizontalBarFragment(
-                        kpiId,
-                        tagName,
-                        footerList[index]
+                        kpiId, tagName, footerList[index]
                     )
                 )
             }
         }
 
         viewPagerAdapter = FragmentPagerAdapter(supportFragmentManager, lifecycle)
-        viewPagerAdapter?.setFragmentsForItem(item, fragmentsList)
+        viewPagerAdapter?.setFragmentsForItem("", fragmentsList)
         binding.viewpager.adapter = viewPagerAdapter
     }
 
@@ -212,7 +190,6 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
             kpiId = kpi?.get(currentIndex)?.kpiId
             setupHeader(kpiId)
-//            footerSetupUp(mCenterText, footerData)
 
             tagName = if (kpiId == 1) {
                 Constants.peDeposit
@@ -220,9 +197,12 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 Constants.general
             }
 
-
             lastSelectedSliceIndex = currentIndex // Update the last selected slice index
             binding.pieChart.invalidate() // Refresh the chart
+        } else {
+            //same pie chart item is clicked
+            val intent = Intent(this, ReportLevel1Activity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -287,8 +267,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             setCenterTextColor(Color.parseColor("#765CB4"))
             data = PieData(pieDataSet)
             highlightValue(
-                selectedKpiIndex.toFloat(),
-                selectedKpiIndex
+                selectedKpiIndex.toFloat(), selectedKpiIndex
             ) //Select First element by default i.e. Deposit
             invalidate()
         }
@@ -319,9 +298,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 when (it) {
                     is ResponseModel.Error -> {
                         Toast.makeText(
-                            this@MainActivity,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
+                            this@MainActivity, "error: " + it.message, Toast.LENGTH_SHORT
                         ).show()
                     }
 
@@ -345,9 +322,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 when (it) {
                     is ResponseModel.Error -> {
                         Toast.makeText(
-                            this@MainActivity,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
+                            this@MainActivity, "error: " + it.message, Toast.LENGTH_SHORT
                         ).show()
                     }
 
@@ -366,19 +341,16 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
                         //for header
                         val topBoxesData = it.data?.body()?.topBoxes
-                        binding.recyclerView.layoutManager =
-                            LinearLayoutManager(
-                                this@MainActivity,
-                                LinearLayoutManager.HORIZONTAL,
-                                false
-                            )
+                        binding.recyclerView.layoutManager = LinearLayoutManager(
+                            this@MainActivity, LinearLayoutManager.HORIZONTAL, false
+                        )
                         adapter = TopBoxesAdapter(applicationContext, topBoxesData)
                         binding.recyclerView.adapter = adapter
 
                         //for footer
                         val footerData = it.data?.body()?.footer
 
-                        footerSetupUp("Deposit", footerData, 0)
+                        footerSetupUp(footerData, 0)
 
                     }
                 }

@@ -1,17 +1,17 @@
 package com.example.meezan360.ui.activities
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.Window
-import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meezan360.databinding.ActivitySplashBinding
+import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import org.koin.android.ext.android.inject
 
 
 class SplashActivity : AppCompatActivity() {
 
     lateinit var binding: ActivitySplashBinding
+    private val sharedPreferenceManager: SharedPreferencesManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +21,15 @@ class SplashActivity : AppCompatActivity() {
 
 
         binding.tvSwipe.setOnClickListener {
-            var intent = Intent(this, LoginScreen::class.java)
-            startActivity(intent)
-            finish()
+            if (sharedPreferenceManager.getToken() != null) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                val intent = Intent(this, LoginScreen::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
 
     }
