@@ -1,9 +1,12 @@
 package com.example.meezan360.adapter
 
 import android.content.Context
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
@@ -30,13 +33,33 @@ class ReportParentAdapter(
             return
         }
 
+//        val verticalHeaderAdapter = ReportChildHeaderAdapter(myContext, item.column)
+//        holder.rvVerticalChildHeaders.adapter = verticalHeaderAdapter
+
+        item.column.forEachIndexed { index, column ->
+            val valueTV = TextView(myContext)
+            valueTV.text = column.header
+            valueTV.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                myContext.resources.getDimension(R.dimen.text_size_small)
+            )
+            valueTV.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
+            valueTV.setTextColor(myContext.resources.getColor(R.color.white))
+            valueTV.layoutParams = LinearLayout.LayoutParams(
+                myContext.resources.getDimension(com.intuit.sdp.R.dimen._60sdp).toInt(),
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.CENTER
+            }
+            holder.headerLayout.addView(valueTV);
+        }
+
+        val columnsData = Report.getDataArray(item.column)
+
         val verticalAdapter =
-            ReportChildVerticalAdapter(myContext, item.column[0].data, item.column)
+            ReportChildVerticalAdapter(myContext, item.column[0].data, columnsData)
         holder.rvVerticalChild.adapter = verticalAdapter
 
-        val verticalAdapterHeader =
-            ReportChildVerticalAdapter(myContext, item.column[0].data, item.column)
-        holder.rvVerticalChildHeaders.adapter = verticalAdapterHeader
     }
 
     override fun getItemCount(): Int {
@@ -46,7 +69,8 @@ class ReportParentAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val rvVerticalChild: RecyclerView = itemView.findViewById(R.id.rvVerticalChild)
-        val rvVerticalChildHeaders: RecyclerView =
-            itemView.findViewById(R.id.rvVerticalChildHeaders)
+        val headerLayout: LinearLayout = itemView.findViewById(R.id.headerLayout)
+//        val rvVerticalChildHeaders: RecyclerView =
+//            itemView.findViewById(R.id.rvVerticalChildHeaders)
     }
 }

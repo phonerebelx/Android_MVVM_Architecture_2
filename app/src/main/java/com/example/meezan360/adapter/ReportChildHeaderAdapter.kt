@@ -7,27 +7,27 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
-import com.example.meezan360.model.reports.ReportsColumnData
+import com.example.meezan360.model.reports.Column
 
 
-class ReportChildHorizontalAdapter(
+class ReportChildHeaderAdapter(
     val myContext: Context,
-    private val itemList: ArrayList<ReportsColumnData>,
+    private val itemList: ArrayList<Column>,
 ) :
-    RecyclerView.Adapter<ReportChildHorizontalAdapter.ViewHolder>() {
+    RecyclerView.Adapter<ReportChildHeaderAdapter.ViewHolder>() {
     private var selectedPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.report_item_child_horizontal, parent, false)
+                .inflate(R.layout.report_item_child_header, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = itemList[position]
-        holder.tvChild.text = item.value
 
+        holder.tvChild.text = item.header
     }
 
     override fun getItemCount(): Int {

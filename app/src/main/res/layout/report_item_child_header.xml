@@ -6,11 +6,11 @@
 
     <TextView
         android:id="@+id/tvChild"
-        android:layout_width="@dimen/_60sdp"
+        android:layout_width="@dimen/_80sdp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:paddingStart="@dimen/_5sdp"
+        android:paddingEnd="@dimen/_15sdp"
         android:text="319"
-        android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_small" />
 

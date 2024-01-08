@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
-import com.example.meezan360.model.reports.Column
-import com.example.meezan360.model.reports.Data
+import com.example.meezan360.model.reports.ReportDataArrayModel
+import com.example.meezan360.model.reports.ReportsColumnData
 
 
 class ReportChildVerticalAdapter(
     private val myContext: Context,
-    private val dataArrayList: ArrayList<Data>,
-    private val columnList: ArrayList<Column>,
+    private val dataArrayList: ArrayList<ReportsColumnData>,
+    private val columnList: ArrayList<ReportDataArrayModel>,
 ) :
     RecyclerView.Adapter<ReportChildVerticalAdapter.ViewHolder>() {
     private var selectedPosition = 0
@@ -27,12 +27,12 @@ class ReportChildVerticalAdapter(
 
         val item = dataArrayList[position]
 
-        val horizontalAdapter = ReportChildHorizontalAdapter(myContext, columnList)
+        val horizontalAdapter = ReportChildHorizontalAdapter(myContext, columnList[position].data)
         holder.rvHorizontalChild.adapter = horizontalAdapter
     }
 
     override fun getItemCount(): Int {
-        return dataArrayList.size //for headers
+        return dataArrayList.size
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

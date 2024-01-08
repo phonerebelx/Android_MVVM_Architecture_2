@@ -7,5 +7,28 @@ data class Report(
     @SerializedName("table_title") var tableTitle: String,
     @SerializedName("is_clickable") var isClickable: String,
     @SerializedName("inner_report_type") var innerReportType: String,
-    @SerializedName("column") var column: ArrayList<Column> = arrayListOf()
+    @SerializedName("column") var column: ArrayList<Column> = arrayListOf(),
+) {
+    companion object {
+        fun getDataArray(columns: ArrayList<Column>): ArrayList<ReportDataArrayModel> {
+            val result: ArrayList<ReportDataArrayModel> = arrayListOf()
+
+            columns.first().data.forEachIndexed { indexRow, data ->
+                val columData = ArrayList<ReportsColumnData>()
+                columns.forEachIndexed { index, column ->
+                    if (column.data.count() > indexRow) {
+                        columData.add(column.data[indexRow])
+                    }
+                }
+                result.add(ReportDataArrayModel(columData))
+
+            }
+            return result
+        }
+    }
+}
+
+data class ReportDataArrayModel (
+    var data: ArrayList<ReportsColumnData>
 )
+
