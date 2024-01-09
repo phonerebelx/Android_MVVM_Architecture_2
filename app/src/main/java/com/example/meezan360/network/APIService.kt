@@ -4,6 +4,7 @@ import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.reports.DepositObject
+import com.example.meezan360.model.reports.Level2ReportModel
 import com.google.gson.JsonElement
 import retrofit2.Response
 import retrofit2.http.GET
@@ -37,4 +38,10 @@ interface APIService {
     @GET("360/GetDepositDetails")
     suspend fun getDepositDetails(
     ): Response<DepositObject>
+
+    @GET("360/LevelTwo")
+    suspend fun getLevelTwo(
+        @Query("kpi_id") kpiId: String,
+        @Query("table_id") tableId: String
+    ): Response<Level2ReportModel>
 }

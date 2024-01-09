@@ -33,67 +33,78 @@
         <!--            tools:listitem="@layout/report_item_child_vertical" />-->
 
 
-        <LinearLayout
-            android:id="@+id/headerLayout"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginEnd="@dimen/_2sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@color/purple_dark"
-            android:orientation="horizontal">
+            app:cardBackgroundColor="@color/purple_dark"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:cardElevation="@dimen/_3sdp">
 
-<!--            <TextView-->
-<!--                android:layout_width="@dimen/_60sdp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text=""-->
-<!--                android:textSize="@dimen/text_size_small" />-->
+            <LinearLayout
+                android:id="@+id/headerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-<!--            <TextView-->
-<!--                android:layout_width="@dimen/_60sdp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="CA"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="@dimen/text_size_small" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="@dimen/_60sdp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text=""-->
+<!--                    android:textSize="@dimen/text_size_small" />-->
 
-<!--            <TextView-->
-<!--                android:layout_width="@dimen/_60sdp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="SA"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="@dimen/text_size_small" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="@dimen/_60sdp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="CA"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/text_size_small" />-->
 
-<!--            <TextView-->
-<!--                android:layout_width="@dimen/_60sdp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="TD"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="@dimen/text_size_small" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="@dimen/_60sdp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="SA"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/text_size_small" />-->
 
-<!--            <TextView-->
-<!--                android:layout_width="@dimen/_60sdp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="CASA"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="@dimen/text_size_small" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="@dimen/_60sdp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="TD"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/text_size_small" />-->
 
-<!--            <TextView-->
-<!--                android:layout_width="@dimen/_60sdp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:text="Total"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="@dimen/text_size_small" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="@dimen/_60sdp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="CASA"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/text_size_small" />-->
 
-        </LinearLayout>
+<!--                <TextView-->
+<!--                    android:layout_width="@dimen/_60sdp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="Total"-->
+<!--                    android:textAlignment="center"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/text_size_small" />-->
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvVerticalChild"
@@ -101,9 +112,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="vertical"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:itemCount="6"
-            android:overScrollMode="never"
             tools:listitem="@layout/report_item_child_vertical" />
 
     </LinearLayout>

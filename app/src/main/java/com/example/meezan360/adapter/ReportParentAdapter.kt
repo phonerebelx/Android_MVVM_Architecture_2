@@ -33,9 +33,7 @@ class ReportParentAdapter(
             return
         }
 
-//        val verticalHeaderAdapter = ReportChildHeaderAdapter(myContext, item.column)
-//        holder.rvVerticalChildHeaders.adapter = verticalHeaderAdapter
-
+        //it creates textview for header dynamically on the basis of column items
         item.column.forEachIndexed { index, column ->
             val valueTV = TextView(myContext)
             valueTV.text = column.header
@@ -51,7 +49,7 @@ class ReportParentAdapter(
             ).apply {
                 gravity = Gravity.CENTER
             }
-            holder.headerLayout.addView(valueTV);
+            holder.headerLayout.addView(valueTV)
         }
 
         val columnsData = Report.getDataArray(item.column)
@@ -70,7 +68,5 @@ class ReportParentAdapter(
         var tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val rvVerticalChild: RecyclerView = itemView.findViewById(R.id.rvVerticalChild)
         val headerLayout: LinearLayout = itemView.findViewById(R.id.headerLayout)
-//        val rvVerticalChildHeaders: RecyclerView =
-//            itemView.findViewById(R.id.rvVerticalChildHeaders)
     }
 }

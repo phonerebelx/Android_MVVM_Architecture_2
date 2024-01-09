@@ -11,7 +11,6 @@
         android:layout_gravity="center"
         android:text="319"
         android:textAlignment="center"
-        android:textColor="@color/white"
         android:textSize="@dimen/text_size_small" />
 
 </LinearLayout>

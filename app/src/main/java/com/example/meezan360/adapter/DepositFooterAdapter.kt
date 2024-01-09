@@ -7,34 +7,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
-import com.example.meezan360.model.reports.Column
+import com.example.meezan360.model.reports.FooterBoxes
 
 
-class ReportChildHeaderAdapter(
-    val myContext: Context,
-    private val itemList: ArrayList<Column>,
+class DepositFooterAdapter(
+    private var myContext: Context,
+    private val footerList: ArrayList<FooterBoxes>?,
 ) :
-    RecyclerView.Adapter<ReportChildHeaderAdapter.ViewHolder>() {
-    private var selectedPosition = 0
+    RecyclerView.Adapter<DepositFooterAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.report_item_child_header, parent, false)
+                .inflate(R.layout.deposit_report_footer_item, parent, false)
         return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        val item = itemList[position]
-
-        holder.tvChild.text = item.header
+        val item = footerList?.get(position)
+        holder.tvTitle.text = item?.title
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return footerList?.size ?: 0
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvChild: TextView = itemView.findViewById(R.id.tvChild)
+        var tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
     }
 }

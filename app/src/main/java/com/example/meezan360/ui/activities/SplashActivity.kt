@@ -18,18 +18,17 @@ class SplashActivity : AppCompatActivity() {
 
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        if (sharedPreferenceManager.getToken() != null) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         binding.tvSwipe.setOnClickListener {
-            if (sharedPreferenceManager.getToken() != null) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                val intent = Intent(this, LoginScreen::class.java)
-                startActivity(intent)
-                finish()
-            }
+            val intent = Intent(this, LoginScreen::class.java)
+            startActivity(intent)
+            finish()
+
         }
 
     }

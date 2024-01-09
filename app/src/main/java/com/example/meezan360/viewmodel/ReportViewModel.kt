@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.datamodule.repository.DataRepository
 import com.example.meezan360.model.reports.DepositObject
+import com.example.meezan360.model.reports.Level2ReportModel
 import com.example.meezan360.network.ResponseModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -14,6 +15,9 @@ class ReportViewModel(private var dataRepo: DataRepository?) : ViewModel() {
     val depositDetail =
         MutableStateFlow<ResponseModel<Response<DepositObject>>>(ResponseModel.Idle("Idle State"))
 
+    val levelTwo =
+        MutableStateFlow<ResponseModel<Response<Level2ReportModel>>>(ResponseModel.Idle("Idle State"))
+
     suspend fun getDepositDetails() {
         depositDetail.emit(ResponseModel.Loading())
         dataRepo?.getDepositDetails()?.collect {
@@ -23,4 +27,16 @@ class ReportViewModel(private var dataRepo: DataRepository?) : ViewModel() {
             }
         }
     }
+
+    suspend fun getLevelTwo(kpiId: String, tableId: String) {
+        levelTwo.emit(ResponseModel.Loading())
+        dataRepo?.getLevelTwo(kpiId, tableId)?.collect {
+            viewModelScope.launch {
+                if (it.isSuccessful) levelTwo.emit(ResponseModel.Success(it))
+                else levelTwo.emit(ResponseModel.Error(it.message()))
+            }
+        }
+    }
+
+
 }

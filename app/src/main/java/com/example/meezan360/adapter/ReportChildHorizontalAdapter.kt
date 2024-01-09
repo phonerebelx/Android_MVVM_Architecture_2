@@ -1,6 +1,7 @@
 package com.example.meezan360.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,7 @@ class ReportChildHorizontalAdapter(
 
         val item = itemList[position]
         holder.tvChild.text = item.value
-
+        holder.tvChild.setTextColor(Color.parseColor(item.valueColor))
     }
 
     override fun getItemCount(): Int {
