@@ -57,7 +57,7 @@ class DataRepository(private var networkModule: NetworkModule) {
     suspend fun getLevelTwo(
         kpiId: String,
         tableId: String
-    ): Flow<Response<Level2ReportModel>> {
+    ): Flow<Response<ArrayList<Level2ReportModel>>> {
         return flow {
             val response = networkModule.sourceOfNetwork().getLevelTwo(kpiId, tableId)
             emit(response)

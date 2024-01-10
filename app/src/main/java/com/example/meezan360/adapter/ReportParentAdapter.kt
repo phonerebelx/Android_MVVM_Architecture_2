@@ -1,6 +1,7 @@
 package com.example.meezan360.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -11,13 +12,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.model.reports.Report
+import com.example.meezan360.ui.activities.ReportLevel2Activity
 
 
 class ReportParentAdapter(
     private var myContext: Context,
     private val reportList: ArrayList<Report>?,
-) :
-    RecyclerView.Adapter<ReportParentAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ReportParentAdapter.ViewHolder>() {
     private var selectedPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v =
@@ -45,7 +46,7 @@ class ReportParentAdapter(
             valueTV.setTextColor(myContext.resources.getColor(R.color.white))
             valueTV.layoutParams = LinearLayout.LayoutParams(
                 myContext.resources.getDimension(com.intuit.sdp.R.dimen._60sdp).toInt(),
-                LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.MATCH_PARENT
             ).apply {
                 gravity = Gravity.CENTER
             }
@@ -57,6 +58,11 @@ class ReportParentAdapter(
         val verticalAdapter =
             ReportChildVerticalAdapter(myContext, item.column[0].data, columnsData)
         holder.rvVerticalChild.adapter = verticalAdapter
+
+        holder.tvTitle.setOnClickListener {
+            val intent = Intent(myContext, ReportLevel2Activity::class.java)
+            myContext.startActivity(intent)
+        }
 
     }
 

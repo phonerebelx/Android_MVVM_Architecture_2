@@ -43,5 +43,5 @@ interface APIService {
     suspend fun getLevelTwo(
         @Query("kpi_id") kpiId: String,
         @Query("table_id") tableId: String
-    ): Response<Level2ReportModel>
+    ): Response<ArrayList<Level2ReportModel>>
 }

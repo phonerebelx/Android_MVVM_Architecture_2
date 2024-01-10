@@ -16,7 +16,7 @@ class ReportViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         MutableStateFlow<ResponseModel<Response<DepositObject>>>(ResponseModel.Idle("Idle State"))
 
     val levelTwo =
-        MutableStateFlow<ResponseModel<Response<Level2ReportModel>>>(ResponseModel.Idle("Idle State"))
+        MutableStateFlow<ResponseModel<Response<ArrayList<Level2ReportModel>>>>(ResponseModel.Idle("Idle State"))
 
     suspend fun getDepositDetails() {
         depositDetail.emit(ResponseModel.Loading())

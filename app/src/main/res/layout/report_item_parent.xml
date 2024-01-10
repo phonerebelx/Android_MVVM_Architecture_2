@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fillViewport="true"
     android:overScrollMode="never"
     android:scrollbars="none">
 
@@ -22,17 +23,6 @@
             android:textSize="@dimen/text_size_medium" />
 
 
-        <!--        <androidx.recyclerview.widget.RecyclerView-->
-        <!--            android:id="@+id/rvVerticalChildHeaders"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_gravity="center"-->
-        <!--            android:orientation="vertical"-->
-        <!--            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-        <!--            tools:itemCount="1"-->
-        <!--            tools:listitem="@layout/report_item_child_vertical" />-->
-
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_35sdp"
@@ -46,61 +36,61 @@
 
             <LinearLayout
                 android:id="@+id/headerLayout"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-<!--                <TextView-->
-<!--                    android:layout_width="@dimen/_60sdp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:text=""-->
-<!--                    android:textSize="@dimen/text_size_small" />-->
+                <!--                                <TextView-->
+                <!--                                    android:layout_width="@dimen/_60sdp"-->
+                <!--                                    android:layout_height="wrap_content"-->
+                <!--                                    android:layout_gravity="center"-->
+                <!--                                    android:text=""-->
+                <!--                                    android:textSize="@dimen/text_size_small" />-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="@dimen/_60sdp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:text="CA"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="@dimen/text_size_small" />-->
+                <!--                                <TextView-->
+                <!--                                    android:layout_width="@dimen/_60sdp"-->
+                <!--                                    android:layout_height="wrap_content"-->
+                <!--                                    android:layout_gravity="center"-->
+                <!--                                    android:text="CA"-->
+                <!--                                    android:textAlignment="center"-->
+                <!--                                    android:textColor="@color/white"-->
+                <!--                                    android:textSize="@dimen/text_size_small" />-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="@dimen/_60sdp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:text="SA"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="@dimen/text_size_small" />-->
+                <!--                                <TextView-->
+                <!--                                    android:layout_width="@dimen/_60sdp"-->
+                <!--                                    android:layout_height="wrap_content"-->
+                <!--                                    android:layout_gravity="center"-->
+                <!--                                    android:text="SA"-->
+                <!--                                    android:textAlignment="center"-->
+                <!--                                    android:textColor="@color/white"-->
+                <!--                                    android:textSize="@dimen/text_size_small" />-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="@dimen/_60sdp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:text="TD"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="@dimen/text_size_small" />-->
+                <!--                                <TextView-->
+                <!--                                    android:layout_width="@dimen/_60sdp"-->
+                <!--                                    android:layout_height="wrap_content"-->
+                <!--                                    android:layout_gravity="center"-->
+                <!--                                    android:text="TD"-->
+                <!--                                    android:textAlignment="center"-->
+                <!--                                    android:textColor="@color/white"-->
+                <!--                                    android:textSize="@dimen/text_size_small" />-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="@dimen/_60sdp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:text="CASA"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="@dimen/text_size_small" />-->
+                <!--                <TextView-->
+                <!--                    android:layout_width="@dimen/_60sdp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:text="CASA"-->
+                <!--                    android:textAlignment="center"-->
+                <!--                    android:textColor="@color/white"-->
+                <!--                    android:textSize="@dimen/text_size_small" />-->
 
-<!--                <TextView-->
-<!--                    android:layout_width="@dimen/_60sdp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:text="Total"-->
-<!--                    android:textAlignment="center"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="@dimen/text_size_small" />-->
+                <!--                <TextView-->
+                <!--                    android:layout_width="@dimen/_60sdp"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    android:text="Total"-->
+                <!--                    android:textAlignment="center"-->
+                <!--                    android:textColor="@color/white"-->
+                <!--                    android:textSize="@dimen/text_size_small" />-->
 
             </LinearLayout>
 
