@@ -37,7 +37,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
 
     private lateinit var binding: FragmentOnOffBranchesBinding
     private val myViewModel: DashboardViewModel by viewModel()
-    private val graphModel: ArrayList<StackGraphModel> = arrayListOf()
+    private var graphModel: ArrayList<StackGraphModel>? = null
     private lateinit var adapter: BarChartAdapter
 
     override fun onCreateView(
@@ -51,8 +51,9 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         }
         handleAPIResponse(dataModel.cardTypeId)
 
+        graphModel = arrayListOf() //initialize array
         binding.switchTD.setOnCheckedChangeListener { _, isChecked ->
-            showBarChart(graphModel[0], binding.barChart, isChecked)
+            graphModel?.get(0)?.let { showBarChart(it, binding.barChart, isChecked) }
         }
 
         return binding.root
@@ -63,6 +64,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         barChart: BarChart,
         switchTD: Boolean
     ) {
+
         val entries: ArrayList<BarEntry> = arrayListOf()
         val colors: ArrayList<Int> = arrayListOf()
         val labels = ArrayList<String>()
@@ -102,7 +104,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
             description.isEnabled = false
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
-            xAxis.position =  XAxis.XAxisPosition.BOTTOM
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.labelCount = entries.size
             xAxis.textSize = 7f
@@ -166,13 +168,17 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
 
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                             val jsonArray = responseBody.asJsonArray.get(index).toString()
-                            graphModel.add(
+                            graphModel?.add(
                                 Gson().fromJson(
                                     jsonArray,
                                     StackGraphModel::class.java
                                 )
                             )
-                            graphModel[index].label.let { it1 -> recyclerViewItems.add(it1) }
+                            graphModel?.get(index)?.label.let { it1 ->
+                                if (it1 != null) {
+                                    recyclerViewItems.add(it1)
+                                }
+                            }
                         }
 
                         if (cardTypeId == "4") {
@@ -183,7 +189,8 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                             binding.recyclerView.visibility = View.GONE
                         }
 
-                        showBarChart(graphModel[0], binding.barChart, true)
+
+                        graphModel?.get(0)?.let { it1 -> showBarChart(it1, binding.barChart, true) }
                     }
                 }
             }
@@ -191,6 +198,6 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
     }
 
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
-        showBarChart(graphModel[position], binding.barChart, false)
+        graphModel?.get(position)?.let { showBarChart(it, binding.barChart, false) }
     }
 }

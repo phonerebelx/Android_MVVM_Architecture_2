@@ -55,8 +55,9 @@ class ReportParentAdapter(
 
         val columnsData = Report.getDataArray(item.column)
 
+
         val verticalAdapter =
-            ReportChildVerticalAdapter(myContext, item.column[0].data, columnsData)
+            item.column[0].data?.let { ReportChildVerticalAdapter(myContext, it, columnsData) }
         holder.rvVerticalChild.adapter = verticalAdapter
 
         holder.tvTitle.setOnClickListener {

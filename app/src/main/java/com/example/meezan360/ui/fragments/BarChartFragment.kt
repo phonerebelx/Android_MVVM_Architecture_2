@@ -82,6 +82,11 @@ class BarChartFragment(
         barChartModel: ArrayList<HorizontalBarChartDataModel>,
         combineChart: CombinedChart
     ) {
+
+        if (barChartModel.isEmpty()){
+            return
+        }
+
         val entries: ArrayList<BarEntry> = ArrayList()
         val scatterEntries = ArrayList<Entry>()
         val labels = ArrayList<String>()

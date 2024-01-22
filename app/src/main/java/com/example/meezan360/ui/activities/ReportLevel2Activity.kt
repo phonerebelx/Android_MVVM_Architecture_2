@@ -32,7 +32,7 @@ class ReportLevel2Activity : AppCompatActivity(), OnItemClickListener {
         setContentView(binding.root)
 
         myViewModel.viewModelScope.launch {
-            myViewModel.getLevelTwo("3", "0")
+            myViewModel.getLevelTwo("4", "0")
         }
         handleAPIResponse()
     }

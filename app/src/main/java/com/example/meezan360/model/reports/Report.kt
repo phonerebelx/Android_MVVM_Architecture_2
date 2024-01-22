@@ -13,22 +13,25 @@ data class Report(
         fun getDataArray(columns: ArrayList<Column>): ArrayList<ReportDataArrayModel> {
             val result: ArrayList<ReportDataArrayModel> = arrayListOf()
 
-            columns.first().data.forEachIndexed { indexRow, data ->
-                val columData = ArrayList<ReportsColumnData>()
-                columns.forEachIndexed { index, column ->
-                    if (column.data.count() > indexRow) {
-                        columData.add(column.data[indexRow])
+                columns.first().data?.forEachIndexed { indexRow, data ->
+                    val columData = ArrayList<ReportsColumnData>()
+                    columns.forEachIndexed { index, column ->
+                        if ((column.data?.count() ?: 0) > indexRow) {
+                            column.data?.get(indexRow)?.let {
+                                columData.add(it)
+                            }
+                        }
                     }
-                }
-                result.add(ReportDataArrayModel(columData))
+                    result.add(ReportDataArrayModel(columData))
 
-            }
+                }
+
             return result
         }
     }
 }
 
-data class ReportDataArrayModel (
+data class ReportDataArrayModel(
     var data: ArrayList<ReportsColumnData>
 )
 

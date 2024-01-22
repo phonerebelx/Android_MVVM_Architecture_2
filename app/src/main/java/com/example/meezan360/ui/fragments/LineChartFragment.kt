@@ -53,6 +53,10 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         positionsList: ArrayList<Int>
     ) {
 
+        if (tierGraphModel.isEmpty() || positionsList.isEmpty()){
+            return
+        }
+
         val listOfDataSet: MutableList<LineDataSet> = mutableListOf()
 
         for (i in positionsList) {
