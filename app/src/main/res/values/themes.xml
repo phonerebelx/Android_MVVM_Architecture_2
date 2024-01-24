@@ -12,11 +12,10 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
 
-            <!-- Customize your theme here. -->
     </style>
 
-    <style name="CustomSeekBarStyle" parent="Widget.AppCompat.SeekBar">
-        <item name="tickMark">@drawable/tick_mark</item>
-        <item name="tickMarkTint">@color/purple_dark</item>
-    </style>
+<!--    <style name="CustomSeekBarStyle" parent="Widget.AppCompat.SeekBar">-->
+<!--        <item name="tickMark">@drawable/green_tick</item>-->
+<!--        <item name="tickMarkTint">@color/purple_dark</item>-->
+<!--    </style>-->
 </resources>

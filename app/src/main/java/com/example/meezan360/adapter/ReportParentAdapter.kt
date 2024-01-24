@@ -45,7 +45,7 @@ class ReportParentAdapter(
             valueTV.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
             valueTV.setTextColor(myContext.resources.getColor(R.color.white))
             valueTV.layoutParams = LinearLayout.LayoutParams(
-                myContext.resources.getDimension(com.intuit.sdp.R.dimen._60sdp).toInt(),
+                myContext.resources.getDimension(com.intuit.sdp.R.dimen._65sdp).toInt(),
                 LinearLayout.LayoutParams.MATCH_PARENT
             ).apply {
                 gravity = Gravity.CENTER
@@ -62,6 +62,7 @@ class ReportParentAdapter(
 
         holder.tvTitle.setOnClickListener {
             val intent = Intent(myContext, ReportLevel2Activity::class.java)
+            intent.putExtra("kpiId", "1") //because this case is only for deposit
             myContext.startActivity(intent)
         }
 

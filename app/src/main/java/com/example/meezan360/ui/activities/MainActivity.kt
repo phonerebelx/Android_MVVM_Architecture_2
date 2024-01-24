@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
@@ -15,9 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.meezan360.adapter.TopBoxesAdapter
 import com.example.meezan360.R
 import com.example.meezan360.adapter.FragmentPagerAdapter
+import com.example.meezan360.adapter.TopBoxesAdapter
 import com.example.meezan360.databinding.ActivityMainBinding
 import com.example.meezan360.model.Kpi
 import com.example.meezan360.model.dashboardByKpi.FooterModel
@@ -30,6 +29,7 @@ import com.example.meezan360.ui.fragments.LineChartFragment
 import com.example.meezan360.ui.fragments.Pie1HorizontalBar1Fragment
 import com.example.meezan360.ui.fragments.Pie2Bar2Fragment
 import com.example.meezan360.ui.fragments.StackChartFragment
+import com.example.meezan360.ui.fragments.StepProgressBarFragment
 import com.example.meezan360.ui.fragments.TierChartFragment
 import com.example.meezan360.utils.Constants
 import com.example.meezan360.viewmodel.DashboardViewModel
@@ -138,6 +138,12 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                         kpiId, tagName, footerList[index]
                     )
                 )
+
+                "steper_lines" -> fragmentsList.add(
+                    StepProgressBarFragment(
+                        kpiId, tagName, footerList[index]
+                    )
+                )
             }
         }
 
@@ -200,9 +206,18 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
             lastSelectedSliceIndex = currentIndex // Update the last selected slice index
             binding.pieChart.invalidate() // Refresh the chart
         } else {
-            //same pie chart item is clicked
-            val intent = Intent(this, ReportLevel1Activity::class.java)
-            startActivity(intent)
+            //same pie chart item is clicked twice
+            if (kpiId == 1) {
+                //for deposit
+                val intent = Intent(this, ReportLevel1Activity::class.java)
+                startActivity(intent)
+            } else {
+                val intent = Intent(this, ReportLevel2Activity::class.java)
+                intent.putExtra("kpiId", kpiId.toString())
+                startActivity(intent)
+            }
+
+
         }
     }
 

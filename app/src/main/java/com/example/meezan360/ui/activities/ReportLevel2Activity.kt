@@ -26,13 +26,19 @@ class ReportLevel2Activity : AppCompatActivity(), OnItemClickListener {
     private lateinit var reportParentAdapter: ReportParentAdapter
     private lateinit var topMenuAdapter: TopMenuAdapter
     private var responseBody: ArrayList<Level2ReportModel>? = arrayListOf()
+    var kpiId: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReportLevel2Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val extras = intent.extras
+        if (extras != null) {
+            kpiId = extras.getString("kpiId")
+        }
+
         myViewModel.viewModelScope.launch {
-            myViewModel.getLevelTwo("4", "0")
+            kpiId?.let { myViewModel.getLevelTwo(it, "0") }
         }
         handleAPIResponse()
     }

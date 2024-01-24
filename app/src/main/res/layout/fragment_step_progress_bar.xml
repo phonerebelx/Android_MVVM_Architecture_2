@@ -3,31 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="@dimen/_10sdp"
+    android:layout_marginTop="@dimen/_20sdp"
+    android:layout_marginEnd="@dimen/_10sdp"
     android:orientation="vertical"
     tools:context=".ui.fragments.StepProgressBarFragment">
 
-<!--    <SeekBar-->
-<!--        android:id="@+id/seekbar"-->
-<!--        android:theme="@style/CustomSeekBarStyle"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_marginTop="@dimen/_10sdp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:max="3"-->
-<!--        android:tickMark="@null"/>-->
 
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enhanced Customer Due Diligence"
+        android:textSize="@dimen/_12ssp" />
 
-<!--    <com.anton46.stepsview.StepsView-->
-<!--        android:id="@+id/stepsView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        />-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        tools:itemCount="4"
+        tools:listitem="@layout/step_progress_bar_item" />
 
-<!--    <com.baoyachi.stepview.HorizontalStepView-->
-<!--        android:id="@+id/stepView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        />-->
+    <!--    android:theme="@style/CustomSeekBarStyle"-->
+    <!--    <SeekBar-->
+    <!--        android:id="@+id/seekbar"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="@dimen/_10sdp"-->
+    <!--        android:max="3"-->
+    <!--        android:padding="@dimen/_10sdp"-->
+    <!--        android:progress="2"-->
+    <!--        android:progressTint="@color/purple_dark"-->
+    <!--        android:tickMark="@drawable/unselected_tick"-->
+    <!--        android:thumb="@drawable/tick_mark"-->
+    <!--        android:thumbTint="@color/purple_dark"-->
+    <!--        />-->
+
 
 </LinearLayout>

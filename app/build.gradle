@@ -79,4 +79,5 @@ dependencies {
 //    implementation 'com.anton46:stepsview:0.0.2'
 //    implementation 'com.github.baoyachi:StepView:1.9'
 
+    implementation 'com.github.loukwn.StageStepBar:stagestepbar:1.1.0'
 }
