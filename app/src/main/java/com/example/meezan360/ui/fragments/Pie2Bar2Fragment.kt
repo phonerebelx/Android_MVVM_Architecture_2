@@ -15,6 +15,7 @@ import com.example.meezan360.model.footerGraph.PieGraphModel
 import com.example.meezan360.model.footerGraph.BarGraphModel
 import com.example.meezan360.model.graphs.Pie2Bar2Model
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
@@ -70,7 +71,7 @@ class Pie2Bar2Fragment(
             pieEntriesCA.add(PieEntry(100 - pieEntryValueCA))
 
             val colors: ArrayList<Int> = ArrayList()
-            colors.add(Color.parseColor(graph1.pieChartModel.color))
+            colors.add(Utils.parseColorSafely(graph1.pieChartModel.color))
             colors.add(Color.parseColor("#FAFAFA"))
 
             val pieDataSet = PieDataSet(pieEntriesCA, "")
@@ -101,7 +102,7 @@ class Pie2Bar2Fragment(
         graph2?.barChartModel?.forEachIndexed { index, _ ->
             labels.add(graph2.barChartModel[index].key.toString())
             yVals1.add(BarEntry(index.toFloat(), graph2.barChartModel[index].value))
-            colors.add(Color.parseColor(graph2.barChartModel[index].valueColor))
+            colors.add(Utils.parseColorSafely(graph2.barChartModel[index].valueColor))
         }
 
         val xl: XAxis = horizontalBarChart.xAxis

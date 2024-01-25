@@ -19,6 +19,7 @@ import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.ScatterChart
@@ -98,8 +99,8 @@ class BarChartFragment(
             barChartModel[index].target?.let { Entry(index.toFloat(), it) }
                 ?.let { scatterEntries.add(it) }
             labels.add(barChartModel[index].key)
-            colorsBar.add(Color.parseColor(barChartModel[index].valueColor))
-            colorsTarget.add(Color.parseColor(barChartModel[index].targetColor))
+            colorsBar.add(Utils.parseColorSafely(barChartModel[index].valueColor))
+            colorsTarget.add(Utils.parseColorSafely(barChartModel[index].targetColor))
         }
 
         val barDataSet = BarDataSet(entries, "Target")

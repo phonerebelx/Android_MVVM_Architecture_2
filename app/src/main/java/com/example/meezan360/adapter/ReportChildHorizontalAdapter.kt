@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.model.reports.ReportsColumnData
+import com.example.meezan360.utils.Utils
 
 
 class ReportChildHorizontalAdapter(
@@ -28,7 +29,7 @@ class ReportChildHorizontalAdapter(
 
         val item = itemList[position]
         holder.tvChild.text = item.value
-        holder.tvChild.setTextColor(Color.parseColor(item.valueColor))
+        holder.tvChild.setTextColor(Utils.parseColorSafely(item.valueColor))
     }
 
     override fun getItemCount(): Int {

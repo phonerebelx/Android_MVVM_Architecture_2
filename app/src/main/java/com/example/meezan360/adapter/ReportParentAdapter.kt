@@ -1,7 +1,6 @@
 package com.example.meezan360.adapter
 
 import android.content.Context
-import android.content.Intent
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.model.reports.Report
-import com.example.meezan360.ui.activities.ReportLevel2Activity
 
 
 class ReportParentAdapter(
@@ -55,16 +53,16 @@ class ReportParentAdapter(
 
         val columnsData = Report.getDataArray(item.column)
 
-
         val verticalAdapter =
-            item.column[0].data?.let { ReportChildVerticalAdapter(myContext, it, columnsData) }
+            item.column[0].data?.let {
+                ReportChildVerticalAdapter(
+                    myContext,
+                    it,
+                    columnsData,
+                    item.tableId
+                )
+            }
         holder.rvVerticalChild.adapter = verticalAdapter
-
-        holder.tvTitle.setOnClickListener {
-            val intent = Intent(myContext, ReportLevel2Activity::class.java)
-            intent.putExtra("kpiId", "1") //because this case is only for deposit
-            myContext.startActivity(intent)
-        }
 
     }
 
@@ -76,5 +74,6 @@ class ReportParentAdapter(
         var tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
         val rvVerticalChild: RecyclerView = itemView.findViewById(R.id.rvVerticalChild)
         val headerLayout: LinearLayout = itemView.findViewById(R.id.headerLayout)
+
     }
 }

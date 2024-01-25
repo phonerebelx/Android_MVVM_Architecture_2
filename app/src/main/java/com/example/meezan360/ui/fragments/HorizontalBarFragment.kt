@@ -17,6 +17,7 @@ import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.InvertedHorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
@@ -64,14 +65,14 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         var lastIndex = 0f
         chartModelTop.forEachIndexed { index, dataModel ->
             entries.add(BarEntry(index.toFloat(), dataModel.value))
-            myColors.add(Color.parseColor(dataModel.valueColor))
+            myColors.add(Utils.parseColorSafely(dataModel.valueColor))
             labels.add(dataModel.key)
             lastIndex = index.toFloat()
         }
         var updatedIndex = lastIndex + 1
         for (dataModel in chartModelBottom) {
             entries.add(BarEntry(updatedIndex, dataModel.value))
-            myColors.add(Color.parseColor(dataModel.valueColor))
+            myColors.add(Utils.parseColorSafely(dataModel.valueColor))
             labels.add(dataModel.key)
             updatedIndex++
         }

@@ -66,6 +66,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
 
     private var tagName: String = Constants.general
 
+    private var footerData: List<FooterModel>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -296,6 +298,8 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
                 binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
                 tagName = Constants.peDeposit
+
+                footerSetupUp(footerData, 0)
             }
 
             R.id.btnAVGDeposit -> {
@@ -303,6 +307,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
                 tagName = Constants.avgDeposit
 
+                footerSetupUp(footerData, 1)
             }
         }
     }
@@ -363,7 +368,7 @@ class MainActivity : AppCompatActivity(), OnChartValueSelectedListener, OnClickL
                         binding.recyclerView.adapter = adapter
 
                         //for footer
-                        val footerData = it.data?.body()?.footer
+                        footerData = it.data?.body()?.footer
 
                         footerSetupUp(footerData, 0)
 

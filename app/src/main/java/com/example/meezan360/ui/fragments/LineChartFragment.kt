@@ -16,6 +16,7 @@ import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -68,7 +69,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
 //                lineEntries.add(Entry(dataModel.key.toFloat(), dataModel.value))
 //            }
             val lineDataSet = LineDataSet(lineEntries, "")
-            customizationLine(lineDataSet, Color.parseColor(tierGraphModel[i].color))
+            customizationLine(lineDataSet, Utils.parseColorSafely(tierGraphModel[i].color))
             listOfDataSet.add(lineDataSet)
         }
 

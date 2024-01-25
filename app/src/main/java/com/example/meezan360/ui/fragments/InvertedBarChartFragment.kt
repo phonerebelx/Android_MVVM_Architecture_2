@@ -18,6 +18,7 @@ import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
@@ -63,7 +64,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
         horizontalGraphModel.barChartModel.forEachIndexed { index, chartData ->
             val barEntry = BarEntry(index.toFloat(), chartData.value)
             entries.add(barEntry)
-            colors.add(Color.parseColor(chartData.valueColor))
+            colors.add(Utils.parseColorSafely(chartData.valueColor))
             labels.add(chartData.key)
         }
 

@@ -19,6 +19,7 @@ import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.StackGraphModel
 import com.example.meezan360.model.footerGraph.data.MyLegend
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
@@ -79,8 +80,8 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                     )
                 )
                 entries.add(barEntry)
-                colors.add(Color.parseColor(stackChartDataModel.value1Color))
-                colors.add(Color.parseColor(stackChartDataModel.value2Color))
+                colors.add(Utils.parseColorSafely(stackChartDataModel.value1Color))
+                colors.add(Utils.parseColorSafely(stackChartDataModel.value2Color))
                 labels.add(stackChartDataModel.key)
             }
         }
@@ -140,7 +141,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                     8f,
                     0f,
                     null,
-                    Color.parseColor(legend1.legendColor)
+                    Utils.parseColorSafely(legend1.legendColor)
                 )
             }
         )

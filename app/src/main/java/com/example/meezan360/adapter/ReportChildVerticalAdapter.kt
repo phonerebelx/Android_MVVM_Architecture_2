@@ -12,13 +12,13 @@ import com.example.meezan360.model.reports.ReportsColumnData
 import com.example.meezan360.ui.activities.ReportLevel2Activity
 import com.google.android.material.card.MaterialCardView
 
-
 class ReportChildVerticalAdapter(
     private val myContext: Context,
     private val dataArrayList: ArrayList<ReportsColumnData>,
     private val columnList: ArrayList<ReportDataArrayModel>,
+    private val tableId: Int,
 ) : RecyclerView.Adapter<ReportChildVerticalAdapter.ViewHolder>() {
-    private var selectedPosition = 0
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.report_item_child_vertical, parent, false)
@@ -26,23 +26,30 @@ class ReportChildVerticalAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         val item = dataArrayList[position]
 
         val horizontalAdapter = ReportChildHorizontalAdapter(myContext, columnList[position].data)
         holder.rvHorizontalChild.adapter = horizontalAdapter
-
-//        holder.cardView.setOnClickListener {
-//
-//        }
     }
 
     override fun getItemCount(): Int {
         return dataArrayList.size
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         var cardView: MaterialCardView = itemView.findViewById(R.id.cardView)
         var rvHorizontalChild: RecyclerView = itemView.findViewById(R.id.rvHorizontalChild)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(view: View?) {
+
+            val intent = Intent(view?.context, ReportLevel2Activity::class.java)
+            intent.putExtra("kpiId", "1") //because this case is only for deposit
+            intent.putExtra("tableId", tableId)
+            view?.context?.startActivity(intent)
+        }
     }
 }

@@ -18,6 +18,7 @@ import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.TierGraphModel
 import com.example.meezan360.model.footerGraph.data.TierChartDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -55,7 +56,7 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
         tierGraphModel.data.forEachIndexed { _, tierChartDataModel ->
             tierChartDataModel.volumn?.let { PieEntry(it.toFloat(), tierChartDataModel.key) }
                 ?.let { pieEntries.add(it) }
-            colors.add(Color.parseColor(tierChartDataModel.color))
+            colors.add(Utils.parseColorSafely(tierChartDataModel.color))
             listItems.add(
                 TierChartDataModel(
                     key = tierChartDataModel.key,

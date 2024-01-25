@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
+import com.example.meezan360.utils.Utils
 import com.google.android.material.checkbox.MaterialCheckBox
 
 
@@ -30,7 +31,7 @@ class LineChartAdapter(
 
         val item = itemList?.get(position)
         holder.tvTitle.text = item?.label
-        holder.checkbox.buttonTintList = ColorStateList.valueOf(Color.parseColor(item?.color))
+        holder.checkbox.buttonTintList = ColorStateList.valueOf(Utils.parseColorSafely(item?.color))
         //for first checkbox to be selected
         if (position == selectedPosition) {
             holder.checkbox.isChecked = true

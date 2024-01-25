@@ -19,6 +19,7 @@ import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.TierGraphModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -57,7 +58,7 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
 
         horizontalGraphModel.data.forEachIndexed { index, tierChartDataModel ->
             mData.add(ValueDataEntry(tierChartDataModel.key, tierChartDataModel.value))
-            colors.add(Color.parseColor(tierChartDataModel.color))
+            colors.add(Utils.parseColorSafely(tierChartDataModel.color))
         }
         pyramidChart.apply {
             data(mData as List<DataEntry>?)

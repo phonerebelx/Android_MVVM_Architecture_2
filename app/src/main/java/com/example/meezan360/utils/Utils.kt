@@ -1,9 +1,8 @@
 package com.example.meezan360.utils
 
+import android.graphics.Color
+import android.text.TextUtils
 import android.util.Base64
-import android.util.Log
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -29,7 +28,8 @@ class Utils {
                 val cipher: Cipher = Cipher.getInstance(CIPHER_NAME)
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec, initVector)
                 val encryptedData: ByteArray = cipher.doFinal(data.toByteArray())
-                val base64_EncryptedData: String = Base64.encodeToString(encryptedData, Base64.DEFAULT)
+                val base64_EncryptedData: String =
+                    Base64.encodeToString(encryptedData, Base64.DEFAULT)
                 val base64_IV: String =
                     Base64.encodeToString(iv.toByteArray(charset("UTF-8")), Base64.DEFAULT)
                 return "$base64_EncryptedData:$base64_IV"
@@ -37,6 +37,17 @@ class Utils {
                 ex.printStackTrace()
             }
             return null
+        }
+
+        fun parseColorSafely(colorString: String?): Int {
+            if (!TextUtils.isEmpty(colorString)) {
+                try {
+                    return Color.parseColor(colorString)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            return Constants.defaultColor
         }
     }
 }

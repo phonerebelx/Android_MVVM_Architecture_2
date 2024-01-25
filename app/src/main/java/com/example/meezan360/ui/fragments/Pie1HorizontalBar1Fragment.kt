@@ -18,6 +18,7 @@ import com.example.meezan360.model.footerGraph.PieGraphModel
 import com.example.meezan360.model.graphs.Pie1HorizontalBar1Model
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.CustomMarker
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
@@ -73,8 +74,8 @@ class Pie1HorizontalBar1Fragment(
                 labels.add(barChartModel.key)
                 entries.add(BarEntry(index.toFloat(), barChartModel.value))
                 targetEntries.add(BarEntry(index.toFloat(), barChartModel.target!!))
-                colors.add(Color.parseColor(barChartModel.valueColor))
-                targetColors.add(Color.parseColor(barChartModel.targetColor))
+                colors.add(Utils.parseColorSafely(barChartModel.valueColor))
+                targetColors.add(Utils.parseColorSafely(barChartModel.targetColor))
                 barChartModel.percentage?.let { percentages.add(it) }
             }
 
@@ -167,7 +168,7 @@ class Pie1HorizontalBar1Fragment(
             pieEntries.add(PieEntry(100 - pieEntryValueCA))
 
             val colors: ArrayList<Int> = ArrayList()
-            colors.add(Color.parseColor(graph1.pieChartModel.color))
+            colors.add(Utils.parseColorSafely(graph1.pieChartModel.color))
             colors.add(Color.parseColor("#FAFAFA"))
 
             val pieDataSet = PieDataSet(pieEntries, "")
