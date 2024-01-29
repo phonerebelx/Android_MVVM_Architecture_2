@@ -62,6 +62,7 @@ class ReportParentAdapter(
                     item.tableId
                 )
             }
+
         holder.rvVerticalChild.adapter = verticalAdapter
 
     }

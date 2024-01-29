@@ -52,7 +52,7 @@
         app:ssb_crossAxisUnfilledTrackSize="@dimen/_2sdp"
         app:ssb_filledThumbDrawable="@drawable/green_tick"
         app:ssb_filledTrackColor="@color/green"
-        app:ssb_stageStepConfig="100,100,100"
+        app:ssb_stageStepConfig="20,20,20,20"
         app:ssb_unfilledThumbColor="#BBBBBB"
         app:ssb_unfilledTrackColor="#BBBBBB" />
 

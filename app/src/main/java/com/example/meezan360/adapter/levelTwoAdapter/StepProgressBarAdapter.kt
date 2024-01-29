@@ -27,14 +27,24 @@ class StepProgressBarAdapter(
 
         val item = itemList[position]
         holder.tvRemarks.text = item.key
-        holder.tvBranches.text = " (No of Branches ${item?.value?.toInt().toString()})"
-        val stage = when {
-            item.percentage!! in 0.0f..33.33f -> 0
-            item.percentage!! in 33.33f..66.66f -> 1
-            item.percentage!! in 66.66f..100.0f -> 2
-            else -> 0
+        holder.tvBranches.text = " (No of Branches ${item?.value?.toInt().toString()} | ${item.percentage}) "
+
+        val reminder = item.percentage?.rem(20)
+        val division = item.percentage?.div(20)
+
+        if (division != null && reminder != null) {
+
+            if (item.percentage!! < 20f) {
+                holder.stageStepBar.setCurrentState(null)
+            } else {
+                holder.stageStepBar.setCurrentState(
+                    StageStepBar.State(
+                        division.toInt()-1,
+                        reminder.toInt()
+                    )
+                )
+            }
         }
-        holder.stageStepBar.setCurrentState(StageStepBar.State(stage, item.percentage!!.toInt()))
 
     }
 

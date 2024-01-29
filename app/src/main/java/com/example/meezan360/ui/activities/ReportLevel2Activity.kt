@@ -27,7 +27,7 @@ class ReportLevel2Activity : AppCompatActivity(), OnItemClickListener {
     private lateinit var topMenuAdapter: TopMenuAdapter
     private var responseBody: ArrayList<Level2ReportModel>? = arrayListOf()
     var kpiId: String? = null
-    private var tableId: Int = 0
+    private var tableId: String = "0"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReportLevel2Binding.inflate(layoutInflater)
@@ -36,11 +36,11 @@ class ReportLevel2Activity : AppCompatActivity(), OnItemClickListener {
         val extras = intent.extras
         if (extras != null) {
             kpiId = extras.getString("kpiId")
-            tableId = extras.getInt("tableId")
+            tableId = extras.getString("tableId").toString()
         }
 
         myViewModel.viewModelScope.launch {
-            kpiId?.let { myViewModel.getLevelTwo(it, tableId.toString()) }
+            kpiId?.let { myViewModel.getLevelTwo(it, tableId) }
         }
         handleAPIResponse()
     }

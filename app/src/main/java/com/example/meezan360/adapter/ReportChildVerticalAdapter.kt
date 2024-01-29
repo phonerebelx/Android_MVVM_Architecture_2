@@ -16,7 +16,7 @@ class ReportChildVerticalAdapter(
     private val myContext: Context,
     private val dataArrayList: ArrayList<ReportsColumnData>,
     private val columnList: ArrayList<ReportDataArrayModel>,
-    private val tableId: Int,
+    private val tableId: String,
 ) : RecyclerView.Adapter<ReportChildVerticalAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
