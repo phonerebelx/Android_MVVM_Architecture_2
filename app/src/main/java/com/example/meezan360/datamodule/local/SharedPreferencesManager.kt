@@ -16,4 +16,9 @@ class SharedPreferencesManager(private val sharedPreferences: SharedPreferences)
         return sharedPreferences.getString(KEY_TOKEN, null)
     }
 
+    fun clearSharedPreferences() {
+        sharedPreferences.edit().clear().apply()
+    }
+
+
 }

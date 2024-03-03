@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    android:background="@color/grey"
+    tools:context=".ui.fragments.SearchFragment.SearchFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_75sdp"
+        android:background="@color/white"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/_12sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/region"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/_16sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:weightSum="10"
+            android:orientation="horizontal">
+<!--            <androidx.appcompat.widget.AppCompatSpinner-->
+<!--                android:id="@+id/actvRegion"-->
+<!--                android:layout_width="@dimen/_250sdp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:background="@color/transparent"-->
+<!--                android:dropDownWidth="match_parent"-->
+<!--                android:dropDownVerticalOffset="@dimen/_42sdp"-->
+<!--                android:popupBackground="@drawable/bg_gray_border" />-->
+
+
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="@dimen/_50sdp"-->
+<!--                android:layout_weight="1"-->
+<!--                app:boxBackgroundMode="none"-->
+<!--                app:endIconMode="none"-->
+<!--                android:textColorHint="@color/grey"-->
+<!--                android:hint="@string/tap_to_select_region">-->
+
+<!--                <AutoCompleteTextView-->
+<!--                    android:id="@+id/actvRegion"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/_12sdp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:inputType="none" />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/actvRegion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="left"
+                android:layout_weight="10"
+                android:hint="@string/tap_to_select_region"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sdp"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_padding="8dp"
+                app:spinner_divider_color="@color/white"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="0.4dp"
+                app:spinner_item_height="46dp"
+                app:spinner_arrow_drawable="@color/grey2"
+                app:spinner_popup_animation="fade"
+                app:spinner_popup_elevation="14dp" />
+
+            <ImageView
+                android:id="@+id/ivRegionCross"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:src="@drawable/ic_cross_backgrund"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_75sdp"
+        android:background="@color/white"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/_12sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/area"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/_16sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:weightSum="10"
+            android:orientation="horizontal">
+
+
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/actvArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="left"
+                android:hint="@string/tap_to_select_area"
+                android:padding="10dp"
+                android:layout_weight="10"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sdp"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_padding="8dp"
+                app:spinner_divider_color="@color/white"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="0.4dp"
+                app:spinner_item_height="46dp"
+                app:spinner_arrow_drawable="@color/grey2"
+                app:spinner_popup_animation="fade"
+                app:spinner_popup_elevation="14dp" />
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="@dimen/_50sdp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:textColorHint="@color/grey"-->
+<!--                android:clickable="false"-->
+<!--                android:focusable="false"-->
+<!--                android:hint="@string/tap_to_select_area">-->
+
+<!--                <AutoCompleteTextView-->
+<!--                    android:id="@+id/actvArea"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/_12sdp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:inputType="none" />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+            <ImageView
+                android:id="@+id/ivAreaCross"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:src="@drawable/ic_cross_backgrund"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_75sdp"
+        android:background="@color/white"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:orientation="vertical"
+
+        android:paddingStart="@dimen/_12sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/branch"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/_16sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:weightSum="10"
+            android:orientation="horizontal">
+
+
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/actvBranch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="left"
+                android:hint="@string/tap_to_select_branch"
+                android:padding="10dp"
+                android:layout_weight="10"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sdp"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_padding="8dp"
+                app:spinner_divider_color="@color/white"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="0.4dp"
+                app:spinner_item_height="46dp"
+                app:spinner_arrow_drawable="@color/grey2"
+                app:spinner_popup_animation="fade"
+                app:spinner_popup_elevation="14dp" />
+<!--            <com.google.android.material.textfield.TextInputLayout-->
+<!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="@dimen/_50sdp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:textColorHint="@color/grey"-->
+<!--                android:hint="@string/tap_to_select_branch">-->
+
+<!--                <AutoCompleteTextView-->
+<!--                    android:id="@+id/actvBranch"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/_12sdp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:inputType="none" />-->
+
+<!--            </com.google.android.material.textfield.TextInputLayout>-->
+
+            <ImageView
+                android:id="@+id/ivBranchCross"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:src="@drawable/ic_cross_backgrund"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_75sdp"
+        android:background="@color/white"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginVertical="@dimen/_12sdp"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/_12sdp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/date"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:textColor="@color/dark_grey"
+            android:textSize="@dimen/_16sdp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="10"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/actvDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:paddingLeft="@dimen/_10sdp"
+                android:focusable="false"
+                android:layout_weight="10"
+                android:textColor="@color/black"
+                android:textColorHint="@color/grey"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12sdp"
+                android:hint="Search By Date"
+                />
+
+            <ImageView
+                android:id="@+id/ivDateCross"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:layout_marginRight="@dimen/_5sdp"
+                android:src="@drawable/ic_cross_backgrund"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/acbReset"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_weight="1"
+            android:background="@color/grey2"
+            android:text="@string/reset"
+            android:textSize="@dimen/_16sdp"
+            android:textColor="@color/white"
+            android:layout_gravity="bottom"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/acbBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_weight="1"
+            android:background="@color/margenda_dark"
+            android:text="@string/apply"
+            android:textSize="@dimen/_16sdp"
+            android:textColor="@color/white"
+            android:layout_gravity="bottom"/>
+    </LinearLayout>
+</LinearLayout>

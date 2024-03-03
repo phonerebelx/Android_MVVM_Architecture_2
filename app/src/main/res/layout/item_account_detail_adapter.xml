@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".adapter.CardAdapter.AccountDetailAdapter">
+
+    <TextView
+        android:id="@+id/tvCifId"
+        style="@style/textViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_5sdp"
+        android:text="@string/number4"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:textColor="@color/purple_dark"
+        android:textSize="@dimen/_8sdp"
+        android:textStyle="bold" />
+
+</FrameLayout>

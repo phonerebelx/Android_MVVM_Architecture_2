@@ -4,5 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 data class ReportsColumnData(
     @SerializedName("value") var value: String,
+    @SerializedName("identifier") var identifier: String,
     @SerializedName("value_color") var valueColor: String
 )

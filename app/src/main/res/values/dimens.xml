@@ -8,6 +8,8 @@
     <dimen name="text_size_medium">@dimen/_14ssp</dimen>
     <dimen name="text_size_small">@dimen/_12ssp</dimen>
     <dimen name="text_size_extra_small">@dimen/_10ssp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="cardView">16dp</dimen>
 
 
 

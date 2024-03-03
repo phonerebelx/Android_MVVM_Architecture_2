@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,7 @@ import com.example.meezan360.model.footerGraph.BarGraphModel
 import com.example.meezan360.model.graphs.Pie2Bar2Model
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.Utils
+import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
@@ -36,14 +38,23 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class Pie2Bar2Fragment(
-    private var kpiId: Int?,
-    private var tagName: String,
-    private var dataModel: DataModel
+
 ) : Fragment() {
 
     private lateinit var binding: FragmentDepositCompositionBinding
 
     private val myViewModel: DashboardViewModel by viewModel()
+    private var kpiId: Int? = null
+    private var tagName: String? = null
+    private var dataModel: DataModel? = null
+    constructor(
+        kpiId: Int?,tagName: String,dataModel: DataModel
+    ) : this() {
+        this.kpiId = kpiId
+        this.tagName = tagName
+        this.dataModel = dataModel
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,9 +62,12 @@ class Pie2Bar2Fragment(
     ): View {
 
         binding = FragmentDepositCompositionBinding.inflate(layoutInflater)
-        binding.tvTitle.text = dataModel.cardTitle
+        binding.tvTitle.text = dataModel?.cardTitle
         myViewModel.viewModelScope.launch {
-            myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
+            dataModel?.cardId?.let { tagName?.let { it1 ->
+                myViewModel.getFooterGraphs(kpiId.toString(),
+                    it1, it)
+            } }
         }
 
         handleAPIResponse()
@@ -157,6 +171,7 @@ class Pie2Bar2Fragment(
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
                             "error: " + it.message,

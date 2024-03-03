@@ -20,11 +20,11 @@ val dataModule = module {
     single { SharedPreferencesManager(get()) }
     //
 
-    single(named("data_repo")) { DataRepository(NetworkModule(get())) }
+    single(named("data_repo")) { DataRepository(NetworkModule(get(),androidContext())) }
 }
 
-class NetworkModule(private val sharedPreferencesManager: SharedPreferencesManager) {
+class NetworkModule(private val sharedPreferencesManager: SharedPreferencesManager,private val context: Context) {
     fun sourceOfNetwork(): APIService {
-        return APIClient.create(sharedPreferencesManager)
+        return APIClient.create(sharedPreferencesManager, context = context)
     }
 }

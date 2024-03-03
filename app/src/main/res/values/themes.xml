@@ -1,11 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Meezan360" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="android:windowTranslucentStatus">true</item>
 
         <!-- Primary brand color. -->
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
@@ -14,8 +15,41 @@
 
     </style>
 
-<!--    <style name="CustomSeekBarStyle" parent="Widget.AppCompat.SeekBar">-->
-<!--        <item name="tickMark">@drawable/green_tick</item>-->
-<!--        <item name="tickMarkTint">@color/purple_dark</item>-->
-<!--    </style>-->
+    <!--    <style name="CustomSeekBarStyle" parent="Widget.AppCompat.SeekBar">-->
+    <!--        <item name="tickMark">@drawable/green_tick</item>-->
+    <!--        <item name="tickMarkTint">@color/purple_dark</item>-->
+    <!--    </style>-->
+
+    <style name="CustomExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <!-- Remove outline -->
+        <item name="boxBackgroundMode">none</item>
+        <!-- Set background color -->
+        <item name="android:background">@drawable/custom_dropdown_background</item>
+        <!-- Set end icon mode to custom icon -->
+        <item name="endIconMode">custom</item>
+        <!-- Set custom end icon -->
+        <item name="endIconDrawable">@drawable/ic_custom_cross</item>
+        <!-- Set custom end icon tint color -->
+    </style>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Meezan360" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+
+    <style name="textViewStyle">
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:textSize">@dimen/_8sdp</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+    <style name="AVLoadingIndicatorView">
+        <item name="minWidth">48dip</item>
+        <item name="maxWidth">48dip</item>
+        <item name="minHeight">48dip</item>
+        <item name="maxHeight">48dip</item>
+
+    </style>
+
 </resources>

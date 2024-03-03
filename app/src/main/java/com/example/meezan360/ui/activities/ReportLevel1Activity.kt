@@ -1,12 +1,17 @@
 package com.example.meezan360.ui.activities
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.meezan360.R
 import com.example.meezan360.adapter.DepositFooterAdapter
 import com.example.meezan360.adapter.ReportParentAdapter
 import com.example.meezan360.adapter.TopBoxesAdapter
@@ -15,11 +20,13 @@ import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 import com.example.meezan360.model.reports.FooterBoxes
 import com.example.meezan360.model.reports.Report
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.ReportViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ReportLevel1Activity : AppCompatActivity() {
+
+class ReportLevel1Activity : DockActivity() {
     private lateinit var binding: ActivityReportLevel1Binding
     private lateinit var topBoxesAdapter: TopBoxesAdapter
     private lateinit var reportParentAdapter: ReportParentAdapter
@@ -29,13 +36,31 @@ class ReportLevel1Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReportLevel1Binding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.tbMainFrag.toolbar)
+        supportActionBar?.title = ""
+        binding.tbMainFrag.toolbarTitle.setTextColor(
+            ContextCompat.getColor(
+                this,
+                R.color.purple_dark
+            )
+        )
+        binding.tbMainFrag.toolbarTitle.text = "Reports"
         myViewModel.viewModelScope.launch {
+            showProgressIndicator()
             myViewModel.getDepositDetails()
         }
+
         handleAPIResponse()
 
-        setContentView(binding.root)
+
+
+        binding.tbMainFrag.toolbar.setNavigationOnClickListener {
+            onBackPressed()
+        }
+
     }
+
 
     private fun setupTopBoxes(topBoxes: ArrayList<TopBoxesModel>?) {
 
@@ -49,24 +74,25 @@ class ReportLevel1Activity : AppCompatActivity() {
     private fun handleAPIResponse() {
         lifecycleScope.launch {
             myViewModel.depositDetail.collect {
+                hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
+                        handleErrorResponse(it)
                         Toast.makeText(
                             this@ReportLevel1Activity, "error: " + it.message, Toast.LENGTH_SHORT
                         ).show()
                     }
 
-                    is ResponseModel.Idle -> {
-                    }
+                    is ResponseModel.Idle -> {}
 
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
                         val responseBody = it.data?.body()
-
                         setupTopBoxes(responseBody?.topBoxes)
                         setupReportsRecyclerView(responseBody?.report)
                         setupFooterRecyclerView(responseBody?.footerBoxes)
+
                     }
                 }
             }
@@ -76,7 +102,7 @@ class ReportLevel1Activity : AppCompatActivity() {
     private fun setupReportsRecyclerView(reportList: ArrayList<Report>?) {
         binding.recyclerViewReport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        reportParentAdapter = ReportParentAdapter(this, reportList)
+        reportParentAdapter = ReportParentAdapter(this, reportList, kpiId = "1")
         binding.recyclerViewReport.adapter = reportParentAdapter
     }
 

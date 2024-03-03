@@ -1,10 +1,12 @@
 package com.example.meezan360.ui.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings.Secure
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +24,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class LoginScreen : AppCompatActivity(), View.OnClickListener {
+class LoginScreen : DockActivity() {
 
     private lateinit var binding: ActivityLoginScreenBinding
     private val myViewModel: LoginViewModel by viewModel()
@@ -41,55 +43,100 @@ class LoginScreen : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun initViews() {
-        binding.btnLogin.setOnClickListener(this)
+        setOnCLickListener()
     }
 
-    override fun onClick(p0: View?) {
-        when (p0?.id) {
-            R.id.btnLogin -> {
 
-                var email = binding.etEmail.text.toString() //waqas
-                var password = Utils.encryptPass(
+    private fun setOnCLickListener(){
+        binding.btnLogin.setOnClickListener {
+
+            var email = binding.etEmail.text.toString() //waqas
+            var password = Utils.encryptPass(
+                "23423532",
+                "1234567891011121",
+                binding.etPassword.text.toString()
+            )
+            val deviceId = Secure.getString(
+                applicationContext.contentResolver,
+                Secure.ANDROID_ID
+            )
+
+            if (BuildConfig.DEBUG) {
+                email = "waqas"
+                password = Utils.encryptPass(
                     "23423532",
-                    "1234567891011121",
-                    binding.etPassword.text.toString()
+                    "1234567891011121", "Uhf@1234"
                 )
-                val deviceId = Secure.getString(
-                    applicationContext.contentResolver,
-                    Secure.ANDROID_ID
+            }
+
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            if (TextUtils.isEmpty(password)) {
+                Toast.makeText(applicationContext, "Please Enter password", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+
+            myViewModel.viewModelScope.launch {
+                myViewModel.loginRequest(
+                    email,
+                    password!!,
+                    deviceId
                 )
-
-                if (BuildConfig.DEBUG) {
-                    email = "waqas"
-                    password = Utils.encryptPass(
-                        "23423532",
-                        "1234567891011121", "Uhf@1234"
-                    )
-                }
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)
-                        .show()
-                    return
-                }
-
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(applicationContext, "Please Enter password", Toast.LENGTH_SHORT)
-                        .show()
-                    return
-                }
-
-                myViewModel.viewModelScope.launch {
-                    myViewModel.loginRequest(
-                        email,
-                        password!!,
-                        deviceId
-                    )
-                }
-
             }
         }
     }
+    @SuppressLint("HardwareIds")
+//    override fun onClick(p0: View?) {
+//        when (p0?.id) {
+//            R.id.btnLogin -> {
+//
+//                var email = binding.etEmail.text.toString() //waqas
+//                var password = Utils.encryptPass(
+//                    "23423532",
+//                    "1234567891011121",
+//                    binding.etPassword.text.toString()
+//                )
+//                val deviceId = Secure.getString(
+//                    applicationContext.contentResolver,
+//                    Secure.ANDROID_ID
+//                )
+//
+//                if (BuildConfig.DEBUG) {
+//                    email = "waqas"
+//                    password = Utils.encryptPass(
+//                        "23423532",
+//                        "1234567891011121", "Uhf@1234"
+//                    )
+//                }
+//
+//                if (TextUtils.isEmpty(email)) {
+//                    Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)
+//                        .show()
+//                    return
+//                }
+//
+//                if (TextUtils.isEmpty(password)) {
+//                    Toast.makeText(applicationContext, "Please Enter password", Toast.LENGTH_SHORT)
+//                        .show()
+//                    return
+//                }
+//
+//                myViewModel.viewModelScope.launch {
+//                    myViewModel.loginRequest(
+//                        email,
+//                        password!!,
+//                        deviceId
+//                    )
+//                }
+//
+//            }
+//        }
+//    }
 
     private fun handleAPIResponse() {
         lifecycleScope.launch {

@@ -7,24 +7,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
+import com.example.meezan360.databinding.BarChartItemBinding
+import com.example.meezan360.databinding.DepositReportFooterItemBinding
 import com.example.meezan360.model.reports.FooterBoxes
 
 
 class DepositFooterAdapter(
     private var myContext: Context,
     private val footerList: ArrayList<FooterBoxes>?,
+
 ) :
     RecyclerView.Adapter<DepositFooterAdapter.ViewHolder>() {
+    private lateinit var binding: DepositReportFooterItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v =
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.deposit_report_footer_item, parent, false)
-        return ViewHolder(v)
+        binding = DepositReportFooterItemBinding.inflate(LayoutInflater.from(myContext), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = footerList?.get(position)
-        holder.tvTitle.text = item?.title
+        holder.tvTitle?.text = item?.title
     }
 
     override fun getItemCount(): Int {
@@ -32,6 +34,6 @@ class DepositFooterAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
+        var tvTitle: TextView? = itemView.findViewById(R.id.tvTitle)
     }
 }

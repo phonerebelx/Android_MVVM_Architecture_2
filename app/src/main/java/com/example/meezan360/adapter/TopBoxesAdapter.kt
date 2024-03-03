@@ -7,16 +7,19 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
+import com.example.meezan360.databinding.FragmentCardLevelAdapterBinding
+import com.example.meezan360.databinding.TopBoxItemBinding
 import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 import com.example.meezan360.utils.Utils
 
 class TopBoxesAdapter(val context: Context, private val itemList: List<TopBoxesModel>?) :
     RecyclerView.Adapter<TopBoxesAdapter.ViewHolder>() {
 
+        private lateinit var binding: TopBoxItemBinding
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.top_box_item, parent, false)
-        return ViewHolder(v)
+        binding = TopBoxItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -28,14 +31,14 @@ class TopBoxesAdapter(val context: Context, private val itemList: List<TopBoxesM
 
         val uomColor = Utils.parseColorSafely(myPos?.uomColor)
 
-        holder.tvTitle.text = myPos?.title
-        holder.tvTitle.setTextColor(Utils.parseColorSafely(myPos?.titleColor))
-        holder.tvAmount.text = myPos?.value
-        holder.tvAmount.setTextColor(valueColor)
-        holder.tvPercentage.text = myPos?.percentage
-        holder.tvPercentage.setTextColor(percentageColor)
-        holder.tvMin.text = myPos?.uom
-        holder.tvMin.setTextColor(uomColor)
+        binding.tvTitle.text = myPos?.title ?: ""
+        binding.tvTitle.setTextColor(Utils.parseColorSafely(myPos?.titleColor) ?: Utils.parseColorSafely("") )
+        binding.tvAmount.text = myPos?.value ?: ""
+        binding.tvAmount.setTextColor(valueColor) ?: ""
+        binding.tvPercentage.text = myPos?.percentage ?: ""
+        binding.tvPercentage.setTextColor(percentageColor ?: Utils.parseColorSafely(""))
+        binding.tvMin.text = myPos?.uom ?: ""
+        binding.tvMin.setTextColor(uomColor ?:  Utils.parseColorSafely(""))
     }
 
     override fun getItemCount(): Int {

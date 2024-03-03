@@ -7,13 +7,17 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 
     <color name="golden">#FFC500</color>
     <color name="purple_light">#856BC1</color>
     <color name="purple_dark">#765CB4</color>
+    <color name="margenda_dark">#701A7D</color>
     <color name="grey">#E0E0E0</color>
+    <color name="dark_grey">#B3B0B0</color>
     <color name="green">#1F753E</color>
     <color name="yellow">#F2C633</color>
+    <color name="card_account_color">#F3F3F3</color>
 
     <color name="grey2">#676767</color>
 </resources>

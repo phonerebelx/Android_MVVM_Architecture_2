@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.example.meezan360.model.footerGraph.InvertedHorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.Utils
+import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
@@ -152,6 +154,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
                             "error: " + it.message,
@@ -180,7 +183,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                         }
                         setupRecyclerView(listItems)
 
-                        showBarChart(
+                        if (graphModel.isNotEmpty()) showBarChart(
                             graphModel[0].top,
                             graphModel[0].bottom,
                             binding.horizontalBarChart

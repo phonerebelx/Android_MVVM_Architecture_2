@@ -10,6 +10,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
+import com.example.meezan360.databinding.BarChartItemBinding
+import com.example.meezan360.databinding.TopBoxItemBinding
 import com.example.meezan360.interfaces.OnItemClickListener
 
 class BarChartAdapter(
@@ -18,24 +20,24 @@ class BarChartAdapter(
     private var onItemClick: OnItemClickListener
 ) :
     RecyclerView.Adapter<BarChartAdapter.ViewHolder>() {
-
+    private lateinit var binding: BarChartItemBinding
     private var selectedPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.bar_chart_item, parent, false)
-        return ViewHolder(v)
+        binding = BarChartItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = itemList?.get(position)
-        holder.text.text = item
+        holder.text?.text = item
 
         if (position == selectedPosition) {
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#856BC1"))
-            holder.text.setTextColor(Color.WHITE)
+            holder.cardView?.setCardBackgroundColor(Color.parseColor("#856BC1"))
+            holder.text?.setTextColor(Color.WHITE)
         } else {
-            holder.cardView.setCardBackgroundColor(Color.WHITE)
-            holder.text.setTextColor(ContextCompat.getColor(context, R.color.grey2))
+            holder.cardView?.setCardBackgroundColor(Color.WHITE)
+            holder.text?.setTextColor(ContextCompat.getColor(context, R.color.grey2))
         }
 
         holder.itemView.setOnClickListener {
@@ -52,8 +54,8 @@ class BarChartAdapter(
     }
 
     class ViewHolder(private var itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var text: TextView = itemView.findViewById(R.id.text)
-        var cardView: CardView = itemView.findViewById(R.id.cardView)
+        var text: TextView? = itemView.findViewById(R.id.text)
+        var cardView: CardView? = itemView.findViewById(R.id.cardView)
 
 
 

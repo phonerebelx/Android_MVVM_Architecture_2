@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,7 @@ import com.example.meezan360.model.footerGraph.TierGraphModel
 import com.example.meezan360.model.footerGraph.data.TierChartDataModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.Utils
+import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -91,6 +93,7 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
                             "error: " + it.message,
@@ -119,7 +122,7 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
 
                         setupRecyclerView(recyclerViewItems)
 
-                        showPieChart(graphModel[0])
+                        if (graphModel.isNotEmpty()) showPieChart(graphModel[0])
 
                     }
                 }

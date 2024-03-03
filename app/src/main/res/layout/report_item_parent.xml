@@ -15,12 +15,13 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/tvRepItemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="On &amp; Off Branches"
+            android:text="On and Off Branches"
+            style="@style/textViewStyle"
             android:textColor="@color/grey2"
-            android:textSize="@dimen/text_size_medium" />
+            android:textSize="@dimen/_12sdp" />
 
 
         <com.google.android.material.card.MaterialCardView
@@ -30,6 +31,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginEnd="@dimen/_2sdp"
             android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_gravity="left"
             app:cardBackgroundColor="@color/purple_dark"
             app:cardCornerRadius="@dimen/_5sdp"
             app:cardElevation="@dimen/_3sdp">
@@ -40,58 +42,6 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <!--                                <TextView-->
-                <!--                                    android:layout_width="@dimen/_60sdp"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:layout_gravity="center"-->
-                <!--                                    android:text=""-->
-                <!--                                    android:textSize="@dimen/text_size_small" />-->
-
-                <!--                                <TextView-->
-                <!--                                    android:layout_width="@dimen/_60sdp"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:layout_gravity="center"-->
-                <!--                                    android:text="CA"-->
-                <!--                                    android:textAlignment="center"-->
-                <!--                                    android:textColor="@color/white"-->
-                <!--                                    android:textSize="@dimen/text_size_small" />-->
-
-                <!--                                <TextView-->
-                <!--                                    android:layout_width="@dimen/_60sdp"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:layout_gravity="center"-->
-                <!--                                    android:text="SA"-->
-                <!--                                    android:textAlignment="center"-->
-                <!--                                    android:textColor="@color/white"-->
-                <!--                                    android:textSize="@dimen/text_size_small" />-->
-
-                <!--                                <TextView-->
-                <!--                                    android:layout_width="@dimen/_60sdp"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:layout_gravity="center"-->
-                <!--                                    android:text="TD"-->
-                <!--                                    android:textAlignment="center"-->
-                <!--                                    android:textColor="@color/white"-->
-                <!--                                    android:textSize="@dimen/text_size_small" />-->
-
-                <!--                <TextView-->
-                <!--                    android:layout_width="@dimen/_60sdp"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="center"-->
-                <!--                    android:text="CASA"-->
-                <!--                    android:textAlignment="center"-->
-                <!--                    android:textColor="@color/white"-->
-                <!--                    android:textSize="@dimen/text_size_small" />-->
-
-                <!--                <TextView-->
-                <!--                    android:layout_width="@dimen/_60sdp"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_gravity="center"-->
-                <!--                    android:text="Total"-->
-                <!--                    android:textAlignment="center"-->
-                <!--                    android:textColor="@color/white"-->
-                <!--                    android:textSize="@dimen/text_size_small" />-->
-
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
@@ -100,7 +50,7 @@
             android:id="@+id/rvVerticalChild"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:orientation="vertical"
             android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

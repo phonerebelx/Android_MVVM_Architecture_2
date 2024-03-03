@@ -15,6 +15,7 @@ class LoginViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         MutableStateFlow<ResponseModel<Response<LoginModel>>>(ResponseModel.Idle("Idle State"))
 
     suspend fun loginRequest(loginId: String, password: String, deviceId: String) {
+
         loginData.emit(ResponseModel.Loading())
         dataRepo?.getLoginRequest(loginId, password, deviceId)?.collect {
             viewModelScope.launch {
@@ -23,7 +24,4 @@ class LoginViewModel(private var dataRepo: DataRepository?) : ViewModel() {
             }
         }
     }
-
-
-
 }

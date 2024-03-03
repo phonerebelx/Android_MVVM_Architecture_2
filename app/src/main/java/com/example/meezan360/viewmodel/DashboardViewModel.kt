@@ -21,8 +21,7 @@ class DashboardViewModel(private var dataRepo: DataRepository?) : ViewModel() {
     val dashboardByKPI =
         MutableStateFlow<ResponseModel<Response<DashboardByKPIModel>>>(ResponseModel.Idle("Idle State"))
 
-    val checkVersioning =
-        MutableStateFlow<ResponseModel<Response<KPIModel>>>(ResponseModel.Idle("Idle State"))
+    val checkVersioning = MutableStateFlow<ResponseModel<Response<KPIModel>>>(ResponseModel.Idle("Idle State"))
 
     suspend fun checkVersioning() {
 
@@ -30,7 +29,7 @@ class DashboardViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         dataRepo?.getCheckVersioning()?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) checkVersioning.emit(ResponseModel.Success(it))
-                else checkVersioning.emit(ResponseModel.Error(it.message()))
+                else checkVersioning.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }

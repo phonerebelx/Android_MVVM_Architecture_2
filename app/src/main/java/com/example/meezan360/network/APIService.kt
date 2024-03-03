@@ -1,7 +1,13 @@
 package com.example.meezan360.network
 
+import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
+import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
+import com.example.meezan360.model.SearchFilterModel.ResetFilter.ResetFilterResponseDataModel
+import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
+import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterRequestDataModel
+import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterResponseDataModel
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
@@ -26,6 +32,7 @@ interface APIService {
     @GET("360/GetDashboardByKpi")
     suspend fun getDashboardByKpi(
         @Query("kpi_id") kpiId: String,
+        @Query("tag") tag: String,
     ): Response<DashboardByKPIModel>
 
     @GET("360/GetFooterGraphs")
@@ -42,6 +49,36 @@ interface APIService {
     @GET("360/LevelTwo")
     suspend fun getLevelTwo(
         @Query("kpi_id") kpiId: String,
-        @Query("table_id") tableId: String
+        @Query("table_id") tableId: String,
+        @Query("identifier_type") identifier_type: String,
+        @Query("identifier") identifier: String
     ): Response<ArrayList<Level2ReportModel>>
+
+    @GET("360/lovs")
+    suspend fun getLovs(
+    ): Response<SearchFilterDataModel>
+
+    @POST("360/GetSetFilter")
+    suspend fun getSetFilter(
+    ): Response<GetSetFilterDataResponseModel>
+
+
+    @POST("360/SetFilter")
+    suspend fun setFilter(
+        @Query("selected_area") selected_area: String,
+        @Query("selected_region") selected_region: String,
+        @Query("selected_branch") selected_branch: String,
+        @Query("selected_date") selected_date: String
+    ): Response<SetFilterResponseDataModel>
+
+    @POST("360/ResetFilter")
+    suspend fun resetFilter(
+    ): Response<ResetFilterResponseDataModel>
+
+
+    @POST("360/GetCustomerService")
+    suspend fun getCustomerService(
+        @Query("response-type") response_type: String,
+        @Query("cif_id") cif_id: String
+    ): Response<CardLevelDataModel>
 }

@@ -10,6 +10,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
+import com.example.meezan360.databinding.DepositReportFooterItemBinding
+import com.example.meezan360.databinding.ProductWiseItemBinding
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.footerGraph.data.TierChartDataModel
 import com.example.meezan360.utils.Utils
@@ -19,20 +21,19 @@ class HalfPieAdapter(
     private val itemList: List<TierChartDataModel>?,
 ) :
     RecyclerView.Adapter<HalfPieAdapter.ViewHolder>() {
-
+    private lateinit var binding: ProductWiseItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v =
-            LayoutInflater.from(parent.context).inflate(R.layout.product_wise_item, parent, false)
-        return ViewHolder(v)
+        binding = ProductWiseItemBinding.inflate(LayoutInflater.from(context), parent, false)
+        return ViewHolder(binding.root)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = itemList?.get(position)
-        holder.viewLine.setBackgroundColor(Utils.parseColorSafely(item?.color))
-        holder.tvTitle.text = item?.key
-        holder.tvPercentage.text = item?.value.toString()
-        holder.tvPercentage.setTextColor(Utils.parseColorSafely(item?.color))
+        holder.viewLine?.setBackgroundColor(Utils.parseColorSafely(item?.color))
+        holder.tvTitle?.text = item?.key
+        holder.tvPercentage?.text = item?.value.toString()
+        holder.tvPercentage?.setTextColor(Utils.parseColorSafely(item?.color))
     }
 
     override fun getItemCount(): Int {
@@ -40,9 +41,9 @@ class HalfPieAdapter(
     }
 
     class ViewHolder(private var itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var viewLine: View = itemView.findViewById(R.id.view_line)
-        var tvTitle: TextView = itemView.findViewById(R.id.tvTitle)
-        var tvPercentage: TextView = itemView.findViewById(R.id.tvPercentage)
+        var viewLine: View? = itemView.findViewById(R.id.view_line)
+        var tvTitle: TextView? = itemView.findViewById(R.id.tvTitle)
+        var tvPercentage: TextView? = itemView.findViewById(R.id.tvPercentage)
 
 
     }

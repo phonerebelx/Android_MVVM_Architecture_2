@@ -1,10 +1,12 @@
 package com.example.meezan360.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -15,6 +17,7 @@ import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.google.gson.Gson
 import com.loukwn.stagestepbar.StageStepBar
@@ -62,6 +65,7 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
                             "error: " + it.message,
@@ -78,19 +82,24 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
                         val responseBody = it.data?.body()
                         val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
 
-                        responseBody?.asJsonArray?.forEachIndexed { index, _ ->
-                            val jsonArray = responseBody.asJsonArray.get(index).toString()
+                        if (responseBody != null) {
+                            if (responseBody.isJsonArray) {
+                                responseBody?.asJsonArray?.forEachIndexed { index, _ ->
+                                    val jsonArray = responseBody.asJsonArray.get(index).toString()
+                                    Log.d("jsonArray", jsonArray.toString())
+                                    graphModel.add(
+                                        Gson().fromJson(
+                                            jsonArray,
+                                            HorizontalGraphModel::class.java
+                                        )
+                                    )
+                                }
 
-                            graphModel.add(
-                                Gson().fromJson(
-                                    jsonArray,
-                                    HorizontalGraphModel::class.java
-                                )
-                            )
+
+                                if (graphModel.isNotEmpty()) setupRecyclerView(graphModel[0].barChartModel)
+                            }
                         }
 
-
-                        setupRecyclerView(graphModel[0].barChartModel)
 
                     }
                 }

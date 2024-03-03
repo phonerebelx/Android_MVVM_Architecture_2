@@ -20,6 +20,7 @@
             android:layout_marginTop="3dp"
             android:gravity="center"
             android:text="CASA"
+            style="@style/textViewStyle"
             android:textColor="#006324"
             android:textSize="11sp" />
 
@@ -29,6 +30,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="659,213"
+            style="@style/textViewStyle"
             android:textColor="@color/grey2"
             android:textSize="14sp" />
 
@@ -42,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="55.98%"
                 android:textColor="#765CB4"
+                style="@style/textViewStyle"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -54,6 +57,7 @@
                 android:layout_marginEnd="@dimen/_2sdp"
                 android:gravity="end"
                 android:text="MIn"
+                style="@style/textViewStyle"
                 android:textColor="#1F753E"
                 android:textSize="8sp"
                 app:layout_constraintBottom_toBottomOf="parent"

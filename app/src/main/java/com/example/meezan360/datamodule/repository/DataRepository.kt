@@ -1,8 +1,14 @@
 package com.example.meezan360.datamodule.repository
 
 import com.example.meezan360.di.NetworkModule
+import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
+import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
+import com.example.meezan360.model.SearchFilterModel.ResetFilter.ResetFilterResponseDataModel
+import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
+import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterRequestDataModel
+import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterResponseDataModel
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
@@ -30,7 +36,7 @@ class DataRepository(private var networkModule: NetworkModule) {
 
     suspend fun getDashboardByKpi(kpiId: String): Flow<Response<DashboardByKPIModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId)
+            val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId,"avg_deposit")
             emit(response)
         }
     }
@@ -56,11 +62,57 @@ class DataRepository(private var networkModule: NetworkModule) {
 
     suspend fun getLevelTwo(
         kpiId: String,
-        tableId: String
+        tableId: String,
+        identifierType: String,
+        identifier: String
     ): Flow<Response<ArrayList<Level2ReportModel>>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getLevelTwo(kpiId, tableId)
+            val response = networkModule.sourceOfNetwork().getLevelTwo(kpiId, tableId,identifierType,identifier)
             emit(response)
         }
     }
+
+    suspend fun getLovs(): Flow<Response<SearchFilterDataModel>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork().getLovs()
+            emit(response)
+        }
+    }
+
+    suspend fun getSetFilter(): Flow<Response<GetSetFilterDataResponseModel>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork().getSetFilter()
+            emit(response)
+        }
+    }
+
+    suspend fun resetFilter(): Flow<Response<ResetFilterResponseDataModel>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork().resetFilter()
+            emit(response)
+        }
+    }
+
+    suspend fun setFilter(
+        selected_area: String,
+        selected_region: String,
+        selected_branch: String,
+        selected_date: String,
+    ): Flow<Response<SetFilterResponseDataModel>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork()
+                .setFilter(selected_area, selected_region, selected_branch, selected_date)
+            emit(response)
+        }
+    }
+
+    suspend fun getCustomerService(
+        cif_id: String
+    ): Flow<Response<CardLevelDataModel>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork().getCustomerService("1",cif_id)
+            emit(response)
+        }
+    }
+
 }

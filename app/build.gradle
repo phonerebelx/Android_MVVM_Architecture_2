@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.meezan360"
-        minSdk 21
+        minSdk 23
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -20,6 +20,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 
     buildTypes {
         release {
@@ -80,4 +81,10 @@ dependencies {
 //    implementation 'com.github.baoyachi:StepView:1.9'
 
     implementation 'com.github.loukwn.StageStepBar:stagestepbar:1.1.0'
+
+    implementation "com.github.skydoves:powerspinner:1.2.7"
+
+
+    implementation 'com.github.emreesen27:Android-Nested-Progress:v1.0.2'
+
 }

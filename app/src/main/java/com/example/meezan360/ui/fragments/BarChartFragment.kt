@@ -2,10 +2,12 @@ package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +22,7 @@ import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.Utils
+import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.ScatterChart
@@ -162,6 +165,7 @@ class BarChartFragment(
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
                             "error: " + it.message,
@@ -190,10 +194,7 @@ class BarChartFragment(
                         }
                         setupRecyclerView(listItems)
 
-                        showCombineChart(
-                            graphModel[0].barChartModel,
-                            binding.combineChart
-                        )
+                        if (graphModel.isNotEmpty()) showCombineChart(graphModel[0].barChartModel, binding.combineChart)
 
                     }
                 }
