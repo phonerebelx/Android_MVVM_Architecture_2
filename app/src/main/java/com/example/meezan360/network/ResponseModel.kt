@@ -29,7 +29,6 @@ sealed class ResponseModel<T>(
                 context.startActivity(intent)
             }
         }
-
     }
 
     class Loading<T> : ResponseModel<T>()

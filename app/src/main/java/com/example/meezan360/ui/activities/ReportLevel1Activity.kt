@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.activities
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -16,17 +17,19 @@ import com.example.meezan360.adapter.DepositFooterAdapter
 import com.example.meezan360.adapter.ReportParentAdapter
 import com.example.meezan360.adapter.TopBoxesAdapter
 import com.example.meezan360.databinding.ActivityReportLevel1Binding
+import com.example.meezan360.interfaces.OnTypeItemClickListener
 import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
 import com.example.meezan360.model.reports.FooterBoxes
 import com.example.meezan360.model.reports.Report
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.CardLevel.CardLevelActivity
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.ReportViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class ReportLevel1Activity : DockActivity() {
+class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
     private lateinit var binding: ActivityReportLevel1Binding
     private lateinit var topBoxesAdapter: TopBoxesAdapter
     private lateinit var reportParentAdapter: ReportParentAdapter
@@ -108,8 +111,28 @@ class ReportLevel1Activity : DockActivity() {
 
     private fun setupFooterRecyclerView(footerBoxesList: ArrayList<FooterBoxes>?) {
         binding.recyclerViewFooter.layoutManager = GridLayoutManager(this, 2)
-        footerAdapter = DepositFooterAdapter(this, footerBoxesList)
+        footerAdapter = DepositFooterAdapter(this, footerBoxesList,this)
         binding.recyclerViewFooter.adapter = footerAdapter
+    }
+
+    override fun <T> onClick(type: String, item: T, position: Int, checked: Boolean?) {
+        when (type) {
+            "On_Deposit_Footer" -> {
+                val getItem = item as FooterBoxes
+
+                val intent = Intent(this, ReportLevel2Activity::class.java)
+                intent.putExtra("kpiId", "1")
+                intent.putExtra("tableId", getItem.tableId.toString())
+                intent.putExtra(
+                    "identifierType",
+                    ""
+                )
+                intent.putExtra("identifier", "")
+                this.startActivity(intent)
+            }
+        }
+
+
     }
 
 }

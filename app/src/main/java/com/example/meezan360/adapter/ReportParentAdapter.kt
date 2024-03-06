@@ -45,7 +45,7 @@ class ReportParentAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = reportList?.get(position)
-        Log.d("onBindViewHolder: ",item.toString())
+
         binding.tvRepItemTitle?.text = item?.tableTitle
 
 //        identifierType = item.column?.get(position).header ?:

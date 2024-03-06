@@ -45,7 +45,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.uhfsolutions.carlutions.progress.ProgressIndicator
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -107,7 +106,7 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
         binding.btnPEDeposit.setOnClickListener(this)
         binding.btnAVGDeposit.setOnClickListener(this)
         binding.ivSearch.setOnClickListener(this)
-
+        setOnClickListener()
     }
 
     private fun footerSetupUp(footerData: List<FooterModel>?, defaultDeposit: Int) {
@@ -398,6 +397,13 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
 
             R.id.ivSearch -> {
 
+            }
+        }
+    }
+
+    private fun setOnClickListener(){
+        binding.let {
+            it.ivSearch.setOnClickListener {
                 val intent = Intent(this, MainFragActivity::class.java)
                 startActivity(intent)
             }

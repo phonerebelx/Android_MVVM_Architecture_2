@@ -193,8 +193,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                             binding.recyclerView.visibility = View.GONE
                         }
 
-
-                        graphModel?.get(0)?.let { it1 -> showBarChart(it1, binding.barChart, true) }
+                        if (graphModel?.isNotEmpty() == true) graphModel?.get(0)?.let { it1 -> showBarChart(it1, binding.barChart, true) }
                     }
                 }
             }

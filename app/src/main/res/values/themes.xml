@@ -52,4 +52,10 @@
 
     </style>
 
+    <style name="MaterialThemeButtonNormal">
+
+        <item name="android:paddingHorizontal" tools:targetApi="o">@dimen/_13sdp</item>
+        <item name="android:paddingVertical" tools:targetApi="o">@dimen/_13sdp</item>
+    </style>
+
 </resources>

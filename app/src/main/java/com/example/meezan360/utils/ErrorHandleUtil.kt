@@ -15,10 +15,9 @@ fun AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error<*>)
         Log.d("res_message", responseModel.message)
     }
 
-    Log.d("res_message", responseModel.toString())
     val response = responseModel.data as Response<*>
     if (response.code() == 551) {
-
+        Log.d("res_message", responseModel.toString())
         val sharedPreferences = getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
         sharedPreferencesManager = SharedPreferencesManager(sharedPreferences)
         sharedPreferencesManager.clearSharedPreferences()

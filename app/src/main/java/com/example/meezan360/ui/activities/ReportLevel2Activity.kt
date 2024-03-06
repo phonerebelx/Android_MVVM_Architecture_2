@@ -146,7 +146,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
 
                         responseBody = it.data?.body()
 
-                        if (responseBody != null) {
+                        if (responseBody != null && responseBody!!.isNotEmpty()) {
                             binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(0).table.get(0).table_title
 
 

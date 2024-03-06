@@ -17,8 +17,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentSearchBinding
+import com.example.meezan360.model.SearchFilterModel.Branch
 import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
 import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterRequestDataModel
@@ -89,6 +92,7 @@ class SearchFragment : BaseDockFragment() {
 
 
         binding.actvRegion.setOnSpinnerItemSelectedListener<IconSpinnerItem> { oldIndex, oldItem, newIndex, newItem ->
+
             regionItem = newItem.text.toString()
             indexArrayForAllLovs[0] = newIndex
             if (regionItem.isNotEmpty() && regionItem != "") {
@@ -139,6 +143,7 @@ class SearchFragment : BaseDockFragment() {
         binding.actvBranch.text = ""
 
 
+
         binding.actvArea.apply {
             binding.actvRegion.dismiss()
             setSpinnerAdapter(IconSpinnerAdapter(this))
@@ -152,17 +157,36 @@ class SearchFragment : BaseDockFragment() {
             areaItem = newItem.text.toString()
 
             indexArrayForAllLovs[1] = newIndex
+
             if (areaItem.isNotEmpty() && areaItem != "") {
+
+                if (binding.actvRegion.text.toString() == "") {
+
+                    for (index in lovsModel.indices) {
+                        val item = lovsModel[index]
+                       item.area.forEachIndexed { areaIndex, area ->
+                           if (areaItem == area.area_name){
+
+                               indexArrayForAllLovs[0] = index
+                               indexArrayForAllLovs[1] = areaIndex
+                           }
+                       }
+                    }
+                }
+
+
+                val branch = lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
+
+
                 if (branchArray.isNotEmpty()) {
                     branchArray.clear()
                 }
-                val branch =
-                    lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
+
                 for (item in branch) {
                     branchArray.add(item.branch_name)
                 }
-                if (branchArray.isNotEmpty()) {
 
+                if (branchArray.isNotEmpty()) {
                     showBranchArray(branchArray)
                 }
             }
@@ -183,7 +207,8 @@ class SearchFragment : BaseDockFragment() {
                         if (branchArray.isNotEmpty()) {
                             branchArray.clear()
                         }
-                        val branch = lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
+                        val branch =
+                            lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
 
                         for (item in branch) {
                             branchArray.add(item.branch_name)
@@ -206,18 +231,23 @@ class SearchFragment : BaseDockFragment() {
             setSpinnerAdapter(IconSpinnerAdapter(this))
             val branchIconSpinnerItems = branchArray.map { IconSpinnerItem(text = it) }
             setItems(branchIconSpinnerItems)
-            getSpinnerRecyclerView().layoutManager = GridLayoutManager(context, 1)
+            getSpinnerRecyclerView().layoutManager = LinearLayoutManager(context)
+            getSpinnerRecyclerView().layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
+
         }
 
 
         binding.actvBranch.setOnSpinnerItemSelectedListener<IconSpinnerItem> { oldIndex, oldItem, newIndex, newItem ->
+
             branchItem = newItem.text.toString()
-            binding.actvBranch.clearFocus()
+
+
+//            binding.actvBranch.clearFocus()
         }
 
         if (currentBranch != "") {
             branchItem = currentBranch
-            Log.d("TAG",branchItem.toString())
+            Log.d("TAG", branchItem.toString())
             binding.actvBranch.text = branchItem
 
 
@@ -227,16 +257,24 @@ class SearchFragment : BaseDockFragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setOnClickListener() {
         binding.let {
-            it.ivRegionCross.setOnClickListener{
+            it.ivRegionCross.setOnClickListener {
                 areaArray = arrayListOf()
                 branchArray = arrayListOf()
                 binding.actvRegion.text = ""
-                binding.actvArea.text= ""
+                binding.actvArea.text = ""
                 binding.actvBranch.text = ""
                 regionItem = ""
                 areaItem = ""
                 branchItem = ""
 
+                for (item in lovsModel) {
+                    item.area.forEach {
+                        areaArray.add(it.area_name)
+                        it.branch.forEach {
+                            branchArray.add(it.branch_name)
+                        }
+                    }
+                }
                 binding.actvArea.apply {
                     setSpinnerAdapter(IconSpinnerAdapter(this))
                     val areaIconSpinnerItems = areaArray.map { IconSpinnerItem(text = it) }
@@ -264,12 +302,20 @@ class SearchFragment : BaseDockFragment() {
                 binding.actvBranch.text = ""
                 areaItem = ""
                 branchItem = ""
-
+                for (item in lovsModel) {
+                    item.area.forEach {
+                        it.branch.forEach {
+                            branchArray.add(it.branch_name)
+                        }
+                    }
+                }
                 binding.actvBranch.apply {
                     setSpinnerAdapter(IconSpinnerAdapter(this))
                     val branchIconSpinnerItems = branchArray.map { IconSpinnerItem(text = it) }
                     setItems(branchIconSpinnerItems)
-                    getSpinnerRecyclerView().layoutManager = GridLayoutManager(context, 1)
+                    getSpinnerRecyclerView().layoutManager = LinearLayoutManager(context)
+                    getSpinnerRecyclerView().layoutParams.height = RecyclerView.LayoutParams.WRAP_CONTENT
+
                 }
                 indexArrayForAllLovs[1] = 0
                 indexArrayForAllLovs[2] = 0
@@ -281,7 +327,7 @@ class SearchFragment : BaseDockFragment() {
                 indexArrayForAllLovs[2] = 0
             }
 
-            it.ivDateCross.setOnClickListener{
+            it.ivDateCross.setOnClickListener {
                 val currentDate = LocalDate.now()
                 val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
                 val formattedDate = currentDate.format(formatter)
@@ -294,33 +340,40 @@ class SearchFragment : BaseDockFragment() {
                 val year = calendar.get(Calendar.YEAR)
                 val month = calendar.get(Calendar.MONTH)
                 val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-                val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                    selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
-                    binding.actvDate.setText(selectedDate)
-                }, year, month, dayOfMonth)
+                val datePickerDialog = DatePickerDialog(
+                    requireContext(),
+                    { _, selectedYear, selectedMonth, selectedDay ->
+                        selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
+                        binding.actvDate.setText(selectedDate)
+                    },
+                    year,
+                    month,
+                    dayOfMonth
+                )
                 datePickerDialog.show()
             }
 
             it.acbBtn.setOnClickListener {
 
-                val setFilterResponse: SetFilterRequestDataModel =  SetFilterRequestDataModel(
+                val setFilterResponse: SetFilterRequestDataModel = SetFilterRequestDataModel(
                     selected_region = regionItem,
-                    selected_area =  areaItem,
+                    selected_area = areaItem,
                     selected_branch = branchItem,
-                    selected_date =  selectedDate
+                    selected_date = selectedDate
                 )
                 setFilter(
                     setFilterResponse.selected_area,
                     setFilterResponse.selected_region,
                     setFilterResponse.selected_branch,
-                    setFilterResponse.selected_date)
+                    setFilterResponse.selected_date
+                )
             }
 
             it.acbReset.setOnClickListener {
                 resetFilter()
             }
             it.actvRegion.setOnSpinnerOutsideTouchListener { view, event ->
-                    it.actvRegion.dismiss()
+                it.actvRegion.dismiss()
             }
 
             it.actvArea.setOnSpinnerOutsideTouchListener { view, event ->
@@ -367,7 +420,6 @@ class SearchFragment : BaseDockFragment() {
     private fun handleAPIResponse() {
 
         lifecycleScope.launch {
-
             myViewModel.getLovResponse.collect {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
@@ -385,19 +437,47 @@ class SearchFragment : BaseDockFragment() {
                     }
 
                     is ResponseModel.Success -> {
+                        myDockActivity?.hideProgressIndicator()
+                        var indexes = 0
                         regionArray = arrayListOf()
                         areaArray = arrayListOf()
                         branchArray = arrayListOf()
                         lovsModel = it.data?.body()!!
                         if (lovsModel != null && lovsModel.isNotEmpty()) {
+
                             for (item in lovsModel) {
                                 regionArray.add(item.region_name)
+                                item.area.forEach {
+                                    areaArray.add(it.area_name)
+                                    it.branch.forEach {
+                                        branchArray.add(it.branch_name)
+
+                                    }
+                                }
                             }
-                            if (regionArray.isNotEmpty()) showRegionArray(
-                                regionArray,
-                                getSetFilterModel.selected_region
-                            )
+
+                            if (regionArray.isNotEmpty()){
+                                showRegionArray(
+                                    regionArray,
+                                    getSetFilterModel.selected_region
+                                )
+                            }
+                            if (areaArray.isNotEmpty()) {
+                                showAreaArray(
+                                    areaArray,
+                                    getSetFilterModel.selected_area
+                                )
+                            }
+                            if (branchArray.isNotEmpty()){
+                                showBranchArray(
+                                    branchArray,
+                                    getSetFilterModel.selected_branch_name
+                                )
+                            }
+
+
                         }
+
                     }
                 }
             }
@@ -437,7 +517,6 @@ class SearchFragment : BaseDockFragment() {
 
         }
 
-
         lifecycleScope.launch {
             myViewModel.setFilterResponse.collect {
                 myDockActivity?.hideProgressIndicator()
@@ -470,7 +549,6 @@ class SearchFragment : BaseDockFragment() {
             }
 
         }
-
 
         lifecycleScope.launch {
             myViewModel.resetFilterResponse.collect {

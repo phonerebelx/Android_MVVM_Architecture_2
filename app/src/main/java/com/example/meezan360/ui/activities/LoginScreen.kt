@@ -1,6 +1,8 @@
 package com.example.meezan360.ui.activities
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -8,10 +10,17 @@ import android.provider.Settings.Secure
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivityLoginScreenBinding
@@ -27,157 +36,35 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginScreen : DockActivity() {
 
     private lateinit var binding: ActivityLoginScreenBinding
-    private val myViewModel: LoginViewModel by viewModel()
-    private val sharedPreferenceManager: SharedPreferencesManager by inject()
+    companion object {
+        lateinit var appBarConfiguration: AppBarConfiguration
+        @SuppressLint("StaticFieldLeak")
+        lateinit var navController : NavController
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = Color.TRANSPARENT
+        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
-
-        handleAPIResponse()
-
         setContentView(binding.root)
 
-        initViews()
-    }
+        navController = findNavController(R.id.nav_host_login_fragment)
 
-    private fun initViews() {
-        setOnCLickListener()
-    }
-
-
-    private fun setOnCLickListener(){
-        binding.btnLogin.setOnClickListener {
-
-            var email = binding.etEmail.text.toString() //waqas
-            var password = Utils.encryptPass(
-                "23423532",
-                "1234567891011121",
-                binding.etPassword.text.toString()
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.login_start
             )
-            val deviceId = Secure.getString(
-                applicationContext.contentResolver,
-                Secure.ANDROID_ID
-            )
+        )
 
-            if (BuildConfig.DEBUG) {
-                email = "waqas"
-                password = Utils.encryptPass(
-                    "23423532",
-                    "1234567891011121", "Uhf@1234"
-                )
-            }
-
-            if (TextUtils.isEmpty(email)) {
-                Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
-            }
-
-            if (TextUtils.isEmpty(password)) {
-                Toast.makeText(applicationContext, "Please Enter password", Toast.LENGTH_SHORT)
-                    .show()
-                return@setOnClickListener
-            }
-
-            myViewModel.viewModelScope.launch {
-                myViewModel.loginRequest(
-                    email,
-                    password!!,
-                    deviceId
-                )
-            }
-        }
-    }
-    @SuppressLint("HardwareIds")
-//    override fun onClick(p0: View?) {
-//        when (p0?.id) {
-//            R.id.btnLogin -> {
-//
-//                var email = binding.etEmail.text.toString() //waqas
-//                var password = Utils.encryptPass(
-//                    "23423532",
-//                    "1234567891011121",
-//                    binding.etPassword.text.toString()
-//                )
-//                val deviceId = Secure.getString(
-//                    applicationContext.contentResolver,
-//                    Secure.ANDROID_ID
-//                )
-//
-//                if (BuildConfig.DEBUG) {
-//                    email = "waqas"
-//                    password = Utils.encryptPass(
-//                        "23423532",
-//                        "1234567891011121", "Uhf@1234"
-//                    )
-//                }
-//
-//                if (TextUtils.isEmpty(email)) {
-//                    Toast.makeText(applicationContext, "Please Enter email", Toast.LENGTH_SHORT)
-//                        .show()
-//                    return
-//                }
-//
-//                if (TextUtils.isEmpty(password)) {
-//                    Toast.makeText(applicationContext, "Please Enter password", Toast.LENGTH_SHORT)
-//                        .show()
-//                    return
-//                }
-//
-//                myViewModel.viewModelScope.launch {
-//                    myViewModel.loginRequest(
-//                        email,
-//                        password!!,
-//                        deviceId
-//                    )
-//                }
-//
-//            }
-//        }
-//    }
-
-    private fun handleAPIResponse() {
-        lifecycleScope.launch {
-            myViewModel.loginData.collect {
-                when (it) {
-                    is ResponseModel.Error -> {
-                        Toast.makeText(
-                            applicationContext,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                    is ResponseModel.Idle -> {
-
-                    }
-//                        Toast.makeText(
-//                        applicationContext,
-//                        "Idle: " + it.message,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-
-                    is ResponseModel.Loading ->{}
-//                        Toast.makeText(
-//                            applicationContext,
-//                            "Loading.. ",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-
-                    is ResponseModel.Success -> {
-
-                        sharedPreferenceManager.saveToken(it.data?.body()?.token)
-
-                        val intent = Intent(this@LoginScreen, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }
-                }
-
-            }
-        }
 
     }
+
+    override fun onSupportNavigateUp(): Boolean {
+        navController = findNavController(R.id.nav_host_login_fragment)
+        return super.onSupportNavigateUp()
+    }
+
 }

@@ -100,8 +100,7 @@ class DataRepository(private var networkModule: NetworkModule) {
         selected_date: String,
     ): Flow<Response<SetFilterResponseDataModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork()
-                .setFilter(selected_area, selected_region, selected_branch, selected_date)
+            val response = networkModule.sourceOfNetwork().setFilter(selected_area, selected_region, selected_branch, selected_date)
             emit(response)
         }
     }
