@@ -3,6 +3,8 @@ package com.example.meezan360.ui.activities
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.progress.ProgressDialog
@@ -41,4 +43,21 @@ abstract class DockActivity: AppCompatActivity(), ProgressIndicator {
             progressBarDialog.dismiss()
         }
     }
+    fun popFragment() {
+        val fragmentManager = supportFragmentManager
+        if (fragmentManager.backStackEntryCount > 0) {
+            fragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    fun hideKeyboard(view: View) {
+        val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.hideSoftInputFromWindow(
+            view.applicationWindowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
+
 }

@@ -1,5 +1,9 @@
 package com.example.meezan360.network
 
+import com.app.adcarchitecture.model.otp.OtpModel
+import com.app.adcarchitecture.model.otp.OtpResponse
+import com.app.adcarchitecture.model.resetPassword.ResetPasswordModel
+import com.app.adcarchitecture.model.resetPassword.ResetPwdReqResponse
 import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
@@ -13,6 +17,7 @@ import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
 import com.google.gson.JsonElement
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -81,4 +86,18 @@ interface APIService {
         @Query("response-type") response_type: String,
         @Query("cif_id") cif_id: String
     ): Response<CardLevelDataModel>
+
+    // reset password
+    @POST("resetPasswordRequest")
+    suspend fun resetPasswordRequest(
+        @Body resetPasswordModel: ResetPasswordModel
+    ): Response<ResetPwdReqResponse>
+
+    // verify otp
+    @POST("verifyOtp")
+    suspend fun verifyOtp(
+        @Body otpModel: OtpModel
+    ): Response<OtpResponse>
+
+
 }

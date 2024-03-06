@@ -22,7 +22,6 @@ android {
 
     buildscript {
         ext.kotlin_version = '1.8.0'
-
     }
 
     buildTypes {
@@ -84,10 +83,9 @@ dependencies {
 //    implementation 'com.github.baoyachi:StepView:1.9'
 
     implementation 'com.github.loukwn.StageStepBar:stagestepbar:1.1.0'
-
     implementation "com.github.skydoves:powerspinner:1.2.7"
-
-
     implementation 'com.github.emreesen27:Android-Nested-Progress:v1.0.2'
+    //pinView for OTP
+    implementation 'com.chaos.view:pinview:1.4.2'
 
 }

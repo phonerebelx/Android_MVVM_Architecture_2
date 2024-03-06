@@ -1,5 +1,9 @@
 package com.example.meezan360.datamodule.repository
 
+import com.app.adcarchitecture.model.otp.OtpModel
+import com.app.adcarchitecture.model.otp.OtpResponse
+import com.app.adcarchitecture.model.resetPassword.ResetPasswordModel
+import com.app.adcarchitecture.model.resetPassword.ResetPwdReqResponse
 import com.example.meezan360.di.NetworkModule
 import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
 import com.example.meezan360.model.KPIModel
@@ -110,6 +114,23 @@ class DataRepository(private var networkModule: NetworkModule) {
     ): Flow<Response<CardLevelDataModel>> {
         return flow {
             val response = networkModule.sourceOfNetwork().getCustomerService("1",cif_id)
+            emit(response)
+        }
+    }
+    suspend fun resetPasswordRequest(
+        resetPasswordModel: ResetPasswordModel
+    ): Flow<Response<ResetPwdReqResponse>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork().resetPasswordRequest(resetPasswordModel)
+            emit(response)
+        }
+    }
+
+    suspend fun verifyOtp(
+        otpModel: OtpModel
+    ): Flow<Response<OtpResponse>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork().verifyOtp(otpModel)
             emit(response)
         }
     }

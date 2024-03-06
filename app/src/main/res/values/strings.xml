@@ -32,7 +32,24 @@
     <string name="send_ver">Send Verification Code On</string>
     <string name="username">Username</string>
     <string name="request_otp">Request OTP</string>
+    <string name="enter_otp">Please enter the OTP received on your mobile number</string>
+    <string name="enter_otp_share">Please refrain from sharing this OTP with anyone.</string>
+    <string name="random_number">03008457575</string>
+    <string name="one_time_otp">One-Time Password (OTP)</string>
     <string name="register_now">Register Now!</string>
+    <string name="time_stamp">04:20</string>
+    <string name="resend_OTP">Resend OTP</string>
+    <string name="otp_not_rec"><u>OTP Not Received?</u></string>
+    <string name="current_password">Current Password</string>
+    <string name="enter_new_password">Enter New Password</string>
+    <string name="re_enter_new_password">Re-enter New Password</string>
+    <string name="alphanumeric">Password should be alphanumeric.</string>
+    <string name="update_password">Update Password</string>
+    <string name="minimum">Minimum password length should be 8 characters with a maximum length of 16 characters. Special characters are optional.</string>
+    <string name="your_new">Your new Password must be different from your previous used password</string>
+    <string name="error_empty_email">Please Provide User Name</string>
+    <string name="error_empty_pass">Please Provide Password</string>
+    <string name="something_went_wrong">Something went wrong</string>
     <string name="swipe_up_to_log_in">Swipe Up to Log In</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

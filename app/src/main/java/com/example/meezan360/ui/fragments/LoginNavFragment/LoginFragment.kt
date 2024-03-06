@@ -18,10 +18,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.ActivityLoginScreenBinding
 import com.example.meezan360.databinding.FragmentLoginBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainActivity
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.viewmodel.LoginViewModel
@@ -29,7 +31,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginFragment : Fragment() {
+class LoginFragment : BaseDockFragment() {
     private lateinit var binding: FragmentLoginBinding
     private val myViewModel: LoginViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
@@ -87,6 +89,7 @@ class LoginFragment : Fragment() {
             }
 
             myViewModel.viewModelScope.launch {
+                myDockActivity?.showProgressIndicator()
                 myViewModel.loginRequest(
                     email,
                     password!!,
@@ -94,10 +97,16 @@ class LoginFragment : Fragment() {
                 )
             }
         }
+
+        binding.tvForgetPassword.setOnClickListener {
+            LoginScreen.navController.navigate(R.id.action_nav_login_fragment_to_nav_forget_fragment)
+        }
+
     }
 
     private fun handleAPIResponse() {
         lifecycleScope.launch {
+            myDockActivity?.hideProgressIndicator()
             myViewModel.loginData.collect {
                 when (it) {
                     is ResponseModel.Error -> {
@@ -111,11 +120,7 @@ class LoginFragment : Fragment() {
                     is ResponseModel.Idle -> {
 
                     }
-//                        Toast.makeText(
-//                        applicationContext,
-//                        "Idle: " + it.message,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
+
 
                     is ResponseModel.Loading ->{}
 //                        Toast.makeText(

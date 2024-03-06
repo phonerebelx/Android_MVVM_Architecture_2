@@ -1,6 +1,9 @@
 package com.example.meezan360.utils
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.provider.Settings
 import android.text.TextUtils
 import android.util.Base64
 import javax.crypto.Cipher
@@ -49,5 +52,15 @@ class Utils {
             }
             return Constants.defaultColor
         }
+        @SuppressLint("HardwareIds")
+        fun getDeviceId(context: Context): String {
+            return Settings.Secure.getString(
+                context.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        }
     }
+
+
+
 }
