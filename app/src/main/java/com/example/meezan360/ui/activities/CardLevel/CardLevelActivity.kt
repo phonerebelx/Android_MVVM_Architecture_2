@@ -143,8 +143,7 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
 
     private fun setupCardRecyclerView(cardList: ArrayList<Card>) {
 
-        binding.recyclerViewReport.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerViewReport.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         cardParentAdapter = CardLevelAdapter(this, this)
         cardParentAdapter.setList(cardList)
         binding.recyclerViewReport.adapter = cardParentAdapter
@@ -158,11 +157,12 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
 
     override fun <T> onClick(type: String, item: T, position: Int, checked: Boolean?) {
         val getItem = item as Card
-        Log.d("getItem", getItem.toString())
+
         when (type) {
             "On_Card_Item_Click" -> {
                 val cardLevelDialogFragment = CardLevelDialogFragment()
                 cardLevelDialogFragment.cifId = getItem.cif_id
+                cardLevelDialogFragment.customerName = getItem.customer_name
                 cardLevelDialogFragment.show(supportFragmentManager, "CardLevelDialogFragment")
             }
         }

@@ -1,5 +1,6 @@
 package com.example.meezan360.adapter.levelTwoAdapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.Log
@@ -28,6 +29,28 @@ class TopMenuAdapter(
         binding = TopBoxCategoryItemBinding.inflate(LayoutInflater.from(myContext), parent, false)
         return ViewHolder(binding.root)
     }
+
+//    @SuppressLint("NotifyDataSetChanged")
+//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//        val item = reportList[position]
+//
+//        binding.tvTopBoxTitle.text = item
+//
+//        binding.tvTopBoxTitle.setOnClickListener {
+//            selectedPosition = holder.adapterPosition
+//            notifyDataSetChanged()
+//            onItemClick.onClick(item, position)
+//
+//        }
+//        if (position == selectedPosition) {
+//            binding.tvTopBoxTitle.setBackgroundResource(R.drawable.purple_rounded_gradient)
+//            binding.tvTopBoxTitle.setTextColor(Color.WHITE)
+//        } else {
+//            binding.tvTopBoxTitle.setBackgroundResource(0)
+//            binding.tvTopBoxTitle.setTextColor(ContextCompat.getColor(myContext, R.color.grey2))
+//        }
+//
+//    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = reportList[position]

@@ -199,6 +199,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
         binding.recyclerViewReport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         reportParentAdapter = ReportParentAdapter(this, reportList, kpiId!!)
+        reportParentAdapter.getScreenSize = getScreenHeight("width")
         binding.recyclerViewReport.adapter = reportParentAdapter
     }
 

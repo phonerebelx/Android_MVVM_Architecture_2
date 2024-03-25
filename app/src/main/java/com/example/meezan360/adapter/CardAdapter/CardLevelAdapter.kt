@@ -26,6 +26,8 @@ class CardLevelAdapter(val context: Context,val onTypeItemClickListener: OnTypeI
             //last day detail
             binding.tvRegionDetail.text = item?.level_value
             binding.tvCustomerDetail.text = item?.customer_name
+            binding.tvAreaDetail.text = item?.area
+            binding.tvBranchDetail.text = item?.branch
             when (item?.last_day) {
                 null -> {
                     binding.llLastDay.visibility = View.GONE
@@ -89,13 +91,13 @@ class CardLevelAdapter(val context: Context,val onTypeItemClickListener: OnTypeI
             if (getDataCount == 1) {
                 getDataCount = 0
                 val layoutHeight =
-                    context.resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._110sdp)
+                    context.resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._150sdp)
                 binding.cvCardBox.layoutParams.height = layoutHeight
                 binding.cvCardBox.layoutParams = binding.cvCardBox.layoutParams
             } else if (getDataCount == 2) {
                 getDataCount = 0
                 val layoutHeight =
-                    context.resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._160sdp)
+                    context.resources.getDimensionPixelSize(com.intuit.sdp.R.dimen._190sdp)
                 binding.cvCardBox.layoutParams.height = layoutHeight
                 binding.cvCardBox.layoutParams = binding.cvCardBox.layoutParams
             } else if (getDataCount == 3) {

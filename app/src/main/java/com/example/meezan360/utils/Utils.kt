@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Base64
+import android.util.Log
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -35,6 +36,7 @@ class Utils {
                     Base64.encodeToString(encryptedData, Base64.DEFAULT)
                 val base64_IV: String =
                     Base64.encodeToString(iv.toByteArray(charset("UTF-8")), Base64.DEFAULT)
+                Log.d( "encryptPass: ","$base64_EncryptedData:$base64_IV")
                 return "$base64_EncryptedData:$base64_IV"
             } catch (ex: Exception) {
                 ex.printStackTrace()

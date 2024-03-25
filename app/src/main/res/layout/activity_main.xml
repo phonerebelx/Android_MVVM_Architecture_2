@@ -10,15 +10,13 @@
         android:id="@+id/svMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
 
         <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-
             android:orientation="vertical"
             tools:context=".ui.activities.MainActivity">
 
@@ -45,18 +43,28 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/linearLayout">
 
-                    <TextView
-                        android:id="@+id/tvDashboard"
+                    <ImageView
+                        android:id="@+id/ivLogout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_15sdp"
-                        android:text="@string/dashboard"
+                        android:src="@drawable/logout"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <TextView
+                        android:id="@+id/tvDashboard"
                         style="@style/textViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dashboard"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_16ssp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/ivSearch"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/ivLogout"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView

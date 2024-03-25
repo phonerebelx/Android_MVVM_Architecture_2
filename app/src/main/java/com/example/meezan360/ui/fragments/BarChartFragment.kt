@@ -71,6 +71,10 @@ class BarChartFragment(
 
     private fun setupRecyclerView(listItems: ArrayList<String>) {
 
+        if (listItems.size == 1){
+            binding.recyclerView.visibility = View.GONE
+        }
+
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 context,

@@ -12,11 +12,10 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cvRatingBox"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_120sdp"
+        android:layout_height="@dimen/_150sdp"
         android:layout_marginHorizontal="@dimen/_7sdp"
-        android:backgroundTint="@color/white"
         android:minHeight="?android:attr/actionBarSize"
-        app:cardCornerRadius="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,138 +25,112 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:gravity="center">
 
+
+            <TextView
+                android:id="@+id/tvCust"
+                style="@style/textViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/customer_name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_8sdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDesh"
+                style="@style/textViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" : "
+                android:textColor="@color/black"
+                android:textSize="@dimen/_8sdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvKey"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvCustomer"
+                style="@style/textViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/customer_360"
+                android:textColor="@color/purple_dark"
+                android:textSize="@dimen/_8sdp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvDesh"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/_8sdp"
                 android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_marginTop="@dimen/_12sdp"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tvCifId"
-                            style="@style/textViewStyle"
+
+                        <androidx.core.widget.NestedScrollView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_5sdp"
-                            android:text="@string/cif_id"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_8sdp"
-                            android:textStyle="bold" />
+                            android:layout_height="wrap_content">
 
-                        <TextView
-                            android:id="@+id/tvCifIdDesc"
-                            style="@style/textViewStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_5sdp"
-
-                            android:textColor="@color/purple_dark"
-                            android:textSize="@dimen/_8sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvAcc"
-                            style="@style/textViewStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_5sdp"
-                            android:text="@string/no_of_acc"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_8sdp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvAccDetail"
-                            style="@style/textViewStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_5sdp"
-
-                            android:textColor="@color/purple_dark"
-                            android:textSize="@dimen/_8sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvProd"
-                            style="@style/textViewStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_5sdp"
-                            android:text="@string/no_of_prod"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_8sdp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvProdDetail"
-                            style="@style/textViewStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_5sdp"
-
-                            android:textColor="@color/purple_dark"
-                            android:textSize="@dimen/_8sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvDetail"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/_5sdp"
+                                android:scrollbars="vertical"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                tools:itemCount="3"
+                                tools:listitem="@layout/fragment_card_detail_adapter" />
+                        </androidx.core.widget.NestedScrollView>
 
                 </LinearLayout>
 
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_75sdp"
-                    android:layout_weight="1"
+                    android:layout_width="150sp"
+                    android:layout_height="match_parent"
                     android:gravity="end"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
                         style="@style/textViewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="left"
                         android:layout_marginTop="@dimen/_12sdp"
-                        android:layout_marginRight="@dimen/_5sdp"
                         android:text="@string/account"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_8sdp"
                         android:textStyle="bold" />
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginHorizontal="@dimen/_4sdp"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:layout_marginEnd="@dimen/_18sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:backgroundTint="@color/card_account_color"
                         android:minHeight="?android:attr/actionBarSize"
                         app:cardCornerRadius="@dimen/_5sdp">
@@ -169,11 +142,12 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerView"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_gravity="center"
                             android:orientation="vertical"
                             android:paddingVertical="@dimen/_5sdp"
                             android:scrollbars="vertical"
+                            android:layout_marginHorizontal="@dimen/_1sdp"
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             tools:itemCount="3"
                             tools:listitem="@layout/item_account_detail_adapter" />
@@ -184,42 +158,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginStart="@dimen/_8sdp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_2sdp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvProdName"
-                        style="@style/textViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_5sdp"
-                        android:text="@string/prod_name"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_8sdp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvProdNameDesc"
-                        style="@style/textViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_5sdp"
-                        android:textColor="@color/purple_dark"
-                        android:textSize="@dimen/_8sdp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

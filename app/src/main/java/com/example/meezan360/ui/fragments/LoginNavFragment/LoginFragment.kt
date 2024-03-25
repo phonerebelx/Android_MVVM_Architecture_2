@@ -26,8 +26,10 @@ import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainActivity
 import com.example.meezan360.utils.Utils
+import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -69,10 +71,11 @@ class LoginFragment : BaseDockFragment() {
             )
 
             if (BuildConfig.DEBUG) {
-                email = "waqas"
+                email =  binding.etEmail.text.toString()
                 password = Utils.encryptPass(
                     "23423532",
-                    "1234567891011121", "Uhf@1234"
+                    "1234567891011121",
+                    binding.etPassword.text.toString()
                 )
             }
 
@@ -99,7 +102,7 @@ class LoginFragment : BaseDockFragment() {
         }
 
         binding.tvForgetPassword.setOnClickListener {
-            LoginScreen.navController.navigate(R.id.action_nav_login_fragment_to_nav_forget_fragment)
+            LoginScreen.navController.navigate(R.id.action_nav_login_fragment_to_nav_forget_pass_fragment)
         }
 
     }
@@ -109,12 +112,14 @@ class LoginFragment : BaseDockFragment() {
             myDockActivity?.hideProgressIndicator()
             myViewModel.loginData.collect {
                 when (it) {
+
                     is ResponseModel.Error -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        myDockActivity?.hideProgressIndicator()
+                        val jsonObject = JSONObject(it.data?.errorBody()?.string().toString())
+                        val error: String = jsonObject.getString("error")
+                        Toast.makeText(requireContext(), "error: ${error}", Toast.LENGTH_SHORT).show()
+
+
                     }
 
                     is ResponseModel.Idle -> {
@@ -130,10 +135,23 @@ class LoginFragment : BaseDockFragment() {
 //                        ).show()
 
                     is ResponseModel.Success -> {
-                        sharedPreferenceManager.saveToken(it.data?.body()?.token)
-                        val intent = Intent(requireContext(), MainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish();
+                        if (it.data?.body()?.twoFactor == "yes"){
+                            val bundle = Bundle()
+                            bundle.putString("LOGIN_ID", binding.etEmail.text.toString())
+                            bundle.putString("COME_FROM", "COME_FROM_LOGIN_SCREEN")
+                            bundle.putBoolean("RESET_PASSWORD", false)
+                            LoginScreen.navController.navigate(
+                                R.id.action_nav_login_fragment_to_OTP_Fragment,
+                                bundle
+                            )
+                        }else{
+                            sharedPreferenceManager.saveToken(it.data?.body()?.token)
+                            sharedPreferenceManager.saveLoginId(binding.etEmail.text.toString())
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            requireActivity().finish();
+                        }
+
                     }
                 }
 

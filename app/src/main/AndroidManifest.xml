@@ -18,6 +18,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activities.ChangePasswordActivity.ChangePasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.CardLevel.CardLevelActivity"
             android:exported="false"
             android:label="@string/title_activity_card_level2"

@@ -18,6 +18,9 @@
     <color name="green">#1F753E</color>
     <color name="yellow">#F2C633</color>
     <color name="card_account_color">#F3F3F3</color>
-
+    <color name="red">#F24A4A</color>
     <color name="grey2">#676767</color>
+    <color name="colorAccent">#701E7D</color>
+    <color name="error_color">#ff0033</color>
+    <color name="banner_green_color">#448C26</color>
 </resources>

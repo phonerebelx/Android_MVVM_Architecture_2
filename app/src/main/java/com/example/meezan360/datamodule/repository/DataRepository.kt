@@ -1,9 +1,8 @@
 package com.example.meezan360.datamodule.repository
 
+
 import com.app.adcarchitecture.model.otp.OtpModel
 import com.app.adcarchitecture.model.otp.OtpResponse
-import com.app.adcarchitecture.model.resetPassword.ResetPasswordModel
-import com.app.adcarchitecture.model.resetPassword.ResetPwdReqResponse
 import com.example.meezan360.di.NetworkModule
 import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
 import com.example.meezan360.model.KPIModel
@@ -11,14 +10,20 @@ import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
 import com.example.meezan360.model.SearchFilterModel.ResetFilter.ResetFilterResponseDataModel
 import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
-import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterRequestDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterResponseDataModel
+import com.example.meezan360.model.changePassword.VerifyPassModel
+import com.example.meezan360.model.changenewpassword.ChangePasswordModel
+import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
+import com.example.meezan360.model.resetPassword.ResetPasswordModel
+import com.example.meezan360.model.resetPassword.ResetPwdReqResponse
 import com.google.gson.JsonElement
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
 
 class DataRepository(private var networkModule: NetworkModule) {
@@ -38,9 +43,9 @@ class DataRepository(private var networkModule: NetworkModule) {
         }
     }
 
-    suspend fun getDashboardByKpi(kpiId: String): Flow<Response<DashboardByKPIModel>> {
+    suspend fun getDashboardByKpi(kpiId: String,tag: String): Flow<Response<DashboardByKPIModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId,"avg_deposit")
+            val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId,tag)
             emit(response)
         }
     }
@@ -131,6 +136,22 @@ class DataRepository(private var networkModule: NetworkModule) {
     ): Flow<Response<OtpResponse>> {
         return flow {
             val response = networkModule.sourceOfNetwork().verifyOtp(otpModel)
+            emit(response)
+        }
+    }
+    suspend fun changePassword(
+        changePasswordModel: ChangePasswordModel
+    ): Flow<Response<ChangePasswordResponse>> {
+        return flow {
+            val response = networkModule.sourceOfNetwork().changePassword(changePasswordModel)
+            emit(response)
+        }
+    }
+    suspend fun resetPasswordVerify(
+        verifyPassModel: VerifyPassModel
+    ): Flow<Call<ResponseBody>> {
+        return flow {
+           val response = networkModule.sourceOfNetwork().verifyPassword(verifyPassModel)
             emit(response)
         }
     }

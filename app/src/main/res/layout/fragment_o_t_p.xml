@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/purple_dark"
-    tools:context=".ui.activities.LoginScreen">
+    tools:context=".ui.fragments.LoginNavFragment.OTPFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:background="@null"
+            android:visibility="visible"
             android:src="@drawable/ic_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +49,7 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/grey"
+        android:background="@color/white"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,18 +104,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:textSize="@dimen/_15ssp"
                 android:gravity="center"
-                android:inputType="phone"
+                android:inputType="number"
+                app:cursorColor="@color/purple_dark"
                 app:hideLineWhenFilled="false"
-                app:itemCount="6"
-                app:itemHeight="@dimen/_35sdp"
-                app:itemRadius="@dimen/_7sdp"
-                app:itemSpacing="@dimen/_15sdp"
-                app:itemWidth="@dimen/_35sdp"
-                app:lineColor="@color/purple_dark" />
+                android:defaultFocusHighlightEnabled="true"
+                app:itemCount="4"
+                app:itemWidth="@dimen/_40sdp"
+                app:lineWidth="@dimen/_2sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/userName"
+                app:lineColor="@color/pin_line_default"
+                app:viewType="line" />
 
 
             <androidx.appcompat.widget.AppCompatTextView

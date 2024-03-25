@@ -2,6 +2,7 @@ package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -55,57 +56,132 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         return binding.root
     }
 
+//    private fun showBarChart(
+//        chartModelTop: ArrayList<HorizontalBarChartDataModel>,
+//        chartModelBottom: ArrayList<HorizontalBarChartDataModel>,
+//        horizontalBarChart: HorizontalBarChart
+//    ) {
+//        val entries: ArrayList<BarEntry> = ArrayList()
+//        val myColors = ArrayList<Int>()
+//        val labels: ArrayList<String> = arrayListOf()
+//
+//        var lastIndex = 0f
+//        chartModelTop.forEachIndexed { index, dataModel ->
+//            entries.add(BarEntry(index.toFloat(), dataModel.value))
+//            myColors.add(Utils.parseColorSafely(dataModel.valueColor))
+//            labels.add(dataModel.key)
+//            lastIndex = index.toFloat()
+//        }
+//        var updatedIndex = lastIndex + 1
+//        for (dataModel in chartModelBottom) {
+//            entries.add(BarEntry(updatedIndex, dataModel.value))
+//            myColors.add(Utils.parseColorSafely(dataModel.valueColor))
+//            labels.add(dataModel.key)
+//            updatedIndex++
+//        }
+//        Log.d("updatedIndex entries",entries.toString())
+//        Log.d("updatedIndex labels",labels.toString())
+//        val barDataSet = BarDataSet(entries, "Target")
+//
+//        barDataSet.colors = myColors
+//
+////        val totalSum = valueList.sum()
+//        barDataSet.valueFormatter = object : ValueFormatter() {
+//            override fun getFormattedValue(value: Float): String {
+////                val percentage = (abs(value.toInt()) / totalSum) * 100
+////                val formatted = "%.1f%%".format(percentage)
+//                return value.toInt().toString()
+//            }
+//        }
+//
+//        barDataSet.setDrawValues(true)
+//        barDataSet.valueTextSize = 8f
+//        barDataSet.valueTextColor = Color.WHITE
+//
+//        val mData = BarData(barDataSet)
+//        mData.barWidth = 0.7f
+//        mData.isHighlightEnabled = false
+//
+//        //Display the axis on the left
+//        val xAxis = horizontalBarChart.xAxis
+//        xAxis.spaceMin = mData.barWidth / 2f // First bar to show properly
+//        xAxis.spaceMax = mData.barWidth / 2f // Last bar to show properly
+//        xAxis.setDrawGridLines(false)
+//        xAxis.position = XAxis.XAxisPosition.BOTTOM
+//        xAxis.setDrawAxisLine(false)
+//        xAxis.labelCount = labels.size
+//
+//        xAxis.valueFormatter = object : IndexAxisValueFormatter(labels) {
+//            override fun getFormattedValue(value: Float): String {
+//                return if (value >= 0 && value.toInt() < labels.size) {
+//                    labels[value.toInt()]
+//                } else {
+//                    ""
+//                }
+//            }
+//        }
+//
+//        val maxValue = entries.maxByOrNull { it.y }
+//        val minValue = entries.minByOrNull { it.y }
+//
+//        horizontalBarChart.apply {
+//            axisLeft.axisMaximum = maxValue?.y!!
+//            //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
+//            axisLeft.axisMinimum = minValue?.y!!
+//            axisRight.axisMinimum = minValue.y
+//            axisRight.axisMaximum = maxValue.y
+//            legend.isEnabled = false
+//            setDrawValueAboveBar(false)
+//            axisLeft.isEnabled = false
+//            axisRight.isEnabled = false
+//            data = mData
+//            description.isEnabled = false
+//            invalidate()
+//        }
+//    }
+
+
     private fun showBarChart(
         chartModelTop: ArrayList<HorizontalBarChartDataModel>,
         chartModelBottom: ArrayList<HorizontalBarChartDataModel>,
         horizontalBarChart: HorizontalBarChart
     ) {
-        val entries: ArrayList<BarEntry> = ArrayList()
-        val myColors = ArrayList<Int>()
+        val topEntries: ArrayList<BarEntry> = ArrayList()
+        val bottomEntries: ArrayList<BarEntry> = ArrayList()
+        val topColors = ArrayList<Int>()
+        val bottomColors = ArrayList<Int>()
         val labels: ArrayList<String> = arrayListOf()
 
-        var lastIndex = 0f
         chartModelTop.forEachIndexed { index, dataModel ->
-            entries.add(BarEntry(index.toFloat(), dataModel.value))
-            myColors.add(Utils.parseColorSafely(dataModel.valueColor))
+            topEntries.add(BarEntry(index.toFloat(), dataModel.value))
+            topColors.add(Utils.parseColorSafely(dataModel.valueColor))
             labels.add(dataModel.key)
-            lastIndex = index.toFloat()
         }
-        var updatedIndex = lastIndex + 1
-        for (dataModel in chartModelBottom) {
-            entries.add(BarEntry(updatedIndex, dataModel.value))
-            myColors.add(Utils.parseColorSafely(dataModel.valueColor))
+        val lastIndex = topEntries.size.toFloat()
+        var updatedIndex = lastIndex
+        chartModelBottom.forEach { dataModel ->
+            bottomEntries.add(BarEntry(updatedIndex, dataModel.value))
+            bottomColors.add(Utils.parseColorSafely(dataModel.valueColor))
             labels.add(dataModel.key)
             updatedIndex++
         }
 
-        val barDataSet = BarDataSet(entries, "Target")
+        val topBarDataSet = BarDataSet(topEntries, "Top Bars")
+        val bottomBarDataSet = BarDataSet(bottomEntries, "Bottom Bars")
 
-        barDataSet.colors = myColors
+        topBarDataSet.colors = topColors
+        bottomBarDataSet.colors = bottomColors // You can use different colors for top and bottom bars if needed
 
-//        val totalSum = valueList.sum()
-        barDataSet.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-//                val percentage = (abs(value.toInt()) / totalSum) * 100
-//                val formatted = "%.1f%%".format(percentage)
-                return value.toInt().toString()
-            }
-        }
-
-        barDataSet.setDrawValues(true)
-        barDataSet.valueTextSize = 8f
-        barDataSet.valueTextColor = Color.WHITE
-
-        val mData = BarData(barDataSet)
-        mData.barWidth = 0.7f
-        mData.isHighlightEnabled = false
+        val mData = BarData(topBarDataSet, bottomBarDataSet)
 
         //Display the axis on the left
         val xAxis = horizontalBarChart.xAxis
+        xAxis.spaceMin = mData.barWidth / 2f // First bar to show properly
+        xAxis.spaceMax = mData.barWidth / 2f // Last bar to show properly
         xAxis.setDrawGridLines(false)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawAxisLine(false)
-        xAxis.labelCount = entries.size
+        xAxis.labelCount = labels.size
 
         xAxis.valueFormatter = object : IndexAxisValueFormatter(labels) {
             override fun getFormattedValue(value: Float): String {
@@ -117,8 +193,8 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
             }
         }
 
-        val maxValue = entries.maxByOrNull { it.y }
-        val minValue = entries.minByOrNull { it.y }
+        val maxValue = (topEntries + bottomEntries).maxByOrNull { it.y }
+        val minValue = (topEntries + bottomEntries).minByOrNull { it.y }
 
         horizontalBarChart.apply {
             axisLeft.axisMaximum = maxValue?.y!!
@@ -136,8 +212,12 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         }
     }
 
-    private fun setupRecyclerView(listItems: ArrayList<String>) {
 
+
+    private fun setupRecyclerView(listItems: ArrayList<String>) {
+        if (listItems.size == 1) {
+            binding.recyclerView.visibility = View.GONE
+        }
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 context,
@@ -182,7 +262,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                             graphModel[index].label.let { it2 -> listItems.add(it2) }
                         }
                         setupRecyclerView(listItems)
-
+                        Log.d("graphModel",graphModel.toString())
                         if (graphModel.isNotEmpty()) showBarChart(
                             graphModel[0].top,
                             graphModel[0].bottom,

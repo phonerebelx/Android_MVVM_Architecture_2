@@ -29,7 +29,7 @@ class SearchFragViewModel(private var dataRepo: DataRepository?) : ViewModel()  
         dataRepo?.getLovs()?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) getLovResponse.emit(ResponseModel.Success(it))
-                else getLovResponse.emit(ResponseModel.Error(it.message()))
+                else getLovResponse.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }
@@ -39,7 +39,7 @@ class SearchFragViewModel(private var dataRepo: DataRepository?) : ViewModel()  
         dataRepo?.getSetFilter()?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) getSetFilterResponse.emit(ResponseModel.Success(it))
-                else getSetFilterResponse.emit(ResponseModel.Error(it.message()))
+                else getSetFilterResponse.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }
@@ -49,7 +49,7 @@ class SearchFragViewModel(private var dataRepo: DataRepository?) : ViewModel()  
         dataRepo?.resetFilter()?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) resetFilterResponse.emit(ResponseModel.Success(it))
-                else resetFilterResponse.emit(ResponseModel.Error(it.message()))
+                else resetFilterResponse.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }
@@ -64,10 +64,8 @@ class SearchFragViewModel(private var dataRepo: DataRepository?) : ViewModel()  
         )?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) setFilterResponse.emit(ResponseModel.Success(it))
-                else setFilterResponse.emit(ResponseModel.Error(it.message()))
+                else setFilterResponse.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }
-
-
 }

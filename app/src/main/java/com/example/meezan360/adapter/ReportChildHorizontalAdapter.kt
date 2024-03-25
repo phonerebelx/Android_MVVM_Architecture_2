@@ -20,7 +20,8 @@ import com.example.meezan360.utils.Utils
 class ReportChildHorizontalAdapter(
     val myContext: Context,
     private val itemList: ArrayList<ReportsColumnData>,
-    val onTtypeItemClickListener: OnTypeItemClickListener
+    val onTtypeItemClickListener: OnTypeItemClickListener,
+    private val getScreenSize: Int
 ) :
     RecyclerView.Adapter<ReportChildHorizontalAdapter.ViewHolder>() {
     private var selectedPosition = 0
@@ -32,10 +33,14 @@ class ReportChildHorizontalAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val item = itemList[position]
 
-        binding.tvChild.text = item.value
-        binding.tvChild.setTextColor(Utils.parseColorSafely(item.valueColor))
+        val item = itemList[position]
+        binding.tvChild.apply {
+            text = item.value
+            layoutParams.width = getScreenSize // Assuming getScreenSize is the desired width in pixels
+            setTextColor(Utils.parseColorSafely(item.valueColor))
+        }
+
 
         binding.llHorizontal.setOnClickListener {
             onTtypeItemClickListener.onClick("",itemList,position)

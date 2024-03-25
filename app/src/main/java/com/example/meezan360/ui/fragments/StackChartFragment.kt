@@ -78,12 +78,14 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                     entries.size.toFloat(),
                     floatArrayOf(
                         stackChartDataModel.value1.toFloat(),
-                        stackChartDataModel.value2.toFloat()
+                        stackChartDataModel.value2.toFloat(),
+                        stackChartDataModel.value3.toFloat()
                     )
                 )
                 entries.add(barEntry)
                 colors.add(Utils.parseColorSafely(stackChartDataModel.value1Color))
                 colors.add(Utils.parseColorSafely(stackChartDataModel.value2Color))
+                colors.add(Utils.parseColorSafely(stackChartDataModel.value3Color))
                 labels.add(stackChartDataModel.key)
             }
         }
@@ -109,17 +111,23 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
             xAxis.setDrawAxisLine(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
-            xAxis.labelCount = entries.size
+            xAxis.labelCount = labels.size
             xAxis.textSize = 7f
             setTouchEnabled(false)
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             data = barData
             animateY(800)
             invalidate()
+            if (dataModel.isVerticalLegend == "1"){
+                xAxis.labelRotationAngle = -90f
+            }
         }
     }
 
     private fun setupRecyclerView(listItems: ArrayList<String>) {
+        if (listItems.size == 1){
+            binding.recyclerView.visibility = View.GONE
+        }
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 requireContext(),

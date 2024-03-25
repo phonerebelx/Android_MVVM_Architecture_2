@@ -1,24 +1,32 @@
 package com.example.meezan360.network
 
+
 import com.app.adcarchitecture.model.otp.OtpModel
 import com.app.adcarchitecture.model.otp.OtpResponse
-import com.app.adcarchitecture.model.resetPassword.ResetPasswordModel
-import com.app.adcarchitecture.model.resetPassword.ResetPwdReqResponse
 import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
+
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
 import com.example.meezan360.model.SearchFilterModel.ResetFilter.ResetFilterResponseDataModel
 import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
-import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterRequestDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterResponseDataModel
+import com.example.meezan360.model.changePassword.VerifyPassModel
+import com.example.meezan360.model.changenewpassword.ChangePasswordModel
+import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
+import com.example.meezan360.model.resetPassword.ResetPasswordModel
+import com.example.meezan360.model.resetPassword.ResetPwdReqResponse
 import com.google.gson.JsonElement
+import okhttp3.ResponseBody
+import retrofit2.Call
+
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -99,5 +107,14 @@ interface APIService {
         @Body otpModel: OtpModel
     ): Response<OtpResponse>
 
+    @POST("auth/changePassword")
+    fun changePassword(
+        @Body changePasswordModel: ChangePasswordModel
+    ): Response<ChangePasswordResponse>
+
+    @POST("auth/resetPasswordVerify")
+    fun verifyPassword(
+        @Body verifyPassModel: VerifyPassModel
+    ): Call<ResponseBody>
 
 }

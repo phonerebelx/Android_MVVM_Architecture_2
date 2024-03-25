@@ -24,11 +24,13 @@ class ReportChildVerticalAdapter(
     private val dataArrayList: ArrayList<ReportsColumnData>,
     private val columnList: ArrayList<ReportDataArrayModel>,
     private val tableId: String,
-    val onTypeItemClickListener: OnTypeItemClickListener
+    val onTypeItemClickListener: OnTypeItemClickListener,
+    private val getScreenSize: Int,
 
 
 ) : RecyclerView.Adapter<ReportChildVerticalAdapter.ViewHolder>(),OnTypeItemClickListener {
     private lateinit var binding: ReportItemChildVerticalBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = ReportItemChildVerticalBinding.inflate(LayoutInflater.from(myContext), parent, false)
         return ViewHolder(binding.root)
@@ -37,7 +39,7 @@ class ReportChildVerticalAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = dataArrayList[position]
 
-        val horizontalAdapter = ReportChildHorizontalAdapter(myContext, columnList[position].data,this)
+        val horizontalAdapter = ReportChildHorizontalAdapter(myContext, columnList[position].data,this,getScreenSize)
         binding.rvHorizontalChild?.adapter = horizontalAdapter
 
 //        holder.cardView.setOnClickListener {

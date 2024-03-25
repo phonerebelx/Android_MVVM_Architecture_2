@@ -1,5 +1,7 @@
-package com.app.adcarchitecture.model.resetPassword
+package com.example.meezan360.model.resetPassword
 
 data class ResetPasswordModel(
-    var login_id: String? = null
+    var login_id: String? = null,
+    var prefix: String? = null,
+
 )

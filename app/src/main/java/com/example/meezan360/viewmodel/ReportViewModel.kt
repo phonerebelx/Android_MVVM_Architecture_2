@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.datamodule.repository.DataRepository
 import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
-import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
 import com.example.meezan360.network.ResponseModel
@@ -26,7 +25,7 @@ class ReportViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         dataRepo?.getDepositDetails()?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) depositDetail.emit(ResponseModel.Success(it))
-                else depositDetail.emit(ResponseModel.Error(it.message()))
+                else depositDetail.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }
@@ -36,7 +35,7 @@ class ReportViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         dataRepo?.getLevelTwo(kpiId, tableId,identifierType,identifier)?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) levelTwo.emit(ResponseModel.Success(it))
-                else levelTwo.emit(ResponseModel.Error(it.message()))
+                else levelTwo.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }
@@ -46,7 +45,7 @@ class ReportViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         dataRepo?.getCustomerService(cif_id)?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) customerService.emit(ResponseModel.Success(it))
-                else customerService.emit(ResponseModel.Error(it.message()))
+                else customerService.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }

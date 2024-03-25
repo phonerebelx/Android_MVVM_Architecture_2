@@ -25,6 +25,7 @@ import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -61,12 +62,15 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         }
 
         val listOfDataSet: MutableList<LineDataSet> = mutableListOf()
-
+        val labels = ArrayList<String>()
         for (i in positionsList) {
             val lineEntries = ArrayList<Entry>()
             tierGraphModel[i].barChartModel.forEachIndexed { index, dataModel ->
+                labels.add(dataModel.key)
                 lineEntries.add(Entry(index.toFloat(), dataModel.value))
             }
+
+
 //            for (dataModel in tierGraphModel[i].barChartModel) {
 //                lineEntries.add(Entry(dataModel.key.toFloat(), dataModel.value))
 //            }
@@ -87,8 +91,12 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.isGranularityEnabled = true
             xAxis.granularity = 1.0f
-//            xAxis.labelCount = lineEntries.count()
+            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            xAxis.labelCount = labels.count()
             data = lineData
+            if (dataModel.isVerticalLegend == "1"){
+                xAxis.labelRotationAngle = -90f
+            }
             invalidate()
         }
 
@@ -156,7 +164,6 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
     }
 
     private fun setupRecyclerView(listItems: ArrayList<HorizontalGraphModel>) {
-
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 context,
@@ -165,6 +172,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             )
         adapter = LineChartAdapter(requireContext(), listItems, this)
         binding.recyclerView.adapter = adapter
+
 
     }
 

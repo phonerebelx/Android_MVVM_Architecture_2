@@ -2,6 +2,7 @@ package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -69,8 +70,12 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             colors.add(Utils.parseColorSafely(chartData.valueColor))
             labels.add(chartData.key)
         }
+        Log.d("labels chart",labels.toString())
 
         val barDataSet = BarDataSet(entries, "Target")
+        barDataSet.setDrawValues(true)
+        barDataSet.valueTextColor = Color.BLACK
+        barDataSet.valueTextSize = 6f
         barDataSet.colors = colors
         val barData = BarData(barDataSet)
         barData.barWidth = 0.3f
@@ -78,6 +83,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
         setupLegend()
 
         barChart.apply {
+            setDrawValueAboveBar(true)
             extraBottomOffset = 10f
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
@@ -86,7 +92,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             xAxis.setDrawAxisLine(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
-            xAxis.labelCount = valueList.size
+            xAxis.labelCount = labels.size
             xAxis.textSize = 7f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             setTouchEnabled(false)

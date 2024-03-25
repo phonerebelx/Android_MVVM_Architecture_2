@@ -11,17 +11,21 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.app.adcarchitecture.model.resetPassword.ResetPasswordModel
+import androidx.navigation.fragment.findNavController
+
 import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentForgetPasswordBinding
 import com.example.meezan360.databinding.FragmentLoginBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.model.resetPassword.ResetPasswordModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainActivity
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.LoginViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,6 +33,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ForgetPasswordFragment : BaseDockFragment() {
     private lateinit var binding: FragmentForgetPasswordBinding
     private val myViewModel: LoginViewModel by viewModel()
+    private var resetPassJob: Job? = null
+
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +51,8 @@ class ForgetPasswordFragment : BaseDockFragment() {
             "Calling_Reset_Password" -> {
                 myDockActivity?.showProgressIndicator()
                 val setResetPassModel = ResetPasswordModel(
-                    binding.reqOtpEtEmail.text.toString()
+                    binding.reqOtpEtEmail.text.toString(),
+                    "360"
                 )
                 myViewModel.viewModelScope.launch {
                     myViewModel.resetPasswordRequest(
@@ -72,13 +79,13 @@ class ForgetPasswordFragment : BaseDockFragment() {
     }
 
     private fun handleAPIResponse() {
-        lifecycleScope.launch {
+        resetPassJob = lifecycleScope.launch {
             myViewModel.resetPassData.collect {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-//                        Log.d("ResponseModel.Error: ",it.data?.errorBody()?.string().toString())
+
 
                     }
 
@@ -90,18 +97,30 @@ class ForgetPasswordFragment : BaseDockFragment() {
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
+                        if (isAdded) {
+                            val bundle = Bundle()
+                            bundle.putString("LOGIN_ID", binding.reqOtpEtEmail.text.toString())
+                            bundle.putString("COME_FROM", "COME_FROM_FORGET_PASSWORD")
+                            bundle.putBoolean("RESET_PASSWORD", true)
+                            LoginScreen.navController.navigate(
+                                R.id.action_forgetPasswordFragment_to_OTP_Fragment,
+                                bundle
+                            )
 
-                        val bundle = Bundle()
-                        bundle.putString("LOGIN_ID", binding.reqOtpEtEmail.text.toString())
-                        bundle.putBoolean("RESET_PASSWORD", true)
-
-                        LoginScreen.navController.navigate(R.id.action_forgetPasswordFragment_to_OTPFragment,bundle)
-
+                        }
                     }
                 }
 
             }
         }
+
+    }
+
+
+    override fun onStop() {
+        super.onStop()
+        resetPassJob?.cancel()
+        myViewModel.resetPassData.value = ResponseModel.Idle("Idle State")
 
     }
 

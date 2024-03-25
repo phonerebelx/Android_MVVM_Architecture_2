@@ -40,10 +40,6 @@ class MainApplication : Application() {
     }
 
     private fun changeStatusBarColor(activity: Activity) {
-        // Check if the Android version is Lollipop or higher
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Change the status bar color to your desired color (e.g., black)
-            activity.window.statusBarColor = activity.resources.getColor(R.color.purple_dark)
-        }
+        activity.window.statusBarColor = activity.resources.getColor(R.color.purple_dark)
     }
 }

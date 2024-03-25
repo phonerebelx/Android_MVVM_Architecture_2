@@ -3,6 +3,7 @@ package com.example.meezan360.adapter
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
+import android.os.Build
 import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +37,7 @@ class ReportParentAdapter(
 ) : RecyclerView.Adapter<ReportParentAdapter.ViewHolder>(), OnTypeItemClickListener {
     private var selectedPosition = 0
     lateinit var binding: ReportItemParentBinding
-
+    lateinit var getScreenSize: String
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -53,9 +55,21 @@ class ReportParentAdapter(
             return
         }
 
-        //it creates textview for header dynamically on the basis of column items
 
-        item.column?.forEachIndexed { index, column ->
+        val columnIndex: Int = item.column?.size ?: 0
+
+        val pixelSize = getScreenSize.toInt() / columnIndex
+        var dpSize = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            pixelSize.toFloat(),
+            myContext.resources.displayMetrics
+        ).toInt()
+        if ( myContext.resources.getDimension(com.intuit.sdp.R.dimen._75sdp).toInt() > dpSize){
+            dpSize = myContext.resources.getDimension(com.intuit.sdp.R.dimen._75sdp).toInt()
+        }
+
+        //it creates textview for header dynamically on the basis of column items
+        item.column?.forEachIndexed{ index, column ->
 
             val valueTV = TextView(myContext)
             val typeface = ResourcesCompat.getFont(myContext, R.font.montserrat_light)
@@ -69,8 +83,10 @@ class ReportParentAdapter(
             )
             valueTV.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
             valueTV.setTextColor(ContextCompat.getColor(myContext,R.color.white))
+
             valueTV.layoutParams = LinearLayout.LayoutParams(
-                myContext.resources.getDimension(com.intuit.sdp.R.dimen._75sdp).toInt(),
+//                myContext.resources.getDimension(com.intuit.sdp.R.dimen._75sdp).toInt(),
+                dpSize,
                 LinearLayout.LayoutParams.MATCH_PARENT
 
             ).apply {
@@ -89,10 +105,11 @@ class ReportParentAdapter(
                     myContext,
                     it,
                     columnsData,
-                    item.tableId, this
+                    item.tableId, this,
+                    dpSize
                 )
             } else {
-                ReportChildVerticalAdapter(myContext, it, arrayListOf(), item.tableId, this)
+                ReportChildVerticalAdapter(myContext, it, arrayListOf(), item.tableId, this,dpSize)
             }
         }
 
@@ -155,4 +172,6 @@ class ReportParentAdapter(
         }
 
     }
+
+
 }

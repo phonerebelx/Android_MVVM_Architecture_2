@@ -2,10 +2,12 @@ package com.example.meezan360.ui.activities
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -102,15 +104,27 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun setupReportsRecyclerView(reportList: ArrayList<Report>?) {
+
         binding.recyclerViewReport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         reportParentAdapter = ReportParentAdapter(this, reportList, kpiId = "1")
+        reportParentAdapter.getScreenSize = getScreenHeight("width")
         binding.recyclerViewReport.adapter = reportParentAdapter
     }
 
     private fun setupFooterRecyclerView(footerBoxesList: ArrayList<FooterBoxes>?) {
         binding.recyclerViewFooter.layoutManager = GridLayoutManager(this, 2)
+        (binding.recyclerViewFooter.layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                when (position) {
+                    0 -> return 2
+                    else -> return 1
+                }
+            }
+        }
+
         footerAdapter = DepositFooterAdapter(this, footerBoxesList,this)
         binding.recyclerViewFooter.adapter = footerAdapter
     }

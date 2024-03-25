@@ -38,6 +38,9 @@
     <string name="one_time_otp">One-Time Password (OTP)</string>
     <string name="register_now">Register Now!</string>
     <string name="time_stamp">04:20</string>
+    <string name="change_pas">Change Password</string>
+    <string name="reset_pas">Reset Password</string>
+    <string name="fp_pr_both_pass_must_match">Both passwords must match</string>
     <string name="resend_OTP">Resend OTP</string>
     <string name="otp_not_rec"><u>OTP Not Received?</u></string>
     <string name="current_password">Current Password</string>
@@ -74,8 +77,11 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
+    <!--    -->
     <string name="Region">Region</string>
-    <string name="customer_name">Customer Name</string>
+    <string name="customer_name">Customer</string>
+    <string name="area_name">Area</string>
+    <string name="branch_name">Branch</string>
     <string name="last_day">Last Day</string>
     <string name="last_month">Last Month</string>
     <string name="last_year">Last Year</string>
@@ -137,4 +143,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+
+    <string name="error">Error</string>
+    <string name="success">Success</string>
 </resources>

@@ -47,6 +47,8 @@ class SearchFragment : BaseDockFragment() {
     private var regionItem: String = ""
     private var areaItem: String = ""
     private var branchItem: String = ""
+    private var branchCode: String = ""
+    private lateinit var branchDict: HashMap<String,String>
     private lateinit var selectedDate: String
     private lateinit var regionArray: ArrayList<String>
     private lateinit var areaArray: ArrayList<String>
@@ -239,14 +241,17 @@ class SearchFragment : BaseDockFragment() {
 
         binding.actvBranch.setOnSpinnerItemSelectedListener<IconSpinnerItem> { oldIndex, oldItem, newIndex, newItem ->
 
-            branchItem = newItem.text.toString()
 
+            branchItem = newItem.text.toString()
+            branchCode = branchDict[newItem.text.toString()].toString()
+            Log.d( "showBranchArray: ",branchItem.toString())
 
 //            binding.actvBranch.clearFocus()
         }
 
         if (currentBranch != "") {
             branchItem = currentBranch
+            branchCode = branchDict[currentBranch].toString()
             Log.d("TAG", branchItem.toString())
             binding.actvBranch.text = branchItem
 
@@ -358,7 +363,7 @@ class SearchFragment : BaseDockFragment() {
                 val setFilterResponse: SetFilterRequestDataModel = SetFilterRequestDataModel(
                     selected_region = regionItem,
                     selected_area = areaItem,
-                    selected_branch = branchItem,
+                    selected_branch = branchCode,
                     selected_date = selectedDate
                 )
                 setFilter(
@@ -442,6 +447,7 @@ class SearchFragment : BaseDockFragment() {
                         regionArray = arrayListOf()
                         areaArray = arrayListOf()
                         branchArray = arrayListOf()
+                        branchDict = hashMapOf()
                         lovsModel = it.data?.body()!!
                         if (lovsModel != null && lovsModel.isNotEmpty()) {
 
@@ -450,6 +456,7 @@ class SearchFragment : BaseDockFragment() {
                                 item.area.forEach {
                                     areaArray.add(it.area_name)
                                     it.branch.forEach {
+                                        branchDict[it.branch_name] = it.branch_code
                                         branchArray.add(it.branch_name)
 
                                     }
@@ -474,7 +481,6 @@ class SearchFragment : BaseDockFragment() {
                                     getSetFilterModel.selected_branch_name
                                 )
                             }
-
 
                         }
 

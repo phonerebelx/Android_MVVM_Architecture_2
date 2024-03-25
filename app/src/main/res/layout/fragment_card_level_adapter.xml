@@ -10,13 +10,12 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cvCardBox"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_200sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_4sdp"
-        android:backgroundTint="@color/white"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_4sdp"
-        android:minHeight="?android:attr/actionBarSize"
-        app:cardCornerRadius="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="@dimen/_10sdp"
         tools:layout_editor_absoluteX="26dp">
 
         <LinearLayout
@@ -29,78 +28,170 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_18sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tvRegion"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/textViewStyle"
-                        android:text="@string/Region"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_8sdp" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/textViewStyle"
-                        android:text=": "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_8sdp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvRegion"
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/Region"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_8sdp" />
+
+                            <TextView
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=": "
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_8sdp" />
 
 
-                    <TextView
-                        android:id="@+id/tvRegionDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="Karachi East"
-                        style="@style/textViewStyle"
-                        android:textColor="@color/purple_dark"
-                        android:textColorHint="@color/purple_dark"
-                        android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvRegionDetail"
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="Karachi East"
+                                android:textColor="@color/purple_dark"
+                                android:textColorHint="@color/purple_dark"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_5sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvAreaName"
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/area_name"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_8sdp" />
+
+                            <TextView
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=": "
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_8sdp" />
+
+
+                            <TextView
+                                android:id="@+id/tvAreaDetail"
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="Vehari Area"
+                                android:textColor="@color/purple_dark"
+                                android:textColorHint="@color/purple_dark"
+                                android:textSize="@dimen/_8sdp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvBranchName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/textViewStyle"
+                                android:text="@string/branch_name"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_8sdp" />
+
+                            <TextView
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=": "
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_8sdp" />
+
+
+                            <TextView
+                                android:id="@+id/tvBranchDetail"
+                                style="@style/textViewStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="100 - ARIFWALA BRANCH"
+                                android:textColor="@color/purple_dark"
+                                android:textColorHint="@color/purple_dark"
+                                android:textSize="@dimen/_8sdp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp">
-
-                    <TextView
-                        android:id="@+id/tvCustomerName"
-                        android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/textViewStyle"
-                        android:text="@string/customer_name"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_8sdp" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/textViewStyle"
-                        android:text=": "
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_8sdp" />
+                        <TextView
+                            android:id="@+id/tvCustomer"
+                            style="@style/textViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/customer_name"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_8sdp" />
+
+                        <TextView
+                            style="@style/textViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=": "
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_8sdp" />
 
 
-                    <TextView
-                        android:id="@+id/tvCustomerDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/textViewStyle"
-                        android:hint="Haider Ali"
-                        android:textColor="@color/purple_dark"
-                        android:textColorHint="@color/purple_dark"
-                        android:textSize="@dimen/_8sdp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCustomerDetail"
+                            style="@style/textViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="Umer Sohail"
+                            android:textColor="@color/purple_dark"
+                            android:textColorHint="@color/purple_dark"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
                 </LinearLayout>
-
             </LinearLayout>
 
 
@@ -108,7 +199,7 @@
                 android:id="@+id/llLastDay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/_18sdp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -146,17 +237,20 @@
 
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/_6sdp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/card_indicator_red" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/_6sdp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/card_indicator_red" />
                     </LinearLayout>
+
                     <ImageView
                         android:layout_width="@dimen/_55sdp"
                         android:layout_height="wrap_content"
@@ -172,18 +266,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="horizontal">
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="@dimen/_5sdp">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="@dimen/_6sdp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/card_indicator_green" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="@dimen/_6sdp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/card_indicator_green" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -296,17 +393,20 @@
 
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="@dimen/_6sdp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/card_indicator_red" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="@dimen/_6sdp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/card_indicator_red" />
                     </LinearLayout>
+
                     <ImageView
                         android:layout_width="@dimen/_55sdp"
                         android:layout_height="wrap_content"
@@ -324,19 +424,19 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/_5sdp">
-
-                    <ImageView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="@dimen/_6sdp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/card_indicator_green" />
-                </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/_5sdp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="@dimen/_6sdp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/card_indicator_green" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -410,7 +510,7 @@
                 android:id="@+id/llLastYear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_15sdp"
+                android:layout_marginVertical="@dimen/_5sdp"
                 android:orientation="horizontal"
                 android:paddingHorizontal="@dimen/_14sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -449,9 +549,11 @@
 
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent">
+
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -460,6 +562,7 @@
                             android:scaleType="fitXY"
                             android:src="@drawable/card_indicator_red" />
                     </LinearLayout>
+
                     <ImageView
                         android:layout_width="@dimen/_55sdp"
                         android:layout_height="wrap_content"
@@ -559,7 +662,6 @@
 
             </LinearLayout>
         </LinearLayout>
-
 
 
     </androidx.cardview.widget.CardView>

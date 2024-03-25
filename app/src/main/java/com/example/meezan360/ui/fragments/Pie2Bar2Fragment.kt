@@ -92,7 +92,6 @@ class Pie2Bar2Fragment(
             pieDataSet.valueTextSize = 0f
             pieDataSet.colors = colors
             pieDataSet.selectionShift = 0f
-
             pieChart.apply {
                 description.isEnabled = false
                 legend.isEnabled = false
@@ -119,10 +118,15 @@ class Pie2Bar2Fragment(
             colors.add(Utils.parseColorSafely(graph2.barChartModel[index].valueColor))
         }
 
+
         val xl: XAxis = horizontalBarChart.xAxis
         xl.position = XAxis.XAxisPosition.BOTTOM
+
         xl.setDrawAxisLine(true)
         xl.setDrawGridLines(false)
+
+        xl.textSize = 9f
+        xl.textColor = Color.BLACK
         xl.valueFormatter = object : IndexAxisValueFormatter(labels) {
             override fun getFormattedValue(value: Float): String {
                 return if (value >= 0 && value.toInt() < labels.size) {
@@ -134,12 +138,13 @@ class Pie2Bar2Fragment(
         }
         xl.granularity = 1f
 
+
         val yl: YAxis = horizontalBarChart.axisLeft
         yl.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
         yl.setDrawGridLines(false)
         yl.isEnabled = false
         yl.axisMinimum = 0f
-
+        yl.textColor = Color.WHITE
         val yr: YAxis = horizontalBarChart.axisRight
         yr.isEnabled = false
 
@@ -148,12 +153,12 @@ class Pie2Bar2Fragment(
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(set1)
         val barData = BarData(dataSets)
-        barData.setValueTextSize(10f)
+        barData.setValueTextSize(9f)
         barData.barWidth = .9f
 
         horizontalBarChart.apply {
             setDrawBarShadow(false)
-            setDrawValueAboveBar(true)
+            setDrawValueAboveBar(false)
             setTouchEnabled(false)
             setDrawGridBackground(false)
             setPinchZoom(false)

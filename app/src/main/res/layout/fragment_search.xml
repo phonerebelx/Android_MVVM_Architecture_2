@@ -195,9 +195,9 @@
                         app:spinner_divider_color="@color/white"
                         app:spinner_divider_show="true"
                         app:spinner_divider_size="0.4dp"
-                        app:spinner_item_height="@dimen/_45sdp"
+                        app:spinner_item_height="46dp"
                         app:spinner_popup_height="@dimen/_300sdp"
-                        app:spinner_popup_animation="fade"
+                        app:spinner_popup_animation="dropdown"
                         app:spinner_popup_elevation="14dp" />
 
                     <ImageView

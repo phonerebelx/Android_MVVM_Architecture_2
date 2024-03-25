@@ -14,8 +14,61 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+#-repackageclasses 'com.app.pb'
+#-repackageclasses 'com.scottyab.rootbeer'
+#-mergeinterfacesaggressively
+#-overloadaggressively
+#-allowaccessmodification
+
+#-Firebase
+# Firebase
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+
+
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
+
+
+-keep class com.example.meezan360.Mvvm.model**{*;}
+-keep class com.example.meezan360.Mvvm.network.network**{*;}
+-keep class com.example.meezan360.UI.activity**{*;}
+-keep class com.example.meezan360**{*;}
+-keep class com.example.meezan360.network.APIService{*;}
+-keep class com.example.meezan360.network.APIClient{*;}
+#-keep class com.example.meezan360.dagger.modules.NetworkModule{*;}
+-keep class com.example.meezan360.ui.activities.DockActivity{*;}
+
+
+-dontwarn com.squareup.okhttp.**
+-keep class com.squareup.okhttp.** { *; }
+-keep class com.squareup.okhttp3.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+-dontwarn retrofit.appengine.UrlFetchClient
+-keep class retrofit.** { *; }
+
+
+
+-dontwarn retrofit.**
+-keep class retrofit** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
+
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** w(...);
+    public static *** v(...);
+    public static *** i(...);
+}
+
+-ignorewarnings

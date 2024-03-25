@@ -34,12 +34,12 @@ class DashboardViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         }
     }
 
-    suspend fun getDashboardByKpi(kpiId: String) {
+    suspend fun getDashboardByKpi(kpiId: String,tag: String) {
         dashboardByKPI.emit(ResponseModel.Loading())
-        dataRepo?.getDashboardByKpi(kpiId)?.collect {
+        dataRepo?.getDashboardByKpi(kpiId,tag)?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) dashboardByKPI.emit(ResponseModel.Success(it))
-                else dashboardByKPI.emit(ResponseModel.Error(it.message()))
+                else dashboardByKPI.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }
@@ -49,7 +49,7 @@ class DashboardViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         dataRepo?.getFooterGraphs(kpiId, tagName, cardId)?.collect {
             viewModelScope.launch {
                 if (it.isSuccessful) footerGraph.emit(ResponseModel.Success(it))
-                else footerGraph.emit(ResponseModel.Error(it.message()))
+                else footerGraph.emit(ResponseModel.Error(it.message(),it))
             }
         }
     }

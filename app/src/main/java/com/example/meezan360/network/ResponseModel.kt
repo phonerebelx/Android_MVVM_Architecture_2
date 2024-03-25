@@ -15,7 +15,7 @@ sealed class ResponseModel<T>(
     val message: String? = null
 ) {
 
-    class Success<T>(data: T) : ResponseModel<T>(data) {
+    class Success<T> (data: T) : ResponseModel<T>(data) {
 
 
     }

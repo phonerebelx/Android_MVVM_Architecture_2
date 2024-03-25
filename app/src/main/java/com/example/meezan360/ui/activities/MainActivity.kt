@@ -25,6 +25,7 @@ import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.dashboardByKpi.FooterModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.progress.ProgressDialog
+import com.example.meezan360.ui.activities.ChangePasswordActivity.ChangePasswordActivity
 import com.example.meezan360.ui.fragments.BarChartFragment
 import com.example.meezan360.ui.fragments.HalfPieFragment
 import com.example.meezan360.ui.fragments.HorizontalBarFragment
@@ -52,7 +53,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListener{
 
 
-    val KEY_FRAG_FIRST = "firstFrag"
+
     private var kpiId: Int? = 0
     private var kpi: List<Kpi>? = null
     private lateinit var iconsList: List<Pair<Int, String>>
@@ -111,7 +112,7 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
 
     private fun footerSetupUp(footerData: List<FooterModel>?, defaultDeposit: Int) {
 
-        footerData?.toString()?.let { Log.d("footerSetupUp: ", it) }
+
         var footerList = listOf<DataModel>()
         if (footerData != null) {
 
@@ -199,10 +200,9 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
     }
 
 
-
-    private fun setupHeader(selectedKpiIndex: Int?) {
+    private fun setupHeader(selectedKpiIndex: Int?,tag: String) {
         showProgressIndicator()
-        myViewModel.viewModelScope.launch { myViewModel.getDashboardByKpi(selectedKpiIndex.toString()) }
+        myViewModel.viewModelScope.launch { myViewModel.getDashboardByKpi(selectedKpiIndex.toString(),tag) }
     }
 
 
@@ -210,7 +210,6 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
         //pie chart nothing selected
         binding.pieChart.onTouchListener?.setLastHighlighted(null)
         binding.pieChart.highlightValues(null)
-
     }
 
 
@@ -247,13 +246,14 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
             val mCenterText = iconsList[currentIndex].second
             binding.pieChart.centerText = mCenterText
             kpiId = kpi?.get(currentIndex)?.kpiId
-            setupHeader(kpiId)
-
             tagName = if (kpiId == 1) {
                 Constants.peDeposit
             } else {
                 Constants.general
             }
+            setupHeader(kpiId,tagName)
+
+
 
             if (kpiId == 1) {
                 binding.btnPEDeposit.visibility = View.VISIBLE
@@ -383,16 +383,16 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
                 binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
                 if (kpiId == 1) tagName = Constants.peDeposit
-
-                footerSetupUp(footerData, 0)
+                if (kpiId == 1)  setupHeader(kpiId,tagName)
+//                footerSetupUp(footerData, 0)
             }
 
             R.id.btnAVGDeposit -> {
                 binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
                 binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
-                tagName = Constants.avgDeposit
+                if (kpiId == 1) tagName = Constants.avgDeposit
 
-                if (kpiId == 1) footerSetupUp(footerData, 1)
+                if (kpiId == 1) setupHeader(kpiId,tagName)
             }
 
             R.id.ivSearch -> {
@@ -405,6 +405,11 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
         binding.let {
             it.ivSearch.setOnClickListener {
                 val intent = Intent(this, MainFragActivity::class.java)
+                startActivity(intent)
+            }
+            it.ivLogout.setOnClickListener {
+                sharedPreferencesManager.clearSharedPreferences()
+                val intent = Intent(this, LoginScreen::class.java)
                 startActivity(intent)
             }
         }
@@ -474,7 +479,11 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
                         //for footer
                         footerData = it.data?.body()?.footer
 
-                        footerSetupUp(footerData, 0)
+                        if (tagName == Constants.peDeposit || tagName == Constants.general){
+                            footerSetupUp(footerData, 0)
+                        }else{
+                            footerSetupUp(footerData, 1)
+                        }
 
                     }
                 }
@@ -482,10 +491,5 @@ class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListen
         }
 
     }
-
-
-
-
-
 
 }
