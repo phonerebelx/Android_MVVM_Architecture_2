@@ -15,6 +15,7 @@ import com.example.meezan360.model.changePassword.VerifyPassResponse
 import com.example.meezan360.model.changePassword.VerifyPwdReqResponse
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
 import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
+import com.example.meezan360.model.logout.LogoutResponse
 import com.example.meezan360.model.resetPassword.ResetPasswordModel
 import com.example.meezan360.model.resetPassword.ResetPwdReqResponse
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +32,7 @@ class LoginViewModel(private var dataRepo: DataRepository?) : ViewModel() {
     val verifyOtpData = MutableStateFlow<ResponseModel<Response<OtpResponse>>>(ResponseModel.Idle("Idle State"))
     val changePasswordpData = MutableStateFlow<ResponseModel<ChangePasswordResponse>>(ResponseModel.Idle("Idle State"))
     val verifyPasswordData = MutableStateFlow<ResponseModel<VerifyPassResponse>>(ResponseModel.Idle("Idle State"))
+    val logoutData = MutableStateFlow<ResponseModel<Response<LogoutResponse>>>(ResponseModel.Idle("Idle State"))
 
 
     suspend fun loginRequest(loginId: String, password: String, deviceId: String) {
@@ -213,5 +215,13 @@ class LoginViewModel(private var dataRepo: DataRepository?) : ViewModel() {
         }
     }
 
-
+    suspend fun logoutRequest() {
+        logoutData.emit(ResponseModel.Loading())
+        dataRepo?.logoutRequest()?.collect {
+            viewModelScope.launch {
+                if (it.isSuccessful) logoutData.emit(ResponseModel.Success(it))
+                else logoutData.emit(ResponseModel.Error(it.message(), it))
+            }
+        }
+    }
 }

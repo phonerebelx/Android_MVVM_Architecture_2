@@ -7,6 +7,8 @@ class SharedPreferencesManager(private val sharedPreferences: SharedPreferences)
     companion object {
         private const val KEY_TOKEN = "token"
         private const val KEY_LOGIN_ID = "login_id"
+        private const val KEY_USER_NAME = "user_name"
+        private const val KEY_USER_EMAIL = "user_emaill"
         private const val KEY_VALUE_CALLED = "Value_called"
     }
 
@@ -19,7 +21,18 @@ class SharedPreferencesManager(private val sharedPreferences: SharedPreferences)
     fun getLoginId(): String?  {
         return sharedPreferences.getString(KEY_LOGIN_ID, null)
     }
-
+    fun saveUserName(userName: String?){
+        sharedPreferences.edit().putString(KEY_USER_NAME, userName).apply()
+    }
+    fun saveUserEmail(userEmail: String?){
+        sharedPreferences.edit().putString(KEY_USER_EMAIL, userEmail).apply()
+    }
+    fun getUserName(): String?  {
+        return sharedPreferences.getString(KEY_USER_NAME, "")
+    }
+    fun getUserEmail(): String?  {
+        return sharedPreferences.getString(KEY_USER_EMAIL, "")
+    }
 
 
     fun getToken(): String? {

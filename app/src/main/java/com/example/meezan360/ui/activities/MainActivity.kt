@@ -44,6 +44,7 @@ import com.example.meezan360.R
 import com.example.meezan360.adapter.ExpListAdapter
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.adapter.TopBoxesAdapter
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.ActivityMainBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.model.Kpi
@@ -65,6 +66,7 @@ import com.example.meezan360.ui.fragments.TierChartFragment
 import com.example.meezan360.utils.Constants
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
+import com.example.meezan360.viewmodel.LoginViewModel
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -72,6 +74,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.ArrayList
@@ -80,7 +83,6 @@ import java.util.HashMap
 
 class MainActivity : DockActivity(){
     companion object {
-
         @SuppressLint("StaticFieldLeak")
         private lateinit var unbinder: Unbinder
         lateinit var navController: NavController
@@ -98,6 +100,9 @@ class MainActivity : DockActivity(){
     lateinit var imageDialog: Dialog
     lateinit var listDataChild: HashMap<String, List<String>>
     lateinit var listDataHeader: ArrayList<String>
+    private val myViewModel: LoginViewModel by viewModel()
+    private var logoutJob: Job? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +116,7 @@ class MainActivity : DockActivity(){
 
         imageDialog = Dialog(this, R.style.DialogTheme)
         imageDialog.setContentView(R.layout.picture_dialog)
-
+        handleAPIResponse()
     }
     override fun onSupportNavigateUp(): Boolean {
         navController = findNavController(R.id.nav_host_main)
@@ -146,8 +151,8 @@ class MainActivity : DockActivity(){
         navController.setGraph(R.navigation.nav_graph)
 
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-        binding.sideLayout.userName.text = "WAQAS"
-        binding.sideLayout.userEmail.text = "waqassayem@gmail.com"
+        binding.sideLayout.userName.text = sharedPreferencesManager.getUserName()
+        binding.sideLayout.userEmail.text = sharedPreferencesManager.getUserEmail()
 
         val window: Window = this.window
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -316,10 +321,38 @@ class MainActivity : DockActivity(){
         ) { dialog: DialogInterface, which: Int -> dialog.cancel() }
         alertDialog.show()
     }
+    private fun handleAPIResponse() {
+        logoutJob = lifecycleScope.launch {
+            myViewModel.logoutData.collect {
+                hideProgressIndicator()
+                when (it) {
+                    is ResponseModel.Error -> {
+                        this@MainActivity.handleErrorResponse(it)
+                    }
+
+                    is ResponseModel.Idle -> {
+
+                    }
+
+                    is ResponseModel.Loading -> {}
+
+                    is ResponseModel.Success -> {
+                          Toast.makeText(this@MainActivity,it.message?:"", Toast.LENGTH_LONG).show()
+                          val intent = Intent(this@MainActivity, LoginScreen::class.java)
+                          startActivity(intent)
+                    }
+                }
+
+            }
+        }
+
+    }
 
     private fun logout() {
+        showProgressIndicator()
         sharedPreferencesManager.clearSharedPreferences()
-        val intent = Intent(this, LoginScreen::class.java)
-        startActivity(intent)
+        myViewModel.viewModelScope.launch {
+            myViewModel.logoutRequest()
+        }
     }
 }

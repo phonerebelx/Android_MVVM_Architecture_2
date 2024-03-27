@@ -15,6 +15,7 @@ import com.example.meezan360.model.changePassword.VerifyPassModel
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
 import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
+import com.example.meezan360.model.logout.LogoutResponse
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
 import com.example.meezan360.model.resetPassword.ResetPasswordModel
@@ -152,6 +153,12 @@ class DataRepository(private var networkModule: NetworkModule) {
     ): Flow<Call<ResponseBody>> {
         return flow {
            val response = networkModule.sourceOfNetwork().verifyPassword(verifyPassModel)
+            emit(response)
+        }
+    }
+    suspend fun logoutRequest(): Flow<Response<LogoutResponse>> {
+        return flow {
+           val response = networkModule.sourceOfNetwork().logoutRequest()
             emit(response)
         }
     }

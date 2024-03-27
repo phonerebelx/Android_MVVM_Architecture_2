@@ -112,7 +112,6 @@ class LoginFragment : BaseDockFragment() {
             myDockActivity?.hideProgressIndicator()
             myViewModel.loginData.collect {
                 when (it) {
-
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
                         val jsonObject = JSONObject(it.data?.errorBody()?.string().toString())
@@ -147,6 +146,8 @@ class LoginFragment : BaseDockFragment() {
                         }else{
                             sharedPreferenceManager.saveToken(it.data?.body()?.token)
                             sharedPreferenceManager.saveLoginId(binding.etEmail.text.toString())
+                            sharedPreferenceManager.saveUserEmail(it.data?.body()?.user?.emailAddress)
+                            sharedPreferenceManager.saveUserName(it.data?.body()?.user?.fullName)
                             val intent = Intent(requireContext(), MainActivity::class.java)
                             startActivity(intent)
                             requireActivity().finish();

@@ -15,6 +15,7 @@ import com.example.meezan360.model.changePassword.VerifyPassModel
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
 import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
+import com.example.meezan360.model.logout.LogoutResponse
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
 import com.example.meezan360.model.resetPassword.ResetPasswordModel
@@ -116,5 +117,6 @@ interface APIService {
     fun verifyPassword(
         @Body verifyPassModel: VerifyPassModel
     ): Call<ResponseBody>
-
+    @POST("auth/logout")
+    suspend fun logoutRequest():Response<LogoutResponse>
 }

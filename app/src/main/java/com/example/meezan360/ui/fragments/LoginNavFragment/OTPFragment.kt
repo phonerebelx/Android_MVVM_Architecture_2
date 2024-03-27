@@ -154,6 +154,8 @@ class OTPFragment : BaseDockFragment() {
                         }else if (comeFromType == "COME_FROM_LOGIN_SCREEN"){
                             sharedPreferencesManager.clearSharedPreferences()
                             sharedPreferencesManager.saveToken(it.data?.body()?.token)
+                            sharedPreferencesManager.saveUserName("Waqas")
+                            sharedPreferencesManager.saveUserName("waqas@uhfsolutions")
                             val intent = Intent(requireContext(), MainActivity::class.java)
                             startActivity(intent)
                             requireActivity().finish();
