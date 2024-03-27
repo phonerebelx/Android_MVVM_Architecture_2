@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavOptions
@@ -16,8 +17,10 @@ import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentResetPasswordBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.interfaces.ApiListener
 import com.example.meezan360.model.changePassword.VerifyPassModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.ChangePasswordActivity.ChangePasswordActivity
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
@@ -25,7 +28,7 @@ import com.example.meezan360.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class ResetPasswordFragment : BaseDockFragment() {
+class ResetPasswordFragment : BaseDockFragment(),ApiListener {
 
     private lateinit var binding: FragmentResetPasswordBinding
     private val myViewModel: LoginViewModel by viewModel()
@@ -35,6 +38,7 @@ class ResetPasswordFragment : BaseDockFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        myViewModel.apiListener = this@ResetPasswordFragment
         initView()
         handleAPIResponse()
         return binding.root
@@ -136,6 +140,44 @@ class ResetPasswordFragment : BaseDockFragment() {
             )
         }
     }
+    override fun onStarted() {
+        Log.d("onStarted", "showPasswordChangingInstructions: ")
+    }
+
+    override fun onSuccess(liveData: LiveData<String>, tag: String) {
+        Log.d("onSuccess", "showPasswordChangingInstructions: ")
+    }
+
+    override fun onFailure(message: String, tag: String) {
+        myDockActivity?.hideProgressIndicator()
+        when (tag) {
+            "Verify_Password_Data" -> {
+                myDockActivity?.showErrorMessage(message)
+            }
+        }
+    }
+
+    override fun onFailureWithResponseCode(code: Int, message: String, tag: String) {
+        myDockActivity?.hideProgressIndicator()
+        when (tag){
+            "onFailureWithResponseCode_551" -> {
+                sharedPreferencesManager.clearSharedPreferences()
+                val intent = Intent(requireContext(), LoginScreen::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
+            "onFailureWithResponseCode_552" -> {
+                val intent = Intent(requireContext(), ChangePasswordActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun showPasswordChangingInstructions(text: String?) {
+        Log.d("showPassword", "showPasswordChangingInstructions: ")
+    }
+
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.meezan360.ui.fragments.LoginNavFragment
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -18,6 +20,7 @@ import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentForgetPasswordBinding
 import com.example.meezan360.databinding.FragmentLoginBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.interfaces.ApiListener
 import com.example.meezan360.model.resetPassword.ResetPasswordModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.LoginScreen
@@ -33,6 +36,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class ForgetPasswordFragment : BaseDockFragment() {
     private lateinit var binding: FragmentForgetPasswordBinding
     private val myViewModel: LoginViewModel by viewModel()
+
     private var resetPassJob: Job? = null
 
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
@@ -41,6 +45,7 @@ class ForgetPasswordFragment : BaseDockFragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentForgetPasswordBinding.inflate(layoutInflater)
+
         handleAPIResponse()
         setOnClickListener()
         return binding.root

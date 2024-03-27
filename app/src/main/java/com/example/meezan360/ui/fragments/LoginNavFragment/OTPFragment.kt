@@ -96,7 +96,6 @@ class OTPFragment : BaseDockFragment() {
                         loginID,
                         otp,
                         Utils.getDeviceId(requireContext()),
-                        "360",
                         "yes"
                     )
                 )
@@ -108,7 +107,6 @@ class OTPFragment : BaseDockFragment() {
                         loginID,
                         otp,
                         Utils.getDeviceId(requireContext()),
-                        "360"
                     )
                 )
             }

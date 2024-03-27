@@ -7,4 +7,7 @@ object Constants {
     val avgDeposit = "avg_deposit"
     val general = "general"
     val defaultColor = Color.BLACK
+    const val DASHBOARD: String = "Dashboard"
+    const val LOGOUT: String = "Logout"
+    const val CHANGE_PASSWORD: String = "Change Password"
 }

@@ -2,6 +2,10 @@
     <string name="app_name">Meezan360</string>
 
     <!--    nav drawer items-->
+    <string name="nav_header_desc">TODO</string>
+    <string name="email">Email</string>
+    <string name="Home">Dashboard</string>
+    <string name="change_pass">Change Password</string>
     <string name="dashboard">Dashboard</string>
     <string name="reports">Reports</string>
     <string name="other_reports">Other Reports</string>

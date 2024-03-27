@@ -2,7 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
-
+apply plugin: 'kotlin-kapt'
 android {
     namespace 'com.example.meezan360'
     compileSdk 34
@@ -92,5 +92,9 @@ dependencies {
     implementation 'com.tapadoo.android:alerter:6.1.0'
     implementation 'com.google.code.gson:gson:2.8.8'
 
-
+    //Circular Image View
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //Butterknife
+    implementation "com.jakewharton:butterknife:10.2.0"
+    kapt "com.jakewharton:butterknife-compiler:10.2.0"
 }

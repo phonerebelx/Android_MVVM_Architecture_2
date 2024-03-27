@@ -110,7 +110,7 @@ interface APIService {
     @POST("auth/changePassword")
     fun changePassword(
         @Body changePasswordModel: ChangePasswordModel
-    ): Response<ChangePasswordResponse>
+    ): Call<ResponseBody>
 
     @POST("auth/resetPasswordVerify")
     fun verifyPassword(

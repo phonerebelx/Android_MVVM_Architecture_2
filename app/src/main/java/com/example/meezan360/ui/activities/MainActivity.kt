@@ -1,21 +1,47 @@
 package com.example.meezan360.ui.activities
 
+import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.Window
+import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.IdRes
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.findNavController
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import butterknife.ButterKnife
+import butterknife.Unbinder
 import com.example.meezan360.R
+import com.example.meezan360.adapter.ExpListAdapter
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.adapter.TopBoxesAdapter
 import com.example.meezan360.databinding.ActivityMainBinding
@@ -48,448 +74,252 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.ArrayList
+import java.util.HashMap
 
 
-class MainActivity : DockActivity(), OnChartValueSelectedListener, OnClickListener{
+class MainActivity : DockActivity(){
+    companion object {
 
+        @SuppressLint("StaticFieldLeak")
+        private lateinit var unbinder: Unbinder
+        lateinit var navController: NavController
+        lateinit var drawerLayout: DrawerLayout
+        const val CAMERA_CODE: Int = 211
+        const val GALLERY_CODE: Int = 212
 
-
-    private var kpiId: Int? = 0
-    private var kpi: List<Kpi>? = null
-    private lateinit var iconsList: List<Pair<Int, String>>
+    }
     private lateinit var binding: ActivityMainBinding
-    private lateinit var colors: List<Int>
-    private lateinit var progressBarDialog: ProgressDialog
-    private var lastSelectedSliceIndex: Int = -1 // Keep track of the selected slice index
-    private var onrTimeUpdateIndex: Int = -1
-    private var currentIndex: Int = -1
-    private lateinit var pieDataSet: PieDataSet
-    private var icons: MutableMap<Int, String> = mutableMapOf()
-    private lateinit var iconsData: ArrayList<Int>
-    private var pieChartAngleDegree: HashMap<String, Float> = HashMap<String, Float>()
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
-    //for top header
-    private lateinit var adapter: TopBoxesAdapter
-
-    //for bottom footer
-    private var viewPagerAdapter: FragmentPagerAdapter? = null
-
-    private val myViewModel: DashboardViewModel by viewModel()
-
-    private var tagName: String = Constants.general
-
-    private var footerData: List<FooterModel>? = null
-    private var index = 0
+    private lateinit var contentView: ConstraintLayout
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    val END_SCALE = 0.7f
+    private lateinit var actionBarMenu: Menu
+    lateinit var imageDialog: Dialog
+    lateinit var listDataChild: HashMap<String, List<String>>
+    lateinit var listDataHeader: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         val sharedPreferences = getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
         sharedPreferencesManager = SharedPreferencesManager(sharedPreferences)
-        pieChartAngleDegree["Deposit"] = 254.03897F
-        pieChartAngleDegree["Cross Sell"] = 216.70924F
-        pieChartAngleDegree["Profitibility"] = 182.16922F
-        pieChartAngleDegree["Controls"] = 146.08641F
-        pieChartAngleDegree["Premium"] = 109.59214F
-        pieChartAngleDegree["Cash"] = 75.48029F
-        pieChartAngleDegree["ADC"] = 38.358177F
-        pieChartAngleDegree["Wealth"] = 1.253729F
-        pieChartAngleDegree["Complaince"] = 327.46887F
-        pieChartAngleDegree["Advances"] = 289.75912F
-        myViewModel.viewModelScope.launch {
-            myViewModel.checkVersioning()
+        setContentView(binding.root)
+
+        unbinder = ButterKnife.bind(this)
+        initView()
+
+        imageDialog = Dialog(this, R.style.DialogTheme)
+        imageDialog.setContentView(R.layout.picture_dialog)
+
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        navController = findNavController(R.id.nav_host_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.toolbar_menu, menu)
+        actionBarMenu = menu
+
+
+
+        actionBarMenu.findItem(R.id.action_searches).setOnMenuItemClickListener {
+//            if (SharedPrefKeyManager.get<Boolean>(Constants.IS_SHIFT) == true)
+            val intent = Intent(this, MainFragActivity::class.java)
+            startActivity(intent)
+
+            true
         }
 
-        handleAPIResponse()
 
-        binding.pieChart.setOnChartValueSelectedListener(this)
-        binding.btnPEDeposit.setOnClickListener(this)
-        binding.btnAVGDeposit.setOnClickListener(this)
-        binding.ivSearch.setOnClickListener(this)
-        setOnClickListener()
+
+        return super.onCreateOptionsMenu(menu)
     }
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun initView() {
 
-    private fun footerSetupUp(footerData: List<FooterModel>?, defaultDeposit: Int) {
+        drawerLayout = binding.drawerLayout
+        setSupportActionBar(findViewById(R.id.toolBar))
+        contentView = binding.appBarMain.content
+        navController = findNavController(R.id.nav_host_main)
+        navController.setGraph(R.navigation.nav_graph)
 
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        binding.sideLayout.userName.text = "WAQAS"
+        binding.sideLayout.userEmail.text = "waqassayem@gmail.com"
 
-        var footerList = listOf<DataModel>()
-        if (footerData != null) {
+        val window: Window = this.window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
-            if (footerData.size >= defaultDeposit + 1) {
-                footerList = footerData.get(defaultDeposit)?.dataModel!!
-            }
-
-            val fragmentsList: ArrayList<Fragment> = arrayListOf()
-
-            footerList?.forEachIndexed { index, footer ->
-                //to access fragments by passing cardType to Enum
-                when (footerList[index].cardType) {
-                    "2pie_2bar" -> fragmentsList.add(
-                        Pie2Bar2Fragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "1pie_1horizontal_bar" -> fragmentsList.add(
-                        Pie1HorizontalBar1Fragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "bar_chart" -> fragmentsList.add(
-                        BarChartFragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "stack_chart", "stack_with_toggle" -> fragmentsList.add(
-                        StackChartFragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "bar_chart_single_value" -> fragmentsList.add(
-                        InvertedBarChartFragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "tier_chart" -> fragmentsList.add(
-                        TierChartFragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "half_pie" -> fragmentsList.add(
-                        HalfPieFragment(
-                            kpiId,
-                            tagName,
-                            footerList[index]
-                        )
-                    )
-
-                    "2_axis_line_chart", "line_chart" -> fragmentsList.add(
-                        LineChartFragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "horizontal_bar" -> fragmentsList.add(
-                        HorizontalBarFragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                    "steper_lines" -> fragmentsList.add(
-                        StepProgressBarFragment(
-                            kpiId, tagName, footerList[index]
-                        )
-                    )
-
-                }
-            }
-
-            viewPagerAdapter = FragmentPagerAdapter(supportFragmentManager, lifecycle)
-            viewPagerAdapter?.setFragmentsForItem("", fragmentsList)
-            binding.viewpager.adapter = viewPagerAdapter
-
-        } else {
-            Toast.makeText(this, "Footer Data is Empty", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
-    private fun setupHeader(selectedKpiIndex: Int?,tag: String) {
-        showProgressIndicator()
-        myViewModel.viewModelScope.launch { myViewModel.getDashboardByKpi(selectedKpiIndex.toString(),tag) }
-    }
-
-
-    override fun onNothingSelected() {
-        //pie chart nothing selected
-        binding.pieChart.onTouchListener?.setLastHighlighted(null)
-        binding.pieChart.highlightValues(null)
-    }
-
-
-    override fun onValueSelected(e: Entry?, h: Highlight?) {
-
-
-        val newColor = Color.parseColor("#765CB4")
-        currentIndex = h?.x?.toInt() ?: -1 // Retrieve the selected slice index
-
-        if (currentIndex != lastSelectedSliceIndex) {
-            // Reset color for the last selected slice
-            if (lastSelectedSliceIndex != -1) {
-                val colors = binding.pieChart.data.getDataSetByIndex(h!!.dataSetIndex).colors
-                colors[lastSelectedSliceIndex] = Color.parseColor("#E0E0E0")
-
-                // Reset icon tint for the last selected slice
-                val lastSelectedEntry = binding.pieChart.data.getDataSetByIndex(h.dataSetIndex)
-                    .getEntryForIndex(lastSelectedSliceIndex)
-                lastSelectedEntry.icon?.colorFilter = null
-            }
-
-            // Change color for the newly selected slice
-            val colors = binding.pieChart.data.getDataSetByIndex(h!!.dataSetIndex).colors
-
-            colors[currentIndex] = newColor
-
-            // Tint the selected icon white
-            val selectedEntry = binding.pieChart.data.getDataSetByIndex(h.dataSetIndex)
-                .getEntryForIndex(currentIndex)
-            selectedEntry.icon?.colorFilter =
-                PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
-
-            // Update the center text based on the selected entry
-            val mCenterText = iconsList[currentIndex].second
-            binding.pieChart.centerText = mCenterText
-            kpiId = kpi?.get(currentIndex)?.kpiId
-            tagName = if (kpiId == 1) {
-                Constants.peDeposit
-            } else {
-                Constants.general
-            }
-            setupHeader(kpiId,tagName)
-
-
-
-            if (kpiId == 1) {
-                binding.btnPEDeposit.visibility = View.VISIBLE
-                binding.btnAVGDeposit.visibility = View.VISIBLE
-            } else {
-                binding.btnPEDeposit.visibility = View.GONE
-                binding.btnAVGDeposit.visibility = View.GONE
-
-            }
-
-
-
-
-
-            if (index == 0) {
-                index++
-                onrTimeUpdateIndex = currentIndex
-            }
-            val angle = if (binding.pieChart.getAngleForPoint(h.x, h.y).isNaN()) {
-                270.0F
-            } else {
-                binding.pieChart.getAngleForPoint(h.x, h.y)
-            }
-
-
-            lastSelectedSliceIndex = currentIndex // Update the last selected slice index
-            binding.pieChart.invalidate() // Refresh the chart
-
-
-            pieChartAngleDegree[mCenterText]?.let {
-                binding.pieChart.spin(
-                    500, binding.pieChart.rotationAngle,
-                    it, Easing.EaseInOutCubic
-                )
-            }
-
-
-        } else {
-            //same pie chart item is clicked twice
-            if (kpiId == 1) {
-                //for deposit
-                val intent = Intent(this, ReportLevel1Activity::class.java)
-                startActivity(intent)
-            } else {
-                val intent = Intent(this, ReportLevel2Activity::class.java)
-                intent.putExtra("kpiId", kpiId.toString())
-                intent.putExtra("identifierType", "")
-                intent.putExtra("identifier", "")
-                startActivity(intent)
-            }
-        }
-    }
-
-
-    private fun showPieChart(kpi: List<Kpi>?) {
-
-        iconsData = arrayListOf(
-            R.drawable.deposit_icon,
-            R.drawable.cross_sell_icon,
-            R.drawable.profitability,
-            R.drawable.controls_icon,
-            R.drawable.premium_icon,
-            R.drawable.cash_icon,
-            R.drawable.adc_icon,
-            R.drawable.wealth_icon,
-            R.drawable.compliance_icon,
-            R.drawable.advances_icon
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        // finally change the color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.purple_light)
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.nav_home,
+            ), drawerLayout
         )
 
-        var selectedKpiIndex = 0
-        if (kpi != null) {
-            for (i in kpi.indices) {
-                icons[iconsData[i]] = kpi[i].name
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        binding.navView.setupWithNavController(navController)
+        animateNavigationDrawer(drawerLayout)
 
-                //for default key
-                if (kpi[i].isDefault.toString() == "true") {
-                    selectedKpiIndex = i
-                }
+        navigateToFragment(R.id.nav_home)
+        prepareSideMenu()
+    }
+
+    private fun navigateToFragment(@IdRes id: Int, args: Bundle? = null) {
+
+        closeDrawer()
+
+        if (args != null) {
+            navController.navigate(id, args)
+            return
+        }
+        // navigation drawer
+        navController.navigate(id)
+    }
+    fun closeDrawer() {
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+    }
+    private fun animateNavigationDrawer(drawerLayout: DrawerLayout) {
+
+//        Add any color or remove it to use the default one!
+//        To make it transparent use Color.Transparent in side setScrimColor();
+//        drawerLayout.setScrimColor(Color.TRANSPARENT);
+
+        drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+
+                // Scale the View based on current slide offset
+                val diffScaledOffset: Float = slideOffset * (1 - END_SCALE)
+                val offsetScale = 1 - diffScaledOffset
+                contentView.scaleX = offsetScale
+                contentView.scaleY = offsetScale
+
+
+                // Translate the View, accounting for the scaled width
+                val xOffset: Float = drawerView.width * slideOffset
+                val xOffsetDiff: Float = contentView.width * diffScaledOffset / 2
+                val xTranslation = xOffset - xOffsetDiff
+                contentView.translationX = xTranslation
 
             }
+        })
+    }
+
+    private fun prepareSideMenu() {
+
+        listDataHeader = ArrayList<String>()
+        listDataChild = HashMap<String, List<String>>()
+        val icons = ArrayList<Int>()
+
+
+
+        listDataHeader.add(Constants.DASHBOARD) //0
+
+        listDataHeader.add(Constants.CHANGE_PASSWORD) //1
+
+        listDataHeader.add(Constants.LOGOUT)
+
+
+        val listAdapter = ExpListAdapter(
+            this,
+            listDataHeader,
+            listDataChild,
+            icons
+        )
+
+
+
+        binding.sideLayout.lvExp.setGroupIndicator(null)
+        binding.sideLayout.lvExp.setChildIndicator(null)
+//        binding.sideLayout.lvExp.setChildDivider(resources.getDrawable(R.color.grey))
+//        binding.sideLayout.lvExp.divider = resources.getDrawable(R.color.grey2)
+
+        binding.sideLayout.userImage.setOnClickListener {
+            showImageDialog()
         }
+        binding.sideLayout.lvExp.setAdapter(listAdapter as ExpListAdapter)
 
-        iconsList = icons.toList()
-
-        // Initializing colors for the entries
-        colors = List(icons.size) { Color.parseColor("#E0E0E0") }
-
-        // Input data and fit data into pie chart entry
-        val pieEntries = mutableListOf<PieEntry>()
-
-        for (icon in icons) {
-            val entry = PieEntry(100f, ContextCompat.getDrawable(this, icon.key)
-            )
-            pieEntries.add(entry)
+//        binding.sideLayout.lvExp.setOnGroupExpandListener { groupPosition: Int ->
+//            fragmentClickEvent(listDataHeader[groupPosition])
+//        }
+        binding.sideLayout.lvExp.setOnGroupClickListener { parent, v, groupPosition, id ->
+            fragmentClickEvent(listDataHeader[groupPosition])
+            true
         }
+    }
 
-
-        // Collecting the entries with label name
-        pieDataSet = PieDataSet(pieEntries, "")
-        // Setting text size of the value (hide text values)
-        pieDataSet.valueTextSize = 0f
-        // Providing color list for coloring different entries
-        pieDataSet.colors = colors
-        pieDataSet.selectionShift = 0f
-
-
-        binding.pieChart.apply {
-            legend.isEnabled = false
-            description.isEnabled = false
-            setCenterTextSize(20f)
-            holeRadius = 60f //to fix the white border of center of circle
-            setCenterTextColor(Color.parseColor("#765CB4"))
-            data = PieData(pieDataSet)
-            highlightValue(
-                selectedKpiIndex.toFloat(), selectedKpiIndex
-            ) //Select First element by default i.e. Deposit
-            invalidate()
+    private fun showImageDialog() {
+        imageDialog.window?.setBackgroundDrawableResource(R.color.zxing_transparent)
+        val camera = imageDialog.findViewById<ImageView>(R.id.camera)
+        val gallery = imageDialog.findViewById<ImageView>(R.id.gallery)
+        camera.setOnClickListener {
+            openCamera()
+            imageDialog.dismiss()
         }
+        gallery.setOnClickListener {
+            openGallery()
+            imageDialog.dismiss()
+        }
+        imageDialog.show()
+    }
 
+    private fun openCamera() {
+        startActivityForResult(Intent().apply {
+            action = MediaStore.ACTION_IMAGE_CAPTURE
+        }, CAMERA_CODE)
+    }
+
+    private fun openGallery() {
+        startActivityForResult(Intent().apply {
+            type = "image/*"
+            action = Intent.ACTION_GET_CONTENT
+
+        }, GALLERY_CODE)
     }
 
 
-    override fun onClick(p0: View?) {
+    private fun fragmentClickEvent(itemString: String?) {
 
-        when (p0?.id) {
-            R.id.btnPEDeposit -> {
-                binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
-                binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
-                if (kpiId == 1) tagName = Constants.peDeposit
-                if (kpiId == 1)  setupHeader(kpiId,tagName)
-//                footerSetupUp(footerData, 0)
+        when (itemString) {
+            Constants.DASHBOARD -> {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            }
+            Constants.CHANGE_PASSWORD -> {
+                navigateToFragment(R.id.action_dashboard_to_change_Password_Fragment)
             }
 
-            R.id.btnAVGDeposit -> {
-                binding.btnAVGDeposit.setBackgroundResource(R.drawable.custom_button_purple_gradient)
-                binding.btnPEDeposit.setBackgroundResource(R.drawable.custom_button_grey_gradient)
-                if (kpiId == 1) tagName = Constants.avgDeposit
-
-                if (kpiId == 1) setupHeader(kpiId,tagName)
-            }
-
-            R.id.ivSearch -> {
-
+            Constants.LOGOUT -> {
+                showLogOutAlert()
             }
         }
     }
 
-    private fun setOnClickListener(){
-        binding.let {
-            it.ivSearch.setOnClickListener {
-                val intent = Intent(this, MainFragActivity::class.java)
-                startActivity(intent)
-            }
-            it.ivLogout.setOnClickListener {
-                sharedPreferencesManager.clearSharedPreferences()
-                val intent = Intent(this, LoginScreen::class.java)
-                startActivity(intent)
-            }
+
+    fun showLogOutAlert() {
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Logout")
+        alertDialog.setMessage("Do you want to Logout?")
+        alertDialog.setPositiveButton(
+            "Yes"
+        ) { dialog, which ->
+                logout()
         }
+        alertDialog.setNegativeButton(
+            "No"
+        ) { dialog: DialogInterface, which: Int -> dialog.cancel() }
+        alertDialog.show()
     }
 
-    private fun handleAPIResponse() {
-        lifecycleScope.launch {
-            myViewModel.checkVersioning.collect {
-                when (it) {
-                    is ResponseModel.Error -> {
-                        hideProgressIndicator()
-                        handleErrorResponse(it)
-                        Toast.makeText(
-                            this@MainActivity, "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                    is ResponseModel.Idle -> {
-                    }
-
-                    is ResponseModel.Loading -> {
-                    }
-
-                    is ResponseModel.Success -> {
-                        hideProgressIndicator()
-                        kpi = it.data?.body()?.kpis
-                        showPieChart(kpi)
-                    }
-
-
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            myViewModel.dashboardByKPI.collect {
-                when (it) {
-                    is ResponseModel.Error -> {
-                        hideProgressIndicator()
-                        handleErrorResponse(it)
-                        Toast.makeText(
-                            this@MainActivity, "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                    is ResponseModel.Idle -> {
-                    }
-
-                    is ResponseModel.Loading -> {
-//                        Toast.makeText(
-//                            this@MainActivity,
-//                            "Loading.. ",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-                    }
-
-                    is ResponseModel.Success -> {
-                        hideProgressIndicator()
-                        //for header
-                        val topBoxesData = it.data?.body()?.topBoxes
-                        binding.recyclerView.layoutManager = LinearLayoutManager(
-                            this@MainActivity, LinearLayoutManager.HORIZONTAL, false
-                        )
-                        adapter = TopBoxesAdapter(applicationContext, topBoxesData)
-                        binding.recyclerView.adapter = adapter
-
-                        //for footer
-                        footerData = it.data?.body()?.footer
-
-                        if (tagName == Constants.peDeposit || tagName == Constants.general){
-                            footerSetupUp(footerData, 0)
-                        }else{
-                            footerSetupUp(footerData, 1)
-                        }
-
-                    }
-                }
-            }
-        }
-
+    private fun logout() {
+        sharedPreferencesManager.clearSharedPreferences()
+        val intent = Intent(this, LoginScreen::class.java)
+        startActivity(intent)
     }
-
 }

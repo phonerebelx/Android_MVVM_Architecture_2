@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
-
+    <color name="zxing_transparent">#00000000</color>
     <color name="golden">#FFC500</color>
     <color name="purple_light">#856BC1</color>
     <color name="purple_dark">#765CB4</color>

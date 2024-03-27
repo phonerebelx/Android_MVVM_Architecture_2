@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.interfaces.ApiListener
 import com.example.meezan360.ui.activities.DockActivity
 
 
@@ -25,7 +26,6 @@ abstract class BaseDockFragment : Fragment() {
     private fun getDockActivity(): DockActivity? {
         return myDockActivity
     }
-
 
 
 

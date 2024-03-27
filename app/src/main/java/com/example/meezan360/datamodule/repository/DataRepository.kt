@@ -141,7 +141,7 @@ class DataRepository(private var networkModule: NetworkModule) {
     }
     suspend fun changePassword(
         changePasswordModel: ChangePasswordModel
-    ): Flow<Response<ChangePasswordResponse>> {
+    ): Flow<Call<ResponseBody>> {
         return flow {
             val response = networkModule.sourceOfNetwork().changePassword(changePasswordModel)
             emit(response)

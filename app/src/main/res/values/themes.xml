@@ -57,5 +57,22 @@
         <item name="android:paddingHorizontal" tools:targetApi="o">@dimen/_13sdp</item>
         <item name="android:paddingVertical" tools:targetApi="o">@dimen/_13sdp</item>
     </style>
+    <style name="nav" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/purple_dark</item>
+        <item name="colorPrimaryDark">@color/purple_dark</item>
+        <item name="colorAccent">@color/purple_dark</item>
+        <item name="android:listDivider">@color/purple_dark</item>
+        <!--       <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>-->
+        <item name="android:textColorPrimary">@color/purple_light</item>
+        <item name="android:textColorSecondary">@color/purple_light</item>
+        <item name="actionMenuTextColor">@color/purple_light</item>
+        <!--        <item name="actionOverflowButtonStyle">@style/DrawerArrowStyle</item>-->
+    </style>
+
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/purple_light</item>
+    </style>
 
 </resources>
