@@ -167,8 +167,6 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                         startActivity(Intent(requireContext(), LoginScreen::class.java))
                         requireActivity().finish()
                         NavOptions.Builder().setPopUpTo(R.id.login_start, true).build()
-
-
                     }
                 }
 

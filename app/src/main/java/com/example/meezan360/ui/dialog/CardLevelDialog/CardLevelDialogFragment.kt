@@ -17,7 +17,8 @@ import com.example.meezan360.adapter.CardAdapter.AccountDetailAdapter
 import com.example.meezan360.adapter.CardAdapter.CardDetailAdapter
 import com.example.meezan360.base.BaseDialogFragment
 import com.example.meezan360.databinding.FragmentCardLevelDialogBinding
-import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
+import com.example.meezan360.model.CardLevelModel.Data
+import com.example.meezan360.model.CardLevelModel.GetCardLevelDataModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.ReportViewModel
@@ -27,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CardLevelDialogFragment() : BaseDialogFragment() {
 
     lateinit var binding: FragmentCardLevelDialogBinding
-    private var responseBody: CardLevelDataModel? = null
+    private var responseBody: GetCardLevelDataModel? = null
     private lateinit var accountAdapter : AccountDetailAdapter
     private lateinit var cardDetailAdapter: CardDetailAdapter
     lateinit var cifId: String
@@ -90,19 +91,37 @@ class CardLevelDialogFragment() : BaseDialogFragment() {
             }
         }
     }
-    private fun setCardAdapter(cardLevelDataModel: CardLevelDataModel){
+
+    private fun setCardAdapter(cardLevelDataModel: GetCardLevelDataModel){
+        val accountNumbers = (cardLevelDataModel.find { it.key == "Account No." }?.value as? Any) as? List<String> ?: emptyList()
 
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         accountAdapter = AccountDetailAdapter(requireContext())
-        accountAdapter.setList(cardLevelDataModel.account)
+        accountAdapter.setList(accountNumbers)
         binding.recyclerView.adapter = accountAdapter
     }
 
-    private fun setCardDetailAdapter(cardLevelDataModel: CardLevelDataModel){
+    private fun setCardDetailAdapter(cardLevelDataModel: GetCardLevelDataModel){
+        val getCardLevelDataModel: GetCardLevelDataModel = GetCardLevelDataModel()
+        cardLevelDataModel.forEach { data ->
+            val key = data.key
+            val value = when (key) {
+                "Account No." -> {}
+
+                else -> {
+                    data.value?.toString()
+
+                }
+            }
+            value?.let { Data(key, it) }?.let { getCardLevelDataModel.add(it) } // Add data to getCardLevelDataModel
+        }
+        getCardLevelDataModel.removeAt(getCardLevelDataModel.size - 1)
+
+
 
         binding.rvDetail.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         cardDetailAdapter = CardDetailAdapter(requireContext())
-        cardDetailAdapter.setList(cardLevelDataModel.data)
+        cardDetailAdapter.setList(getCardLevelDataModel)
         binding.rvDetail.adapter = cardDetailAdapter
     }
 

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.text.TextUtils
@@ -14,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.BuildConfig
@@ -37,6 +39,7 @@ class LoginFragment : BaseDockFragment() {
     private lateinit var binding: FragmentLoginBinding
     private val myViewModel: LoginViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,11 +53,13 @@ class LoginFragment : BaseDockFragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     private fun initViews() {
         setOnCLickListener()
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("HardwareIds")
     private fun setOnCLickListener(){
         binding.btnLogin.setOnClickListener {
@@ -69,6 +74,7 @@ class LoginFragment : BaseDockFragment() {
                 requireContext().contentResolver,
                 Settings.Secure.ANDROID_ID
             )
+            Log.d("Password",password.toString())
 
             if (BuildConfig.DEBUG) {
                 email =  binding.etEmail.text.toString()
@@ -92,12 +98,16 @@ class LoginFragment : BaseDockFragment() {
             }
 
             myViewModel.viewModelScope.launch {
-                myDockActivity?.showProgressIndicator()
-                myViewModel.loginRequest(
-                    email,
-                    password!!,
-                    deviceId
-                )
+                myViewModel.isOnline.observe(requireActivity()) { isOnline ->
+                    lifecycleScope.launch {
+                        if (isOnline) {
+                            myViewModel.loginRequest(email, password!!, deviceId)
+                        } else {
+                            myDockActivity?.showErrorMessage("Internet not available")
+                        }
+                    }
+
+                }
             }
         }
 
@@ -114,19 +124,22 @@ class LoginFragment : BaseDockFragment() {
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        val jsonObject = JSONObject(it.data?.errorBody()?.string().toString())
-                        val error: String = jsonObject.getString("error")
-                        Toast.makeText(requireContext(), "error: ${error}", Toast.LENGTH_SHORT).show()
+                        myDockActivity?.handleErrorResponse(it)
+//                        val jsonObject = JSONObject(it.data?.errorBody()?.string().toString())
+//                        val error: String = jsonObject.getString("error")
+//                        Toast.makeText(requireContext(), "error: ${error}", Toast.LENGTH_SHORT).show()
 
 
                     }
 
                     is ResponseModel.Idle -> {
-
+                        myDockActivity?.hideProgressIndicator()
                     }
 
 
-                    is ResponseModel.Loading ->{}
+                    is ResponseModel.Loading ->{
+                        myDockActivity?.showProgressIndicator()
+                    }
 //                        Toast.makeText(
 //                            applicationContext,
 //                            "Loading.. ",

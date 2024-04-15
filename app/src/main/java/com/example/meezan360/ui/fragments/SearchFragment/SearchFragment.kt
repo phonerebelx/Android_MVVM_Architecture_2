@@ -416,6 +416,7 @@ class SearchFragment : BaseDockFragment() {
         selected_date: String,
     ) {
         myViewModel.viewModelScope.launch {
+            myDockActivity?.showProgressIndicator()
             myViewModel.setFilter(
                 selected_area, selected_region, selected_branch, selected_date
             )

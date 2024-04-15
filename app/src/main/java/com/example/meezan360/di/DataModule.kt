@@ -18,7 +18,6 @@ val dataModule = module {
         androidContext().getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
     }
     single { SharedPreferencesManager(get()) }
-    //
 
     single(named("data_repo")) { DataRepository(NetworkModule(get(),androidContext())) }
 }

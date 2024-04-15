@@ -15,7 +15,31 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            //storeFile file('hotworx/hot_worx_keystore.jks')
 
+            storeFile file("C:/Users/Haroon Traders/AndroidStudioProjects/meezan360revamp/meezan360.jks")
+            storePassword '123456'
+            keyAlias = '360'
+            keyPassword '123456'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources  true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            testCoverageEnabled = true
+
+        }
+
+    }
     buildFeatures {
         viewBinding = true
     }
@@ -26,7 +50,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -97,4 +121,7 @@ dependencies {
     //Butterknife
     implementation "com.jakewharton:butterknife:10.2.0"
     kapt "com.jakewharton:butterknife-compiler:10.2.0"
+
+    //Root Detection
+    implementation 'com.scottyab:rootbeer-lib:0.1.0'
 }

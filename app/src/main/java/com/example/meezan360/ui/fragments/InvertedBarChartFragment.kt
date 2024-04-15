@@ -42,7 +42,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
     private val myViewModel: DashboardViewModel by viewModel()
     private val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
     private lateinit var adapter: BarChartAdapter
-
+    private var rotationAngle: Float = 0f
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -52,6 +52,10 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
         myViewModel.viewModelScope.launch {
             myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
         }
+        rotationAngle = if (dataModel.isVerticalLegend == "1")
+            -90f
+        else
+            -0f
         handleAPIResponse()
 
         return binding.root
@@ -70,17 +74,17 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             colors.add(Utils.parseColorSafely(chartData.valueColor))
             labels.add(chartData.key)
         }
-        Log.d("labels chart",labels.toString())
 
-        val barDataSet = BarDataSet(entries, "Target")
+
+        val barDataSet = BarDataSet(entries,"")
         barDataSet.setDrawValues(true)
         barDataSet.valueTextColor = Color.BLACK
         barDataSet.valueTextSize = 6f
         barDataSet.colors = colors
         val barData = BarData(barDataSet)
-        barData.barWidth = 0.3f
+        barData.barWidth = 0.5f
 
-        setupLegend()
+//        setupLegend()
 
         barChart.apply {
             setDrawValueAboveBar(true)
@@ -88,6 +92,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
             description.isEnabled = false
+            xAxis.labelRotationAngle = rotationAngle
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -95,6 +100,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             xAxis.labelCount = labels.size
             xAxis.textSize = 7f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            legend.isEnabled = false
             setTouchEnabled(false)
             data = barData
             animateY(800)
@@ -161,11 +167,10 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
                 }
             }
         }
-
     }
 
     private fun setupRecyclerView(listItems: ArrayList<String>) {
-
+        if (listItems.size == 1) binding.recyclerView.visibility = View.GONE
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 context,

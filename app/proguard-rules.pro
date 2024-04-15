@@ -42,9 +42,10 @@
 -keep class com.example.meezan360**{*;}
 -keep class com.example.meezan360.network.APIService{*;}
 -keep class com.example.meezan360.network.APIClient{*;}
-#-keep class com.example.meezan360.dagger.modules.NetworkModule{*;}
 -keep class com.example.meezan360.ui.activities.DockActivity{*;}
-
+-keep class com.scottyab.rootbeer**{*;}
+-keep class com.scottyab.rootbeer.** { *; }
+-keep class com.scottyab.rootbeer.RootBeer{*;}
 
 -dontwarn com.squareup.okhttp.**
 -keep class com.squareup.okhttp.** { *; }

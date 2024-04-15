@@ -4,7 +4,7 @@ package com.example.meezan360.datamodule.repository
 import com.app.adcarchitecture.model.otp.OtpModel
 import com.app.adcarchitecture.model.otp.OtpResponse
 import com.example.meezan360.di.NetworkModule
-import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
+import com.example.meezan360.model.CardLevelModel.GetCardLevelDataModel
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
@@ -13,7 +13,6 @@ import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterResponseDataModel
 import com.example.meezan360.model.changePassword.VerifyPassModel
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
-import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.logout.LogoutResponse
 import com.example.meezan360.model.reports.DepositObject
@@ -26,14 +25,22 @@ import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
+import java.io.IOException
 
 class DataRepository(private var networkModule: NetworkModule) {
+
     suspend fun getLoginRequest(
         loginId: String, password: String, deviceId: String
     ): Flow<Response<LoginModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().loginRequest(loginId, password, deviceId)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().loginRequest(loginId, password, deviceId)
+                emit(response)
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -44,9 +51,9 @@ class DataRepository(private var networkModule: NetworkModule) {
         }
     }
 
-    suspend fun getDashboardByKpi(kpiId: String,tag: String): Flow<Response<DashboardByKPIModel>> {
+    suspend fun getDashboardByKpi(kpiId: String, tag: String): Flow<Response<DashboardByKPIModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId,tag)
+            val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId, tag)
             emit(response)
         }
     }
@@ -77,7 +84,8 @@ class DataRepository(private var networkModule: NetworkModule) {
         identifier: String
     ): Flow<Response<ArrayList<Level2ReportModel>>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getLevelTwo(kpiId, tableId,identifierType,identifier)
+            val response = networkModule.sourceOfNetwork()
+                .getLevelTwo(kpiId, tableId, identifierType, identifier)
             emit(response)
         }
     }
@@ -110,19 +118,21 @@ class DataRepository(private var networkModule: NetworkModule) {
         selected_date: String,
     ): Flow<Response<SetFilterResponseDataModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().setFilter(selected_area, selected_region, selected_branch, selected_date)
+            val response = networkModule.sourceOfNetwork()
+                .setFilter(selected_area, selected_region, selected_branch, selected_date)
             emit(response)
         }
     }
 
     suspend fun getCustomerService(
         cif_id: String
-    ): Flow<Response<CardLevelDataModel>> {
+    ): Flow<Response<GetCardLevelDataModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getCustomerService("1",cif_id)
+            val response = networkModule.sourceOfNetwork().getCustomerService("1", cif_id)
             emit(response)
         }
     }
+
     suspend fun resetPasswordRequest(
         resetPasswordModel: ResetPasswordModel
     ): Flow<Response<ResetPwdReqResponse>> {
@@ -140,6 +150,7 @@ class DataRepository(private var networkModule: NetworkModule) {
             emit(response)
         }
     }
+
     suspend fun changePassword(
         changePasswordModel: ChangePasswordModel
     ): Flow<Call<ResponseBody>> {
@@ -148,11 +159,12 @@ class DataRepository(private var networkModule: NetworkModule) {
             emit(response)
         }
     }
+
     suspend fun resetPasswordVerify(
         verifyPassModel: VerifyPassModel
     ): Flow<Call<ResponseBody>> {
         return flow {
-           val response = networkModule.sourceOfNetwork().verifyPassword(verifyPassModel)
+            val response = networkModule.sourceOfNetwork().verifyPassword(verifyPassModel)
             emit(response)
         }
     }

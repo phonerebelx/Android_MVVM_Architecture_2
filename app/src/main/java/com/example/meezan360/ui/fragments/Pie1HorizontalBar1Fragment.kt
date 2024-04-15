@@ -27,6 +27,7 @@ import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
@@ -69,31 +70,24 @@ class Pie1HorizontalBar1Fragment(
             val labels: ArrayList<String> = arrayListOf()
             val entries: ArrayList<BarEntry> = arrayListOf()
             val targetEntries: ArrayList<BarEntry> = arrayListOf()
+            val Value: ArrayList<Float> = arrayListOf()
+            val targetValue: ArrayList<Float> = arrayListOf()
             val colors: ArrayList<Int> = arrayListOf()
             val targetColors: ArrayList<Int> = arrayListOf()
             val percentages: ArrayList<Float> = arrayListOf()
 
-//            graph2.barChartModel.forEachIndexed { index, barChartModel ->
-//                labels.add(barChartModel.key)
-//                entries.add(BarEntry(index.toFloat(), barChartModel.value))
-//                targetEntries.add(BarEntry(index.toFloat(), barChartModel.target!!))
-//                colors.add(Utils.parseColorSafely(barChartModel.valueColor))
-//                targetColors.add(Utils.parseColorSafely(barChartModel.targetColor))
-//                barChartModel.percentage?.let { percentages.add(it) }
-//            }
-
-            Log.d("showHorizontalBarChart: ",graph2.barChartModel.toString())
             for (index in graph2.barChartModel.size - 1 downTo 0) {
-
                 val barChartModel = graph2.barChartModel[index]
                 labels.add(barChartModel.key)
-                entries.add(BarEntry(((graph2.barChartModel.size-1) - index).toFloat(), barChartModel.value))
-                targetEntries.add(BarEntry(((graph2.barChartModel.size-1) - index).toFloat(), barChartModel.target!!))
+                entries.add(BarEntry(((graph2.barChartModel.size - 1) - index).toFloat(), barChartModel.percentage!!))
+                targetEntries.add(BarEntry(((graph2.barChartModel.size - 1) - index).toFloat(), 100F))
+                Value.add(barChartModel.value)
+                targetValue.add(barChartModel.target!!)
+                targetEntries.add(BarEntry(((graph2.barChartModel.size - 1) - index).toFloat(), 100F))
                 colors.add(Utils.parseColorSafely(barChartModel.valueColor))
                 targetColors.add(Utils.parseColorSafely(barChartModel.targetColor))
                 barChartModel.percentage?.let { percentages.add(it) }
             }
-
 
             val barDataSet = BarDataSet(entries, "Target")
             barDataSet.colors = colors
@@ -101,21 +95,22 @@ class Pie1HorizontalBar1Fragment(
             val barDataSet2 = BarDataSet(targetEntries, "Target2")
             barDataSet2.colors = targetColors
             barDataSet2.setDrawValues(false)
-            //for text inside horizontal bars
+
+
 
             var index = 0
             barDataSet.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    if (index < barDataSet.entryCount){
-                        val percentage = "${percentages[index]}%"
+                    if (index < barDataSet.entryCount) {
+                        val value = "${Value[index]}"
                         index++
-                        return percentage
-                    }else{
+                        return value
+                    } else {
                         index = 0
                     }
-                    val outsidePercentage = percentages[index]
+                    val outsideValue = Value[index]
                     index++
-                    return "${outsidePercentage}%"
+                    return "${outsideValue}"
                 }
             }
 
@@ -124,11 +119,30 @@ class Pie1HorizontalBar1Fragment(
             barDataSet.valueTextSize = 8f
             barDataSet.valueTextColor = Color.WHITE
 
-            val mData = BarData(barDataSet2,barDataSet)
+
+
+            val yAxis = horizontalBarChart.axisLeft
+
+
+
+
+            val limitLine = LimitLine(100F, "")
+            limitLine.lineWidth = 2f
+//            limitLine.enableDashedLine(10f, 10f, 0f)
+            limitLine.lineColor = ContextCompat.getColor(requireContext(), R.color.red);
+            limitLine.labelPosition = LimitLine.LimitLabelPosition.LEFT_BOTTOM
+            yAxis.addLimitLine(limitLine)
+            yAxis.setDrawLimitLinesBehindData(false)
+
+
+
+
+
+            val mData = BarData(barDataSet2, barDataSet)
             mData.barWidth = 0.7f
             mData.isHighlightEnabled = false
 
-            //for text on left side
+
             val xl: XAxis = horizontalBarChart.xAxis
             xl.position = XAxis.XAxisPosition.BOTTOM
             xl.setDrawAxisLine(true)
@@ -152,14 +166,18 @@ class Pie1HorizontalBar1Fragment(
 
             horizontalBarChart.apply {
                 setTouchEnabled(false)
-                marker = CustomMarker(context, R.layout.marker_layout) //
+                marker = CustomMarker(context, R.layout.marker_layout)
                 if (axisMax != null) {
-                    axisLeft.axisMaximum = axisMax + 2000
+                    axisLeft.axisMaximum = axisMax
                 } //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
                 axisLeft.axisMinimum = 0f
                 setDrawValueAboveBar(false)
-                axisLeft.isEnabled = false
+                axisLeft.isEnabled = true
+                axisLeft.setDrawAxisLine(false)
+                axisLeft.setDrawLabels(false)
+                axisLeft.setDrawGridLines(false)
                 axisRight.isEnabled = false
+
                 data = mData
                 description.isEnabled = false
                 animateY(800)
@@ -180,7 +198,7 @@ class Pie1HorizontalBar1Fragment(
         val l2 = LegendEntry(
             "Achievement", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#1F753E")
         )
-        legend.setCustom(arrayOf(l1,l2))
+        legend.setCustom(arrayOf(l1, l2))
     }
 
     private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
@@ -206,6 +224,7 @@ class Pie1HorizontalBar1Fragment(
                 description.isEnabled = false
                 centerText = "${pieEntryValueCA}%"
                 extraLeftOffset = 25f
+
                 setTouchEnabled(false) //to stop rotation
                 setHoleColor(Color.parseColor("#E0E0E0"))
                 setCenterTextSize(8f)

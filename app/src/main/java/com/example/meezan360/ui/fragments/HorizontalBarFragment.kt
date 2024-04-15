@@ -152,19 +152,34 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         val bottomColors = ArrayList<Int>()
         val labels: ArrayList<String> = arrayListOf()
 
-        chartModelTop.forEachIndexed { index, dataModel ->
-            topEntries.add(BarEntry(index.toFloat(), dataModel.value))
-            topColors.add(Utils.parseColorSafely(dataModel.valueColor))
-            labels.add(dataModel.key)
+
+
+        for (index in chartModelTop.size - 1 downTo 0) {
+            val barChartModel = chartModelTop[index]
+
+            topEntries.add(BarEntry(((chartModelTop.size - 1) - index).toFloat(), barChartModel.value))
+            topColors.add(Utils.parseColorSafely(barChartModel.valueColor))
+            labels.add(barChartModel.key)
         }
+
+
         val lastIndex = topEntries.size.toFloat()
         var updatedIndex = lastIndex
-        chartModelBottom.forEach { dataModel ->
-            bottomEntries.add(BarEntry(updatedIndex, dataModel.value))
-            bottomColors.add(Utils.parseColorSafely(dataModel.valueColor))
-            labels.add(dataModel.key)
+        for (index in chartModelBottom.size - 1 downTo 0) {
+            val barChartModel = chartModelBottom[index]
+            bottomEntries.add(BarEntry(updatedIndex, barChartModel.value))
+            bottomColors.add(Utils.parseColorSafely(barChartModel.valueColor))
+            labels.add(barChartModel.key)
             updatedIndex++
         }
+
+//        chartModelBottom.forEach { dataModel ->
+//
+//            bottomEntries.add(BarEntry(updatedIndex, dataModel.value))
+//            bottomColors.add(Utils.parseColorSafely(dataModel.valueColor))
+//            labels.add(dataModel.key)
+//            updatedIndex++
+//        }
 
         val topBarDataSet = BarDataSet(topEntries, "Top Bars")
         val bottomBarDataSet = BarDataSet(bottomEntries, "Bottom Bars")
@@ -264,8 +279,8 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                         setupRecyclerView(listItems)
                         Log.d("graphModel",graphModel.toString())
                         if (graphModel.isNotEmpty()) showBarChart(
-                            graphModel[0].top,
                             graphModel[0].bottom,
+                            graphModel[0].top,
                             binding.horizontalBarChart
                         )
 
@@ -277,8 +292,8 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
 
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
         showBarChart(
-            graphModel[position].top,
             graphModel[position].bottom,
+            graphModel[position].top,
             binding.horizontalBarChart
         )
     }

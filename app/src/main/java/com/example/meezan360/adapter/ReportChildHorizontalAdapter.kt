@@ -40,6 +40,16 @@ class ReportChildHorizontalAdapter(
             layoutParams.width = getScreenSize // Assuming getScreenSize is the desired width in pixels
             setTextColor(Utils.parseColorSafely(item.valueColor))
         }
+        if (item.sub_value != null && item.sub_value.isNotEmpty() ){
+            binding.tvSubChild.apply {
+                text = item.sub_value
+                layoutParams.width = getScreenSize // Assuming getScreenSize is the desired width in pixels
+                setTextColor(Utils.parseColorSafely(item.valueColor))
+            }
+        }
+        else{
+            binding.tvSubChild.visibility = View.GONE
+        }
 
 
         binding.llHorizontal.setOnClickListener {

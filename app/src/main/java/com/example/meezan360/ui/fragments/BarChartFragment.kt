@@ -26,11 +26,14 @@ import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.ScatterChart
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -102,6 +105,7 @@ class BarChartFragment(
         val colorsTarget = ArrayList<Int>() //for squares
 
         for (index in barChartModel.indices) {
+
             entries.add(BarEntry(index.toFloat(), barChartModel[index].value))
             barChartModel[index].target?.let { Entry(index.toFloat(), it) }
                 ?.let { scatterEntries.add(it) }
@@ -112,8 +116,15 @@ class BarChartFragment(
 
         val barDataSet = BarDataSet(entries, "Target")
         barDataSet.colors = colorsBar
+        barDataSet.setDrawValues(false)
         val barData = BarData(barDataSet)
-        barData.barWidth = 0.5f
+        if (entries.size > 5){
+            barData.barWidth = 0.7f
+        }else if (entries.size > 4){
+            barData.barWidth = 0.1f
+        }else{
+            barData.barWidth = 0.2f
+        }
 
         // Scatter chart (to place squares on top of each bar)
         val scatterDataSet = ScatterDataSet(scatterEntries, "Scatter Chart")
@@ -146,16 +157,32 @@ class BarChartFragment(
             setTouchEnabled(false)
             extraBottomOffset = 10f
             description.isEnabled = false
-            xAxis.spaceMin = barData.barWidth / 2f // First bar to show properly
-            xAxis.spaceMax = barData.barWidth / 2f // Last bar to show properly
-            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            xAxis.spaceMin = barData.barWidth / 2f
+            xAxis.spaceMax = barData.barWidth / 2f
             xAxis.labelRotationAngle = rotationAngle
             xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.labelCount = entries.size
+
+
+            xAxis.setLabelCount(labels.size,false)
+            xAxis.granularity = 1f
+            xAxis.valueFormatter =  object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    if (value >= 0) {
+                        if (value <= labels.size - 1) {
+                            return labels[value.toInt()]
+                        }
+                        return ""
+                    }
+                    return ""
+                }
+            }
             xAxis.textSize = 7f
-            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
+            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.black)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(false)
+            axisLeft.axisMinimum = 0f
+            axisRight.axisMinimum = 0f
+
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
             data = combineData

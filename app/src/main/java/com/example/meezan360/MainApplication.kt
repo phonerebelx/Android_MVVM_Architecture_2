@@ -4,20 +4,36 @@ import android.app.Activity
 import android.app.Application
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.meezan360.di.appModule
 import com.example.meezan360.di.dataModule
+import com.example.meezan360.utils.InternetHelper
+import com.scottyab.rootbeer.RootBeer
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
+    lateinit var rootBeer: RootBeer
+    lateinit var internetHelper: InternetHelper
+
+
     override fun onCreate() {
         super.onCreate()
+        rootBeer = RootBeer(applicationContext)
+        internetHelper = InternetHelper(applicationContext)
 
-        initKoin()
+            initKoin()
+
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                changeStatusBarColor(activity)
+                if (rootBeer.isRooted) {
+                    activity.finish()
+                }else{
+
+                    changeStatusBarColor(activity)
+                }
             }
 
             override fun onActivityStarted(activity: Activity) {}
@@ -35,7 +51,7 @@ class MainApplication : Application() {
     private fun initKoin() {
         startKoin {
             androidContext(this@MainApplication)
-            modules(appModule, dataModule)
+                modules(appModule, dataModule)
         }
     }
 

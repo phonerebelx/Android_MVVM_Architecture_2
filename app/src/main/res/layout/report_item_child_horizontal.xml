@@ -3,16 +3,34 @@
     android:id="@+id/llHorizontal"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvChild"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="3,551999"
-        style="@style/textViewStyle"
-        android:textSize="@dimen/_11sdp"
-       />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvChild"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="3,551999"
+            style="@style/textViewStyle"
+            android:textSize="@dimen/_8sdp" />
+
+
+        <TextView
+            android:id="@+id/tvSubChild"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="3,551999"
+            style="@style/textViewStyle"
+            android:textSize="@dimen/_6sdp" />
+
+
+    </LinearLayout>
 
 </LinearLayout>

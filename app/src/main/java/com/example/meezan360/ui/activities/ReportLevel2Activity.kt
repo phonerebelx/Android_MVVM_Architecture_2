@@ -79,7 +79,10 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
     }
 
     private fun setupTopMenu(topBoxes: ArrayList<String>) {
-
+        if (topBoxes.isEmpty() || (topBoxes.size == 1 && topBoxes[0] == "")){
+            binding.recyclerViewTopCategory.visibility = View.GONE
+            return
+        }
         binding.recyclerViewTopCategory.layoutManager =
             LinearLayoutManager(
                 this,

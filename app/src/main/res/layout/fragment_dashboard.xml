@@ -23,8 +23,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
@@ -38,8 +37,8 @@
                     android:id="@+id/linearLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:layout_marginVertical="@dimen/_15sdp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/linearLayout">
@@ -48,9 +47,9 @@
                         android:id="@+id/ivLogout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:src="@drawable/logout"
                         android:visibility="gone"
-                        android:layout_marginStart="@dimen/_5sdp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -61,10 +60,10 @@
                         style="@style/textViewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
                         android:text="@string/dashboard"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_16ssp"
+                        android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/ivSearch"
                         app:layout_constraintStart_toEndOf="@+id/ivLogout"
@@ -101,38 +100,58 @@
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart"
+                    style="@style/textViewStyle"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
                     android:layout_marginTop="@dimen/_20sdp"
-                    style="@style/textViewStyle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
-                <TextView
-                    android:id="@+id/centerTextView"
+                <LinearLayout
+                    android:id="@+id/lvCenterView"
                     android:layout_width="@dimen/_120sdp"
                     android:layout_height="@dimen/_120sdp"
-                    android:layout_gravity="center"
+                    android:orientation="vertical"
                     android:gravity="center"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/pieChart"
                     app:layout_constraintEnd_toEndOf="@+id/pieChart"
                     app:layout_constraintStart_toStartOf="@+id/pieChart"
-                    app:layout_constraintTop_toTopOf="@+id/pieChart" />
+                    app:layout_constraintTop_toTopOf="@+id/pieChart">
 
+                    <TextView
+                        android:id="@+id/centerTextView"
+                        android:layout_width="@dimen/_120sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:textColor="@color/purple_dark"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/centerTextDateView"
+                        android:layout_width="@dimen/_120sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:gravity="center"
+                        android:textColor="@color/purple_dark"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnPEDeposit"
+                    style="@style/textViewStyle"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_25sdp"
                     android:layout_marginStart="@dimen/_20sdp"
                     android:background="@drawable/custom_button_purple_gradient"
                     android:text="PE-Deposit"
-                    style="@style/textViewStyle"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_9ssp"
@@ -141,12 +160,12 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAVGDeposit"
+                    style="@style/textViewStyle"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_25sdp"
                     android:layout_marginEnd="@dimen/_20sdp"
                     android:background="@drawable/custom_button_grey_gradient"
                     android:text="AVG-Deposit"
-                    style="@style/textViewStyle"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_9ssp"
@@ -155,7 +174,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_250sdp"
+                    android:layout_height="@dimen/_300sdp"
                     android:layout_margin="@dimen/_6sdp"
                     app:cardCornerRadius="@dimen/_10sdp"
                     app:cardElevation="@dimen/_3sdp"

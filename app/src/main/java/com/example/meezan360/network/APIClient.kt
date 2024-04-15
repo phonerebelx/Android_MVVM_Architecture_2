@@ -2,17 +2,19 @@ package com.example.meezan360.network
 
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.util.Log
+import android.widget.Toast
 import com.example.meezan360.R
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.koinApplication
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.net.UnknownHostException
 import java.security.KeyManagementException
 import java.security.KeyStore
 import java.security.KeyStoreException
@@ -21,19 +23,21 @@ import java.security.SecureRandom
 import java.security.cert.Certificate
 import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
-import java.security.cert.X509Certificate
 import java.util.Arrays
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
-import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
+
 class APIClient() {
     companion object {
-        private const val BASE_URL = "http://thesalesforceapi.avengers.pk/api/v1/"
-//        private const val BASE_URL = "https://bdosales.meezanbank.com:9988/api/v1/"
+//        private const val BASE_URL = "http://thesalesforceapi.avengers.pk/api/v1/"
+        private const val BASE_URL = "https://bdosales.meezanbank.com:9988/api/v1/"
+        //al barqa
+//        private const val BASE_URL = "https://salesforceuatapi.albaraka.com.pk/api/v1/"
+//        private const val BASE_URL = "https://salesforceapi.albaraka.com.pk/api/v1/"
 
 
 
@@ -48,7 +52,7 @@ class APIClient() {
             check(!(trustManagers.size != 1 || trustManagers[0] !is X509TrustManager)) {
                 "Unexpected default trust managers:" + Arrays.toString(
                     trustManagers
-                )
+                )   
             }
 
             val trustManager = trustManagers.get(0) as X509TrustManager
@@ -56,7 +60,7 @@ class APIClient() {
             sslContext.init(null, arrayOf<TrustManager>(trustManager), null)
             val client = OkHttpClient.Builder().apply {
 
-                addInterceptor(BaseHeadersInterceptor(sharedPreferencesManager))
+                addInterceptor(BaseHeadersInterceptor(sharedPreferencesManager,context))
                 addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 connectTimeout(50, TimeUnit.SECONDS) // Set connection timeout
                 readTimeout(50, TimeUnit.SECONDS)    // Set read timeout
@@ -75,7 +79,9 @@ class APIClient() {
             IOException::class,
             KeyStoreException::class,
             NoSuchAlgorithmException::class,
-            KeyManagementException::class
+            KeyManagementException::class,
+            UnknownHostException::class,
+            NullPointerException::class
         )
         private fun getSSLConfig(context: Context): SSLContext? {
             val cf = CertificateFactory.getInstance("X.509")
@@ -107,16 +113,42 @@ class APIClient() {
     }
 }
 
-class BaseHeadersInterceptor(private val sharedPreferencesManager: SharedPreferencesManager) :
+class BaseHeadersInterceptor(private val sharedPreferencesManager: SharedPreferencesManager,private val mcontext: Context) :
     Interceptor {
+    @Throws(
+        IOException::class,
+    )
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request().newBuilder().apply {
-            val token = sharedPreferencesManager.getToken()
-            if (!token.isNullOrBlank()) {
-                header("Authorization", "Bearer $token")
-                header("response-type", "1") //0 for static data and 1 for dynamic data
-            }
-        }.build()
-        return chain.proceed(request)
+        if (!isConnected()) {
+
+            throw IOException()
+        }
+        try {
+            val request = chain.request().newBuilder().apply {
+                val token = sharedPreferencesManager.getToken()
+                if (!token.isNullOrBlank()) {
+                    header("Authorization", "Bearer $token")
+                    header("response-type", "1") // 0 for static data and 1 for dynamic data
+                }
+            }.build()
+
+            return chain.proceed(request)
+        } catch (e: java.net.UnknownHostException) {
+            throw IOException("Unable to resolve host", e)
+        }
+    }
+
+    fun isConnected(): Boolean {
+        val connectivityManager =
+            mcontext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = connectivityManager.activeNetworkInfo
+        return netInfo != null && netInfo.isConnected
     }
 }
+
+//class NoConnectivityException : IOException() {
+//
+//    override val message: String
+//        get() = "No Internet Connection"
+//
+//}

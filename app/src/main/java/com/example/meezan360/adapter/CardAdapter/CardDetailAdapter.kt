@@ -19,12 +19,10 @@ class CardDetailAdapter(val context: Context) : RecyclerView.Adapter<CardDetailA
         fun bindItems(item: Data?) {
             this.setIsRecyclable(false)
             binding.tvKey.text = item?.key
-            binding.tvValue.text = item?.value
-
+            binding.tvValue.text = item?.value.toString()
         }
     }
     fun setList(list: List<Data>) {
-
         adapterList = list
         notifyDataSetChanged()
     }

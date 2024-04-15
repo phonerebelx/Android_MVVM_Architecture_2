@@ -44,7 +44,7 @@ fun <T> AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         }else if (response.code() == 500) {
-            Toast.makeText(applicationContext, "error: Internal Server Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(applicationContext, "error: ${response.errorBody()?.string().toString()}", Toast.LENGTH_SHORT).show()
         }
 
 

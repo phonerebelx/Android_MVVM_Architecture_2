@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,6 +21,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -140,12 +142,21 @@ class MainActivity : DockActivity(){
 
         return super.onCreateOptionsMenu(menu)
     }
+    fun Context.dpToPx(dp: Float): Int {
+        val scale = resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun initView() {
 
         drawerLayout = binding.drawerLayout
         setSupportActionBar(findViewById(R.id.toolBar))
+        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolBar)
+        val dpSizeInDp = getScreenHeight("width").toFloat()/5 // Your dp value
+        val titleMarginStartInPx = dpToPx(dpSizeInDp)
+        toolbar.titleMarginStart = titleMarginStartInPx
+
         contentView = binding.appBarMain.content
         navController = findNavController(R.id.nav_host_main)
         navController.setGraph(R.navigation.nav_graph)

@@ -2,6 +2,7 @@ package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,7 +44,8 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
     private val myViewModel: DashboardViewModel by viewModel()
     private var graphModel: ArrayList<StackGraphModel>? = null
     private lateinit var adapter: BarChartAdapter
-
+    lateinit var graphArrayWithoutTd: ArrayList<StackGraphModel?>
+    lateinit var graphArrayWithTd: ArrayList<StackGraphModel?>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,11 +59,84 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
 
         graphModel = arrayListOf() //initialize array
         binding.switchTD.setOnCheckedChangeListener { _, isChecked ->
-            graphModel?.get(0)?.let { showBarChart(it, binding.barChart, isChecked) }
+
+            Log.d("graphArrayWithTd",graphArrayWithTd.toString())
+
+            if (isChecked){
+                graphArrayWithTd[0]?.let { showBarChart(it, binding.barChart, isChecked) }
+            }else  {
+                graphArrayWithoutTd[0]?.let { graph -> graph.stackChartData.removeIf { it.key == "TD" } }
+                graphArrayWithoutTd[0]?.let { showBarChart(it, binding.barChart, isChecked) }
+            }
+
+
         }
 
         return binding.root
     }
+
+//    private fun showBarChart(
+//        stackChartModel: StackGraphModel,
+//        barChart: BarChart,
+//        switchTD: Boolean
+//    ) {
+//
+//        val entries: ArrayList<BarEntry> = arrayListOf()
+//        val colors: ArrayList<Int> = arrayListOf()
+//        val labels = ArrayList<String>()
+//
+//        stackChartModel.stackChartData.forEachIndexed { _, stackChartDataModel ->
+//            if (!(stackChartDataModel.key.equals("term", true) && !switchTD)) {
+//                val barEntry = BarEntry(
+//                    entries.size.toFloat(),
+//                    floatArrayOf(
+//                        stackChartDataModel.value1.toFloat(),
+//                        stackChartDataModel.value2.toFloat(),
+//                        stackChartDataModel.value3.toFloat()
+//                    )
+//                )
+//                entries.add(barEntry)
+//                colors.add(Utils.parseColorSafely(stackChartDataModel.value1Color))
+//                colors.add(Utils.parseColorSafely(stackChartDataModel.value2Color))
+//                colors.add(Utils.parseColorSafely(stackChartDataModel.value3Color))
+//                labels.add(stackChartDataModel.key)
+//            }
+//        }
+//
+//        legendSetup(stackChartModel.legend)
+//
+//        val barDataSet = BarDataSet(entries, "Target")
+//        barDataSet.setDrawValues(true)
+//        barDataSet.valueTextColor = Color.WHITE
+//        barDataSet.valueTextSize = 6f
+//        barDataSet.colors = colors
+//
+//        val barData = BarData(barDataSet)
+//        barData.barWidth = 0.3f
+//
+//        barChart.apply {
+//            setDrawValueAboveBar(false)
+//            extraBottomOffset = 10f
+//            axisLeft.isEnabled = false
+//            axisRight.isEnabled = false
+//            description.isEnabled = false
+//            xAxis.setDrawGridLines(false)
+//            xAxis.setDrawAxisLine(false)
+//            xAxis.position = XAxis.XAxisPosition.BOTTOM
+//            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
+//            xAxis.labelCount = labels.size
+//            xAxis.textSize = 7f
+//            setTouchEnabled(false)
+//            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+//            data = barData
+//            animateY(800)
+//            invalidate()
+//            if (dataModel.isVerticalLegend == "1"){
+//                xAxis.labelRotationAngle = -90f
+//            }
+//        }
+//    }
+
 
     private fun showBarChart(
         stackChartModel: StackGraphModel,
@@ -71,6 +147,9 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         val entries: ArrayList<BarEntry> = arrayListOf()
         val colors: ArrayList<Int> = arrayListOf()
         val labels = ArrayList<String>()
+
+        Log.d( "labelsShowBarChart: ",stackChartModel.toString() )
+
 
         stackChartModel.stackChartData.forEachIndexed { _, stackChartDataModel ->
             if (!(stackChartDataModel.key.equals("term", true) && !switchTD)) {
@@ -99,7 +178,18 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         barDataSet.colors = colors
 
         val barData = BarData(barDataSet)
-        barData.barWidth = 0.3f
+        if (entries.size > 5){
+            barData.barWidth = 0.7f
+        }else{
+            barData.barWidth = 0.3f
+        }
+
+        // Customize value formatter to hide 0 values
+        barData.setValueFormatter(object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return if (value == 0f) "" else value.toInt().toString()
+            }
+        })
 
         barChart.apply {
             setDrawValueAboveBar(false)
@@ -113,8 +203,22 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.labelCount = labels.size
             xAxis.textSize = 7f
+
+
             setTouchEnabled(false)
-            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            xAxis.setLabelCount(labels.size,false)
+            xAxis.granularity = 1f
+            xAxis.valueFormatter =  object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    if (value >= 0) {
+                        if (value <= labels.size - 1) {
+                            return labels[value.toInt()]
+                        }
+                        return ""
+                    }
+                    return ""
+                }
+            }
             data = barData
             animateY(800)
             invalidate()
@@ -123,6 +227,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
             }
         }
     }
+
 
     private fun setupRecyclerView(listItems: ArrayList<String>) {
         if (listItems.size == 1){
@@ -177,10 +282,25 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                     is ResponseModel.Success -> {
                         val responseBody = it.data?.body()
                         val recyclerViewItems: ArrayList<String> = arrayListOf()
+                        graphArrayWithTd = arrayListOf()
+                        graphArrayWithoutTd = arrayListOf()
 
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                             val jsonArray = responseBody.asJsonArray.get(index).toString()
                             graphModel?.add(
+                                Gson().fromJson(
+                                    jsonArray,
+                                    StackGraphModel::class.java
+                                )
+                            )
+                            graphArrayWithTd.add(
+                                Gson().fromJson(
+                                    jsonArray,
+                                    StackGraphModel::class.java
+                                )
+                            )
+
+                            graphArrayWithoutTd.add(
                                 Gson().fromJson(
                                     jsonArray,
                                     StackGraphModel::class.java
@@ -200,6 +320,9 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                             binding.switchTD.visibility = View.VISIBLE
                             binding.recyclerView.visibility = View.GONE
                         }
+
+
+
 
                         if (graphModel?.isNotEmpty() == true) graphModel?.get(0)?.let { it1 -> showBarChart(it1, binding.barChart, true) }
                     }

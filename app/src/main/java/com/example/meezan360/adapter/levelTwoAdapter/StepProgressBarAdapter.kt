@@ -58,7 +58,7 @@ class StepProgressBarAdapter(
     class ViewHolder(private var itemView: View) : RecyclerView.ViewHolder(itemView) {
         var tvRemarks: TextView? = itemView.findViewById(R.id.tvRemarks)
         var tvBranches: TextView? = itemView.findViewById(R.id.tvBranches)
-        var btnNoOfDays: Button? = itemView.findViewById(R.id.btnNoOfDays)
+//        var btnNoOfDays: Button? = itemView.findViewById(R.id.btnNoOfDays)
         var stageStepBar: StageStepBar? = itemView.findViewById(R.id.stageStepBar)
 
 

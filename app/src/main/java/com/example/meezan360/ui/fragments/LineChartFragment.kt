@@ -2,6 +2,7 @@ package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +38,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
     private lateinit var binding: FragmentDepositTrendBinding
     private val myViewModel: DashboardViewModel by viewModel()
     private lateinit var adapter: LineChartAdapter
-    private val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
+    private var graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
     private val positionsList = ArrayList<Int>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,18 +63,21 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         }
 
         val listOfDataSet: MutableList<LineDataSet> = mutableListOf()
-        val labels = ArrayList<String>()
+        var labels = ArrayList<String>()
         for (i in positionsList) {
             val lineEntries = ArrayList<Entry>()
             tierGraphModel[i].barChartModel.forEachIndexed { index, dataModel ->
                 labels.add(dataModel.key)
+
                 lineEntries.add(Entry(index.toFloat(), dataModel.value))
             }
 
-
+            val labelsSet = linkedSetOf<String>().apply { addAll(labels) }
+            labels = ArrayList(labelsSet)
 //            for (dataModel in tierGraphModel[i].barChartModel) {
 //                lineEntries.add(Entry(dataModel.key.toFloat(), dataModel.value))
 //            }
+
             val lineDataSet = LineDataSet(lineEntries, "")
             customizationLine(lineDataSet, Utils.parseColorSafely(tierGraphModel[i].color))
             listOfDataSet.add(lineDataSet)
@@ -135,9 +139,10 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
 
                         val responseBody = it.data?.body()
                         val recyclerViewItems: ArrayList<String> = arrayListOf()
-
+                        graphModel = arrayListOf()
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                             val jsonArray = responseBody.asJsonArray.get(index).toString()
+
                             graphModel.add(
                                 Gson().fromJson(
                                     jsonArray,
@@ -164,6 +169,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
     }
 
     private fun setupRecyclerView(listItems: ArrayList<HorizontalGraphModel>) {
+        if (listItems.size == 1) binding.recyclerView.visibility = View.GONE
         binding.recyclerView.layoutManager =
             LinearLayoutManager(
                 context,
@@ -187,6 +193,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         }
         drawLineChart(graphModel, positionsList)
     }
+
 
 
 }

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -63,9 +64,10 @@ class ReportParentAdapter(
             TypedValue.COMPLEX_UNIT_DIP,
             pixelSize.toFloat(),
             myContext.resources.displayMetrics
-        ).toInt()
-        if ( myContext.resources.getDimension(com.intuit.sdp.R.dimen._75sdp).toInt() > dpSize){
-            dpSize = myContext.resources.getDimension(com.intuit.sdp.R.dimen._75sdp).toInt()
+        ).toInt() - 10
+
+        if ( myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt() > dpSize){
+            dpSize = myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt()
         }
 
         //it creates textview for header dynamically on the basis of column items
@@ -79,13 +81,13 @@ class ReportParentAdapter(
             valueTV.typeface = typeface
             valueTV.setTextSize(
                 TypedValue.COMPLEX_UNIT_PX,
-                myContext.resources.getDimension(com.intuit.sdp.R.dimen._12sdp)
+                myContext.resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
             )
             valueTV.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
             valueTV.setTextColor(ContextCompat.getColor(myContext,R.color.white))
 
             valueTV.layoutParams = LinearLayout.LayoutParams(
-//                myContext.resources.getDimension(com.intuit.sdp.R.dimen._75sdp).toInt(),
+//                myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt(),
                 dpSize,
                 LinearLayout.LayoutParams.MATCH_PARENT
 

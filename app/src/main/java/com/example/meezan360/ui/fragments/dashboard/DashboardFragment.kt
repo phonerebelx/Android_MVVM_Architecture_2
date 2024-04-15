@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,7 @@ import com.example.meezan360.databinding.ActivityMainBinding
 import com.example.meezan360.databinding.FragmentDashboardBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.model.Kpi
+import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.dashboardByKpi.FooterModel
 import com.example.meezan360.network.ResponseModel
@@ -41,12 +43,15 @@ import com.example.meezan360.ui.fragments.InvertedBarChartFragment
 import com.example.meezan360.ui.fragments.LineChartFragment
 import com.example.meezan360.ui.fragments.Pie1HorizontalBar1Fragment
 import com.example.meezan360.ui.fragments.Pie2Bar2Fragment
+import com.example.meezan360.ui.fragments.Pie4ChartFragment
+import com.example.meezan360.ui.fragments.PieChartFragment
 import com.example.meezan360.ui.fragments.StackChartFragment
 import com.example.meezan360.ui.fragments.StepProgressBarFragment
 import com.example.meezan360.ui.fragments.TierChartFragment
 import com.example.meezan360.utils.Constants
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
+import com.example.meezan360.viewmodel.SearchFragViewModel
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -74,7 +79,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private lateinit var iconsData: ArrayList<Int>
     private var pieChartAngleDegree: HashMap<String, Float> = HashMap<String, Float>()
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
-
+    private lateinit var getSetFilterModel: GetSetFilterDataResponseModel
     //for top header
     private lateinit var adapter: TopBoxesAdapter
 
@@ -82,6 +87,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private var viewPagerAdapter: FragmentPagerAdapter? = null
 
     private val myViewModel: DashboardViewModel by viewModel()
+    private val myViewModel2: SearchFragViewModel by viewModel()
 
     private var tagName: String = Constants.general
 
@@ -116,7 +122,9 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         myViewModel.viewModelScope.launch {
             myViewModel.checkVersioning()
         }
-
+        myViewModel2.viewModelScope.launch {
+            myViewModel2.getSetFilter()
+        }
         handleAPIResponse()
 
         binding.pieChart.setOnChartValueSelectedListener(this)
@@ -142,6 +150,17 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             footerList?.forEachIndexed { index, footer ->
                 //to access fragments by passing cardType to Enum
                 when (footerList[index].cardType) {
+                    "pie_chart" -> fragmentsList.add(
+                        PieChartFragment(
+                            kpiId, tagName, footerList[index]
+                        )
+                    )
+                    "4pie_chart" -> fragmentsList.add(
+                        Pie4ChartFragment(
+                            kpiId, tagName, footerList[index]
+                        )
+                    )
+
                     "2pie_2bar" -> fragmentsList.add(
                         Pie2Bar2Fragment(
                             kpiId, tagName, footerList[index]
@@ -425,7 +444,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                 val intent = Intent(requireContext(), LoginScreen::class.java)
                 startActivity(intent)
             }
-            it.centerTextView.setOnClickListener {
+            it.lvCenterView.setOnClickListener {
                 if (kpiId == 1) {
                     //for deposit
                     val intent = Intent(requireContext(), ReportLevel1Activity::class.java)
@@ -444,6 +463,10 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private fun handleAPIResponse() {
         resetPassJob = lifecycleScope.launch {
             myDockActivity?.hideProgressIndicator()
+
+
+
+
             myViewModel.checkVersioning.collect {
                 when (it) {
                     is ResponseModel.Error -> {
@@ -483,12 +506,9 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                         ).show()
                     }
 
-                    is ResponseModel.Idle -> {
-                    }
+                    is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {
-
-                    }
+                    is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
                         myDockActivity?.hideProgressIndicator()
@@ -508,12 +528,39 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                         } else {
                             footerSetupUp(footerData, 1)
                         }
-
                     }
                 }
             }
+
+        }
+        resetPassJob = lifecycleScope.launch {
+
+        myViewModel2.getSetFilterResponse.collect {
+            myDockActivity?.hideProgressIndicator()
+            when (it) {
+                is ResponseModel.Error -> {
+                    (requireActivity() as AppCompatActivity).handleErrorResponse(it)
+                    Toast.makeText(
+                        requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                is ResponseModel.Idle -> {
+                }
+
+                is ResponseModel.Loading -> {
+                }
+
+                is ResponseModel.Success -> {
+                    getSetFilterModel = it.data?.body()!!
+                    binding.centerTextDateView.text = getSetFilterModel.selected_date
+                }
+
+
+            }
         }
 
+        }
     }
 
     override fun onStop() {

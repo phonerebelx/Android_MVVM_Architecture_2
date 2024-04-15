@@ -3,7 +3,7 @@ package com.example.meezan360.network
 
 import com.app.adcarchitecture.model.otp.OtpModel
 import com.app.adcarchitecture.model.otp.OtpResponse
-import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
+import com.example.meezan360.model.CardLevelModel.GetCardLevelDataModel
 
 import com.example.meezan360.model.KPIModel
 import com.example.meezan360.model.LoginModel
@@ -13,7 +13,6 @@ import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterResponseDataModel
 import com.example.meezan360.model.changePassword.VerifyPassModel
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
-import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
 import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.logout.LogoutResponse
 import com.example.meezan360.model.reports.DepositObject
@@ -94,7 +93,7 @@ interface APIService {
     suspend fun getCustomerService(
         @Query("response-type") response_type: String,
         @Query("cif_id") cif_id: String
-    ): Response<CardLevelDataModel>
+    ): Response<GetCardLevelDataModel>
 
     // reset password
     @POST("resetPasswordRequest")

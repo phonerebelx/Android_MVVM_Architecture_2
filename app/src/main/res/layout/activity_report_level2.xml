@@ -33,8 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="#EFEFF0"
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                app:strokeColor="@android:color/transparent"
                 app:cardCornerRadius="@dimen/_30sdp"
-                app:cardElevation="@dimen/_3sdp">
+                app:cardElevation="@dimen/_5sdp">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewTopCategory"

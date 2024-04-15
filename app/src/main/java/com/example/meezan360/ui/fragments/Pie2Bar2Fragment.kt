@@ -92,11 +92,12 @@ class Pie2Bar2Fragment(
             pieDataSet.valueTextSize = 0f
             pieDataSet.colors = colors
             pieDataSet.selectionShift = 0f
+
             pieChart.apply {
                 description.isEnabled = false
                 legend.isEnabled = false
                 centerText = "$pieEntryValueCA%"
-                setHoleColor(Color.parseColor("#E0E0E0"))
+                setHoleColor(Color.parseColor("#FFFFFF"))
                 setCenterTextSize(14f)
                 setCenterTextColor(Color.parseColor("#7B7878"))
                 setTouchEnabled(false) //to stop rotation
@@ -121,6 +122,7 @@ class Pie2Bar2Fragment(
 
         val xl: XAxis = horizontalBarChart.xAxis
         xl.position = XAxis.XAxisPosition.BOTTOM
+
 
         xl.setDrawAxisLine(true)
         xl.setDrawGridLines(false)
@@ -150,13 +152,18 @@ class Pie2Bar2Fragment(
 
         val set1 = BarDataSet(yVals1, graph2?.label)
         set1.colors = colors
+
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(set1)
         val barData = BarData(dataSets)
+
         barData.setValueTextSize(9f)
-        barData.barWidth = .9f
+        barData.setValueTextColor(Color.WHITE)
+        barData.barWidth = .7f
+        barData.getGroupWidth(3f, 5f)
 
         horizontalBarChart.apply {
+
             setDrawBarShadow(false)
             setDrawValueAboveBar(false)
             setTouchEnabled(false)

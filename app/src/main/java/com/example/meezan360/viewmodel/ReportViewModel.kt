@@ -3,7 +3,7 @@ package com.example.meezan360.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.datamodule.repository.DataRepository
-import com.example.meezan360.model.CardLevelModel.CardLevelDataModel
+import com.example.meezan360.model.CardLevelModel.GetCardLevelDataModel
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
 import com.example.meezan360.network.ResponseModel
@@ -17,7 +17,7 @@ class ReportViewModel(private var dataRepo: DataRepository?) : ViewModel() {
 
     val levelTwo = MutableStateFlow<ResponseModel<Response<ArrayList<Level2ReportModel>>>>(ResponseModel.Idle("Idle State"))
 
-    val customerService = MutableStateFlow<ResponseModel<Response<CardLevelDataModel>>>(ResponseModel.Idle("Idle State"))
+    val customerService = MutableStateFlow<ResponseModel<Response<GetCardLevelDataModel>>>(ResponseModel.Idle("Idle State"))
 
 
     suspend fun getDepositDetails() {

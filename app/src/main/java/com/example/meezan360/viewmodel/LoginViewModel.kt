@@ -1,11 +1,15 @@
 package com.example.meezan360.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.adcarchitecture.model.otp.OtpModel
 import com.app.adcarchitecture.model.otp.OtpResponse
+import com.example.meezan360.datamodule.repository.ConnectivityRepository
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.datamodule.repository.DataRepository
 import com.example.meezan360.interfaces.ApiListener
@@ -25,8 +29,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.gson.Gson
-class LoginViewModel(private var dataRepo: DataRepository?) : ViewModel() {
+class LoginViewModel(private var dataRepo: DataRepository?,private val connectivityRepository: ConnectivityRepository) : ViewModel() {
     var apiListener: ApiListener? = null
+    @RequiresApi(Build.VERSION_CODES.N)
+    val isOnline = connectivityRepository.isConnected.asLiveData()
     val loginData = MutableStateFlow<ResponseModel<Response<LoginModel>>>(ResponseModel.Idle("Idle State"))
     val resetPassData = MutableStateFlow<ResponseModel<Response<ResetPwdReqResponse>>>(ResponseModel.Idle("Idle State"))
     val verifyOtpData = MutableStateFlow<ResponseModel<Response<OtpResponse>>>(ResponseModel.Idle("Idle State"))
