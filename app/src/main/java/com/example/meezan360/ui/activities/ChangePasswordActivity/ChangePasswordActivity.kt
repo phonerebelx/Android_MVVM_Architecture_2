@@ -3,6 +3,7 @@ package com.example.meezan360.ui.activities.ChangePasswordActivity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
@@ -25,7 +26,7 @@ class ChangePasswordActivity : DockActivity() {
         sharedPreferencesManager = SharedPreferencesManager(sharedPreferences)
         if (savedInstanceState == null) {
             val bundle = bundleOf("some_int" to 0)
-            bundle.putString("LOGIN_ID",sharedPreferencesManager.getLoginId())
+
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
                 add<ChangePasswordFragment>(R.id.fragment_container_view, args = bundle)

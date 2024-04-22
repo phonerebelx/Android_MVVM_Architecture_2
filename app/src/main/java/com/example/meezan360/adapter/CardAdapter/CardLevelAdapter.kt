@@ -118,8 +118,7 @@ class CardLevelAdapter(val context: Context,val onTypeItemClickListener: OnTypeI
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        binding =
-            FragmentCardLevelAdapterBinding.inflate(LayoutInflater.from(context), parent, false)
+        binding = FragmentCardLevelAdapterBinding.inflate(LayoutInflater.from(context), parent, false)
         return ViewHolder(binding.root)
     }
 

@@ -41,20 +41,37 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
             }
+
+
+
         }
     }
 
     suspend fun getCheckVersioning(): Flow<Response<KPIModel>> {
+
         return flow {
-            val response = networkModule.sourceOfNetwork().checkVersioning()
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().checkVersioning()
+                emit(response)
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
+
         }
     }
 
     suspend fun getDashboardByKpi(kpiId: String, tag: String): Flow<Response<DashboardByKPIModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId, tag)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId, tag)
+                emit(response)
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -64,16 +81,29 @@ class DataRepository(private var networkModule: NetworkModule) {
         cardId: String,
     ): Flow<Response<JsonElement>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getFooterGraphs(kpiId, tagName, cardId)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().getFooterGraphs(kpiId, tagName, cardId)
+                emit(response)
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
     suspend fun getDepositDetails(
     ): Flow<Response<DepositObject>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getDepositDetails()
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().getDepositDetails()
+                emit(response)
+
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -84,30 +114,57 @@ class DataRepository(private var networkModule: NetworkModule) {
         identifier: String
     ): Flow<Response<ArrayList<Level2ReportModel>>> {
         return flow {
-            val response = networkModule.sourceOfNetwork()
-                .getLevelTwo(kpiId, tableId, identifierType, identifier)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork()
+                    .getLevelTwo(kpiId, tableId, identifierType, identifier)
+                emit(response)
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
     suspend fun getLovs(): Flow<Response<SearchFilterDataModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getLovs()
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().getLovs()
+                emit(response)
+
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
     suspend fun getSetFilter(): Flow<Response<GetSetFilterDataResponseModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getSetFilter()
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().getSetFilter()
+                emit(response)
+
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
     suspend fun resetFilter(): Flow<Response<ResetFilterResponseDataModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().resetFilter()
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().resetFilter()
+                emit(response)
+
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -118,9 +175,16 @@ class DataRepository(private var networkModule: NetworkModule) {
         selected_date: String,
     ): Flow<Response<SetFilterResponseDataModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork()
-                .setFilter(selected_area, selected_region, selected_branch, selected_date)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork()
+                    .setFilter(selected_area, selected_region, selected_branch, selected_date)
+                emit(response)
+
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -128,8 +192,14 @@ class DataRepository(private var networkModule: NetworkModule) {
         cif_id: String
     ): Flow<Response<GetCardLevelDataModel>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().getCustomerService("1", cif_id)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().getCustomerService("1", cif_id)
+                emit(response)
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -137,8 +207,14 @@ class DataRepository(private var networkModule: NetworkModule) {
         resetPasswordModel: ResetPasswordModel
     ): Flow<Response<ResetPwdReqResponse>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().resetPasswordRequest(resetPasswordModel)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().resetPasswordRequest(resetPasswordModel)
+                emit(response)
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -146,8 +222,15 @@ class DataRepository(private var networkModule: NetworkModule) {
         otpModel: OtpModel
     ): Flow<Response<OtpResponse>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().verifyOtp(otpModel)
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().verifyOtp(otpModel)
+                emit(response)
+
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
         }
     }
 
@@ -170,7 +253,7 @@ class DataRepository(private var networkModule: NetworkModule) {
     }
     suspend fun logoutRequest(): Flow<Response<LogoutResponse>> {
         return flow {
-           val response = networkModule.sourceOfNetwork().logoutRequest()
+            val response = networkModule.sourceOfNetwork().logoutRequest()
             emit(response)
         }
     }

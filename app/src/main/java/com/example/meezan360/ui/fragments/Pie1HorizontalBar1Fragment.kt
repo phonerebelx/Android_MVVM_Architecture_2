@@ -169,7 +169,7 @@ class Pie1HorizontalBar1Fragment(
                 marker = CustomMarker(context, R.layout.marker_layout)
                 if (axisMax != null) {
                     axisLeft.axisMaximum = axisMax
-                } //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
+                }
                 axisLeft.axisMinimum = 0f
                 setDrawValueAboveBar(false)
                 axisLeft.isEnabled = true

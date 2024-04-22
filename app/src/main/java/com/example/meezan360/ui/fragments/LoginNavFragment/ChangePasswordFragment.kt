@@ -86,7 +86,8 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
 
     private fun initView() {
         binding = FragmentChangePasswordBinding.inflate(layoutInflater)
-        login_id = arguments?.getString("LOGIN_ID", "").toString()
+        login_id = sharedPreferencesManager.getLoginId().toString()
+
         setOnClickListener()
     }
 
@@ -107,18 +108,12 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                         // ALI - ProgressIndicator displayed and changePassword request call made
                         myDockActivity?.hideKeyboard(requireView())
 
-                        val decodedEmail = String(
-                            android.util.Base64.decode(
-                                login_id,
-                                android.util.Base64.DEFAULT
-                            )
-                        )
 
                         myViewModel.viewModelScope.launch {
                             myDockActivity?.showProgressIndicator()
                             myViewModel.changePassword(
                                 ChangePasswordModel(
-                                    login_id = decodedEmail,
+                                    login_id = login_id,
                                     old_password = Utils.encryptPass(
                                         "23423532",
                                         "1234567891011121",
@@ -136,11 +131,9 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                                     ).toString()
                                 )
                             )
-
                         }
                     }
                 }
-
             }
             myDockActivity?.setPassViewListener(
                 binding.cpEtNewPass, binding.cpEtConfirmPass, binding.bothPasswordsMustMatch
@@ -164,6 +157,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
+                        myDockActivity?.showSuccessMessage("Password Change Successfully")
                         startActivity(Intent(requireContext(), LoginScreen::class.java))
                         requireActivity().finish()
                         NavOptions.Builder().setPopUpTo(R.id.login_start, true).build()

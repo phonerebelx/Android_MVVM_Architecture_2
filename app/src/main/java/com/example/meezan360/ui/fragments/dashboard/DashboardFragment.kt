@@ -465,8 +465,6 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             myDockActivity?.hideProgressIndicator()
 
 
-
-
             myViewModel.checkVersioning.collect {
                 when (it) {
                     is ResponseModel.Error -> {
@@ -486,6 +484,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                     is ResponseModel.Success -> {
                         myDockActivity?.hideProgressIndicator()
                         kpi = it.data?.body()?.kpis
+                        Log.d( "handleAPIResponse: ",kpi.toString())
                         showPieChart(kpi)
                     }
 

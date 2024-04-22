@@ -74,7 +74,6 @@ class LoginFragment : BaseDockFragment() {
                 requireContext().contentResolver,
                 Settings.Secure.ANDROID_ID
             )
-            Log.d("Password",password.toString())
 
             if (BuildConfig.DEBUG) {
                 email =  binding.etEmail.text.toString()
@@ -98,16 +97,19 @@ class LoginFragment : BaseDockFragment() {
             }
 
             myViewModel.viewModelScope.launch {
-                myViewModel.isOnline.observe(requireActivity()) { isOnline ->
-                    lifecycleScope.launch {
-                        if (isOnline) {
-                            myViewModel.loginRequest(email, password!!, deviceId)
-                        } else {
-                            myDockActivity?.showErrorMessage("Internet not available")
-                        }
-                    }
+                myViewModel.loginRequest(email, password!!, deviceId)
 
-                }
+
+//                myViewModel.isOnline.observe(requireActivity()) { isOnline ->
+//                    lifecycleScope.launch {
+//                        if (isOnline) {
+//
+//                        } else {
+//                            myDockActivity?.showErrorMessage("Internet not available")
+//                        }
+//                    }
+//
+//                }
             }
         }
 
@@ -150,6 +152,8 @@ class LoginFragment : BaseDockFragment() {
                         if (it.data?.body()?.twoFactor == "yes"){
                             val bundle = Bundle()
                             bundle.putString("LOGIN_ID", binding.etEmail.text.toString())
+                            bundle.putString("USER_EMAIL", binding.etEmail.text.toString())
+                            bundle.putString("USER_NAME", binding.etEmail.text.toString())
                             bundle.putString("COME_FROM", "COME_FROM_LOGIN_SCREEN")
                             bundle.putBoolean("RESET_PASSWORD", false)
                             LoginScreen.navController.navigate(
