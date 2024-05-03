@@ -62,10 +62,11 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.lang.Math.abs
 
 class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View.OnClickListener {
     private var kpiId: Int? = 0
-    private var kpi: List<Kpi>? = null
+    private var kpi: ArrayList<Kpi>? = null
     private lateinit var iconsList: List<Pair<Int, String>>
     private lateinit var binding: FragmentDashboardBinding
     private lateinit var colors: List<Int>
@@ -93,6 +94,8 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
     private var footerData: List<FooterModel>? = null
     private var index = 0
+    private var isRotateFirst: Boolean = true
+    private var rotationAngleMovement: Float = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,13 +114,13 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
         pieChartAngleDegree["Deposit"] = 254.03897F
         pieChartAngleDegree["Cross Sell"] = 216.70924F
-        pieChartAngleDegree["Profitibility"] = 182.16922F
+        pieChartAngleDegree["Profitability"] = 182.16922F
         pieChartAngleDegree["Controls"] = 146.08641F
         pieChartAngleDegree["Premium"] = 109.59214F
         pieChartAngleDegree["Cash"] = 75.48029F
         pieChartAngleDegree["ADC"] = 38.358177F
         pieChartAngleDegree["Wealth"] = 1.253729F
-        pieChartAngleDegree["Complaince"] = 327.46887F
+        pieChartAngleDegree["Compliance"] = 327.46887F
         pieChartAngleDegree["Advances"] = 289.75912F
         myViewModel.viewModelScope.launch {
             myViewModel.checkVersioning()
@@ -325,7 +328,6 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             lastSelectedSliceIndex = currentIndex // Update the last selected slice index
             binding.pieChart.invalidate() // Refresh the chart
 
-
             pieChartAngleDegree[mCenterText]?.let {
                 binding.pieChart.spin(
                     500, binding.pieChart.rotationAngle,
@@ -339,7 +341,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     }
 
 
-    private fun showPieChart(kpi: List<Kpi>?) {
+    private fun showPieChart(kpi: ArrayList<Kpi>?) {
 
         iconsData = arrayListOf(
             R.drawable.deposit_icon,
@@ -356,8 +358,9 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
         var selectedKpiIndex = 0
         if (kpi != null) {
+
             for (i in kpi.indices) {
-                icons[iconsData[i]] = kpi[i].name
+                icons[iconsData[kpi[i].kpiId-1]] = kpi[i].name
 
                 //for default key
                 if (kpi[i].isDefault.toString() == "true") {
@@ -367,6 +370,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             }
         }
 
+        Log.d( "showPieChart: ",icons.size.toString())
         iconsList = icons.toList()
 
         // Initializing colors for the entries
@@ -483,7 +487,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
                     is ResponseModel.Success -> {
                         myDockActivity?.hideProgressIndicator()
-                        kpi = it.data?.body()?.kpis
+                        kpi = it.data?.body()?.kpis?.let { it1 -> ArrayList(it1) }
                         Log.d( "handleAPIResponse: ",kpi.toString())
                         showPieChart(kpi)
                     }
