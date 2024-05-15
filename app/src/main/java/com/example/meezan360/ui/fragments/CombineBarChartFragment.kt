@@ -83,7 +83,7 @@ class CombineBarChartFragment : Fragment() {
             xAxis.labelCount = valueLists.first().size
             xAxis.textSize = 7f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-
+            xAxis.setDrawAxisLine(true)
             invalidate()
         }
 

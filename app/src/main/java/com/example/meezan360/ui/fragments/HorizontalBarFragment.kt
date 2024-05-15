@@ -185,6 +185,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         val bottomBarDataSet = BarDataSet(bottomEntries, "Bottom Bars")
 
         topBarDataSet.colors = topColors
+        bottomBarDataSet.valueTextColor = Color.WHITE
         bottomBarDataSet.colors = bottomColors // You can use different colors for top and bottom bars if needed
 
         val mData = BarData(topBarDataSet, bottomBarDataSet)
@@ -195,7 +196,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         xAxis.spaceMax = mData.barWidth / 2f // Last bar to show properly
         xAxis.setDrawGridLines(false)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawAxisLine(false)
+        xAxis.setDrawAxisLine(true)
         xAxis.labelCount = labels.size
 
         xAxis.valueFormatter = object : IndexAxisValueFormatter(labels) {

@@ -94,7 +94,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             description.isEnabled = false
             xAxis.labelRotationAngle = rotationAngle
             xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawAxisLine(true)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.labelCount = labels.size

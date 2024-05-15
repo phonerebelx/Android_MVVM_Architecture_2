@@ -198,7 +198,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
             axisRight.isEnabled = false
             description.isEnabled = false
             xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawAxisLine(true)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
             xAxis.labelCount = labels.size

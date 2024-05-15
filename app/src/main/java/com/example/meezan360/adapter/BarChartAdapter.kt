@@ -10,6 +10,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.R
+import android.widget.FrameLayout.LayoutParams
 import com.example.meezan360.databinding.BarChartItemBinding
 import com.example.meezan360.databinding.TopBoxItemBinding
 import com.example.meezan360.interfaces.OnItemClickListener
@@ -30,6 +31,9 @@ class BarChartAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = itemList?.get(position)
+        if (item?.length!! >5){
+            holder.text?.layoutParams = textSize()
+        }
         holder.text?.text = item
 
         if (position == selectedPosition) {
@@ -46,6 +50,18 @@ class BarChartAdapter(
             onItemClick.onClick(item, position)
         }
 
+
+    }
+    fun textSize(): LayoutParams {
+        val widthInPx = context.resources.getDimensionPixelSize(R.dimen.textview_width)
+        val heightInPx = context.resources.getDimensionPixelSize(R.dimen.textview_height) // Adjust if you want to set height as well
+
+        // Create a LayoutParams object with the desired size
+        val layoutParams = LayoutParams(
+            widthInPx,
+            heightInPx
+        )
+        return layoutParams
 
     }
 

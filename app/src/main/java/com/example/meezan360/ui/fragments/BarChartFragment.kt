@@ -161,8 +161,10 @@ class BarChartFragment(
             xAxis.spaceMax = barData.barWidth / 2f
             xAxis.labelRotationAngle = rotationAngle
             xAxis.position = XAxis.XAxisPosition.BOTTOM
-
-
+            if (entries.size <= 2) {
+                xAxis.axisMinimum = -0.5f
+                xAxis.axisMaximum = 0.5f
+            }
             xAxis.setLabelCount(labels.size,false)
             xAxis.granularity = 1f
             xAxis.valueFormatter =  object : ValueFormatter() {
@@ -179,7 +181,7 @@ class BarChartFragment(
             xAxis.textSize = 7f
             xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.black)
             xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawAxisLine(true)
             axisLeft.axisMinimum = 0f
             axisRight.axisMinimum = 0f
 

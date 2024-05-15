@@ -12,13 +12,16 @@
 
     <TextView
         android:id="@+id/text"
-        android:layout_width="match_parent"
+            android:layout_width="@dimen/_50sdp"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/_10sdp"
         android:layout_gravity="center"
         android:gravity="center"
+        android:maxLines="1"
+        android:paddingHorizontal="@dimen/_6sdp"
+        android:text="TOTAL"
         android:textColor="@color/grey2"
-        android:text="TOTAL" />
+        android:textSize="@dimen/_10sdp"
+        />
 
 
 </com.google.android.material.card.MaterialCardView>

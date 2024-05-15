@@ -21,6 +21,8 @@ import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.LegendEntry
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -30,6 +32,7 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -119,14 +122,11 @@ class Pie2Bar2Fragment(
             colors.add(Utils.parseColorSafely(graph2.barChartModel[index].valueColor))
         }
 
-
         val xl: XAxis = horizontalBarChart.xAxis
         xl.position = XAxis.XAxisPosition.BOTTOM
 
-
         xl.setDrawAxisLine(true)
         xl.setDrawGridLines(false)
-
         xl.textSize = 9f
         xl.textColor = Color.BLACK
         xl.valueFormatter = object : IndexAxisValueFormatter(labels) {
@@ -140,7 +140,6 @@ class Pie2Bar2Fragment(
         }
         xl.granularity = 1f
 
-
         val yl: YAxis = horizontalBarChart.axisLeft
         yl.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
         yl.setDrawGridLines(false)
@@ -152,6 +151,11 @@ class Pie2Bar2Fragment(
 
         val set1 = BarDataSet(yVals1, graph2?.label)
         set1.colors = colors
+        set1.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return "${value.toInt()}%"
+            }
+        }
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(set1)
@@ -163,7 +167,6 @@ class Pie2Bar2Fragment(
         barData.getGroupWidth(3f, 5f)
 
         horizontalBarChart.apply {
-
             setDrawBarShadow(false)
             setDrawValueAboveBar(false)
             setTouchEnabled(false)
@@ -171,8 +174,22 @@ class Pie2Bar2Fragment(
             setPinchZoom(false)
             data = barData
             description.isEnabled = false
-            legend.isEnabled = false
+            legend.isEnabled = true
             animateY(800)
+            xAxis.setDrawAxisLine(true)
+            legend.form = Legend.LegendForm.SQUARE // Choose the form shape, e.g., CIRCLE, SQUARE, etc.
+            legend.setCustom(
+                arrayOf(
+                    LegendEntry(
+                        graph2?.label, // Label for the legend entry
+                        Legend.LegendForm.SQUARE, // Form shape
+                        10f, // Form size
+                        Float.NaN, // Form line width
+                        null, // Form color
+                        set1.color
+                    )
+                )
+            )
             invalidate()
         }
     }

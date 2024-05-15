@@ -102,15 +102,15 @@ class Pie1HorizontalBar1Fragment(
             barDataSet.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     if (index < barDataSet.entryCount) {
-                        val value = "${Value[index]}"
+                        val value = "${percentages[index]}%"
                         index++
                         return value
                     } else {
                         index = 0
                     }
-                    val outsideValue = Value[index]
+                    val outsideValue = percentages[index]
                     index++
-                    return "${outsideValue}"
+                    return "${outsideValue}%"
                 }
             }
 
@@ -173,11 +173,14 @@ class Pie1HorizontalBar1Fragment(
                 axisLeft.axisMinimum = 0f
                 setDrawValueAboveBar(false)
                 axisLeft.isEnabled = true
+                description.isEnabled = false
                 axisLeft.setDrawAxisLine(false)
                 axisLeft.setDrawLabels(false)
                 axisLeft.setDrawGridLines(false)
-                axisRight.isEnabled = false
-
+                axisRight.isEnabled = true
+                axisRight.setDrawGridLines(false)
+                axisRight.setDrawAxisLine(true)
+                axisRight.setDrawLabels(false)
                 data = mData
                 description.isEnabled = false
                 animateY(800)

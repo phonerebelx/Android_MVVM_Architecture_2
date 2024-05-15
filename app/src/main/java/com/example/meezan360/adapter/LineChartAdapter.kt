@@ -36,9 +36,8 @@ class LineChartAdapter(
         holder.tvTitle?.text = item?.label
         holder.checkbox?.buttonTintList = ColorStateList.valueOf(Utils.parseColorSafely(item?.color))
         //for first checkbox to be selected
-        if (position == selectedPosition) {
             holder.checkbox?.isChecked = true
-        }
+
 
         holder.checkbox?.setOnCheckedChangeListener { buttonView, isChecked ->
             onItemClick.onClick(item?.label, position, isChecked)

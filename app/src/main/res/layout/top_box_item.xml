@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/_85sdp"
+    android:layout_width="@dimen/_80sdp"
     android:layout_height="@dimen/_55sdp"
     android:layout_margin="8dp"
     app:cardCornerRadius="5dp"
@@ -10,15 +10,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:weightSum="3"
         android:orientation="vertical"
         android:padding="2dp">
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="3dp"
             android:gravity="center"
+            android:layout_weight="1"
             android:text="CASA"
             style="@style/textViewStyle"
             android:textColor="#006324"
@@ -27,8 +29,9 @@
         <TextView
             android:id="@+id/tvAmount"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
+            android:layout_weight="1"
             android:text="659,213"
             style="@style/textViewStyle"
             android:textColor="@color/grey2"
@@ -36,33 +39,37 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:layout_weight="1"
             android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/tvPercentage"
+                style="@style/textViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="55.98%"
+                android:layout_weight="1"
                 android:textColor="#765CB4"
-                style="@style/textViewStyle"
                 android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvMin"
+                style="@style/textViewStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_2sdp"
+                android:layout_marginEnd="@dimen/_3sdp"
+                android:layout_marginBottom="@dimen/_3sdp"
                 android:gravity="end"
                 android:text="MIn"
-                style="@style/textViewStyle"
                 android:textColor="#1F753E"
                 android:textSize="8sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+               />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

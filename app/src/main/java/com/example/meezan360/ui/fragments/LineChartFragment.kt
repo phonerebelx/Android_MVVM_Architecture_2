@@ -91,7 +91,7 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             legend.isEnabled = false
             axisRight.isEnabled = false
             xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(false)
+            xAxis.setDrawAxisLine(true)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.isGranularityEnabled = true
             xAxis.granularity = 1.0f
@@ -154,11 +154,12 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
                                     recyclerViewItems.add(it1)
                                 }
                             }
+                            positionsList.add(index)
                         }
 
                         setupRecyclerView(graphModel)
 
-                        positionsList.add(0)//for first line to show
+                        //for first line to show
                         drawLineChart(graphModel, positionsList)
 
                     }
