@@ -32,6 +32,7 @@ class OTPFragment : BaseDockFragment() {
 
     private lateinit var binding: FragmentOTPBinding
     lateinit var loginID: String
+    lateinit var userName: String
     private var isPinnFilled = false
     private lateinit var pin: String
     var isResetPassword = false
@@ -48,6 +49,8 @@ class OTPFragment : BaseDockFragment() {
 
             //otp screen change
         loginID = arguments?.getString("LOGIN_ID", "").toString()
+        userName = arguments?.getString("USER_NAME", "").toString()
+
         comeFromType = arguments?.getString("COME_FROM", "").toString()
         val sharedPreferences =
             requireActivity().getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
@@ -151,11 +154,12 @@ class OTPFragment : BaseDockFragment() {
                                 bundle.putString("LOGIN_ID", loginID)
                                 LoginScreen.navController.navigate(R.id.action_OTPFragment_to_resetPasswordFragment, bundle)
                             }
+
                         }else if (comeFromType == "COME_FROM_LOGIN_SCREEN"){
                             sharedPreferencesManager.clearSharedPreferences()
                             sharedPreferencesManager.saveToken(it.data?.body()?.token)
-                            sharedPreferencesManager.saveUserName("Waqas")
-                            sharedPreferencesManager.saveUserName("waqas@uhfsolutions")
+                            sharedPreferencesManager.saveUserName(loginID)
+                            sharedPreferencesManager.saveUserEmail(userName)
                             val intent = Intent(requireContext(), MainActivity::class.java)
                             startActivity(intent)
                             requireActivity().finish();
