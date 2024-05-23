@@ -66,7 +66,7 @@ class APIClient() {
                 readTimeout(50, TimeUnit.SECONDS)    // Set read timeout
                 writeTimeout(50, TimeUnit.SECONDS)   // Set write timeout
             }
-            client.sslSocketFactory(getSSLConfig(context)?.socketFactory!!, trustManager)
+//            client.sslSocketFactory(getSSLConfig(context)?.socketFactory!!, trustManager)
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(client.build())

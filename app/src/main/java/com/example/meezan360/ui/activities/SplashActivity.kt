@@ -11,7 +11,7 @@ import androidx.core.view.GestureDetectorCompat
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivitySplashBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
-import com.scottyab.rootbeer.RootBeer
+
 import org.koin.android.ext.android.inject
 class SplashActivity : DockActivity() {
 

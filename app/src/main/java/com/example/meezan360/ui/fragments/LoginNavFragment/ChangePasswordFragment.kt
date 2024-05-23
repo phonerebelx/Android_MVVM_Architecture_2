@@ -86,8 +86,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
 
     private fun initView() {
         binding = FragmentChangePasswordBinding.inflate(layoutInflater)
-        login_id = sharedPreferencesManager.getLoginId().toString()
-
+        login_id = sharedPreferencesManager.getUserEmail().toString()
         setOnClickListener()
     }
 

@@ -18,6 +18,7 @@
         android:theme="@style/Theme.Meezan360"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
         <activity
             android:name=".ui.activities.ChangePasswordActivity.ChangePasswordActivity"
             android:exported="false" />

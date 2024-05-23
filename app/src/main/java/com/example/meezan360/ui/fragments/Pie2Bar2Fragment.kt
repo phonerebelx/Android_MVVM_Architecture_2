@@ -2,6 +2,7 @@ package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,9 +41,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class Pie2Bar2Fragment(
-
-) : Fragment() {
+class Pie2Bar2Fragment() : Fragment() {
 
     private lateinit var binding: FragmentDepositCompositionBinding
 
@@ -81,6 +80,8 @@ class Pie2Bar2Fragment(
     private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
 
         graph1?.let {
+            try {
+
             val pieEntryValueCA = graph1.pieChartModel.value
 
             val pieEntriesCA = mutableListOf<PieEntry>()
@@ -107,7 +108,11 @@ class Pie2Bar2Fragment(
                 data = PieData(pieDataSet)
                 invalidate()
             }
+        } catch (e: Exception){
+                Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
         }
+        }
+
     }
 
     private fun showBarChart(graph2: BarGraphModel?, horizontalBarChart: HorizontalBarChart) {
@@ -214,18 +219,29 @@ class Pie2Bar2Fragment(
 
                     is ResponseModel.Success -> {
 
-                        val responseBody: String = it.data?.body()?.toString() ?: ""
+                        val responseBody = it.data?.body()
 
                         val pie2Bar2Model: Pie2Bar2Model? = try {
                             Gson().fromJson(responseBody, Pie2Bar2Model::class.java)
+
                         } catch (e: JsonSyntaxException) {
                             null
                         }
 
+                        if (pie2Bar2Model != null) {
+                            if (pie2Bar2Model.graph1 != null){
+
+                            }
+                        }
+
+                        try{
                         showPieChart(pie2Bar2Model?.graph1, binding.pieChartCA)
                         showPieChart(pie2Bar2Model?.graph3, binding.pieChartCASA)
                         showBarChart(pie2Bar2Model?.graph2, binding.horizontalBarChart)
                         showBarChart(pie2Bar2Model?.graph4, binding.horizontalBarChart2)
+                        }catch (e: Exception){
+                            Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
+                        }
 
                     }
                 }

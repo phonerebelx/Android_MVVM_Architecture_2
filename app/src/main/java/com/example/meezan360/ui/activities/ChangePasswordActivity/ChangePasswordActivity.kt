@@ -26,7 +26,7 @@ class ChangePasswordActivity : DockActivity() {
         sharedPreferencesManager = SharedPreferencesManager(sharedPreferences)
         if (savedInstanceState == null) {
             val bundle = bundleOf("some_int" to 0)
-
+            sharedPreferences
             supportFragmentManager.commit {
                 setReorderingAllowed(true)
                 add<ChangePasswordFragment>(R.id.fragment_container_view, args = bundle)

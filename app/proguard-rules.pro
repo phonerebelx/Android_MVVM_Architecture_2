@@ -43,9 +43,10 @@
 -keep class com.example.meezan360.network.APIService{*;}
 -keep class com.example.meezan360.network.APIClient{*;}
 -keep class com.example.meezan360.ui.activities.DockActivity{*;}
--keep class com.scottyab.rootbeer**{*;}
--keep class com.scottyab.rootbeer.** { *; }
--keep class com.scottyab.rootbeer.RootBeer{*;}
+-keep class com.aheaditec.talsec_security{*;}
+-keep class com.aheaditec.talsec_security.security.api{*;}
+-keep class com.aheaditec.talsec_security.security.api{*;}
+-keep class com.aheaditec.talsec_security.security.api.TalsecConfig{*;}
 
 -dontwarn com.squareup.okhttp.**
 -keep class com.squareup.okhttp.** { *; }

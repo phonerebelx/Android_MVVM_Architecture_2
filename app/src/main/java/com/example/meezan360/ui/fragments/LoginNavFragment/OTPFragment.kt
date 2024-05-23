@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -91,6 +92,7 @@ class OTPFragment : BaseDockFragment() {
     }
 
     private fun verifyOTP(otp: String) {
+
         myDockActivity?.showProgressIndicator()
         if (isResetPassword) {
             myViewModel.viewModelScope.launch {
