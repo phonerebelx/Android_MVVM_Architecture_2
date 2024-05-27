@@ -36,7 +36,6 @@ android {
 
         debug {
             testCoverageEnabled = true
-
         }
 
     }
@@ -48,12 +47,6 @@ android {
         ext.kotlin_version = '1.8.0'
     }
 
-    buildTypes {
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -63,6 +56,7 @@ android {
         jvmTarget = '1.8'
     }
 }
+
 
 dependencies {
 

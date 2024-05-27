@@ -86,7 +86,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
 
     private fun initView() {
         binding = FragmentChangePasswordBinding.inflate(layoutInflater)
-        login_id = sharedPreferencesManager.getUserEmail().toString()
+        login_id = sharedPreferencesManager.getLoginId().toString()
         setOnClickListener()
     }
 
@@ -157,6 +157,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
 
                     is ResponseModel.Success -> {
                         myDockActivity?.showSuccessMessage("Password Change Successfully")
+                        sharedPreferencesManager.clearSharedPreferences()
                         startActivity(Intent(requireContext(), LoginScreen::class.java))
                         requireActivity().finish()
                         NavOptions.Builder().setPopUpTo(R.id.login_start, true).build()

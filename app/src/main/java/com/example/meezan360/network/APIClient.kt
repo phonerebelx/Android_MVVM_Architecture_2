@@ -33,8 +33,8 @@ import javax.net.ssl.X509TrustManager
 
 class APIClient() {
     companion object {
-        private const val BASE_URL = "http://thesalesforceapi.avengers.pk/api/v1/"
-//        private const val BASE_URL = "https://bdosales.meezanbank.com:9988/api/v1/"
+//        private const val BASE_URL = "http://thesalesforceapi.avengers.pk/api/v1/"
+        private const val BASE_URL = "https://bdosales.meezanbank.com:9988/api/v1/"
         //al barqa
 //        private const val BASE_URL = "https://salesforceuatapi.albaraka.com.pk/api/v1/"
 //        private const val BASE_URL = "https://salesforceapi.albaraka.com.pk/api/v1/"
@@ -66,7 +66,8 @@ class APIClient() {
                 readTimeout(50, TimeUnit.SECONDS)    // Set read timeout
                 writeTimeout(50, TimeUnit.SECONDS)   // Set write timeout
             }
-//            client.sslSocketFactory(getSSLConfig(context)?.socketFactory!!, trustManager)
+
+            client.sslSocketFactory(getSSLConfig(context)?.socketFactory!!, trustManager)
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(client.build())
