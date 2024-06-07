@@ -24,10 +24,10 @@ class CardLevelAdapter(val context: Context,val onTypeItemClickListener: OnTypeI
             this.setIsRecyclable(false)
 
             //last day detail
-            binding.tvRegionDetail.text = item?.level_value
-            binding.tvCustomerDetail.text = item?.customer_name
-            binding.tvAreaDetail.text = item?.area
-            binding.tvBranchDetail.text = item?.branch
+            binding.tvRegionDetail.text = item?.region ?: ""
+            binding.tvCustomerDetail.text = item?.customer_name ?: ""
+            binding.tvAreaDetail.text = item?.area ?: ""
+            binding.tvBranchDetail.text = item?.branch ?: ""
             when (item?.last_day) {
                 null -> {
                     binding.llLastDay.visibility = View.GONE

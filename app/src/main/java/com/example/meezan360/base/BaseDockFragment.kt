@@ -13,9 +13,7 @@ import com.example.meezan360.ui.activities.DockActivity
 
 
 abstract class BaseDockFragment : Fragment() {
-
     protected var myDockActivity: DockActivity? = null
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

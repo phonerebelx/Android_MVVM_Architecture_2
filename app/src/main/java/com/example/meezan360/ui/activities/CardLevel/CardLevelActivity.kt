@@ -95,7 +95,6 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
         binding.recyclerViewTopBox.adapter = topBoxesAdapter
     }
 
-
     private fun handleAPIResponse() {
         lifecycleScope.launch {
             myViewModel.levelTwo.collect {

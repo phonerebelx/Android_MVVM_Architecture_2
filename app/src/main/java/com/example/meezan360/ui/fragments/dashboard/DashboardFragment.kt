@@ -142,9 +142,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private fun footerSetupUp(footerData: List<FooterModel>?, defaultDeposit: Int) {
 
         var footerList = listOf<DataModel>()
-        Log.d("footerSetupUp: ",footerList.toString())
-        Log.d("footerData: ",footerData.toString())
-        if (footerData != null) {
+       if (footerData != null) {
 
             if (footerData.size >= defaultDeposit + 1) {
                 footerList = footerData.get(defaultDeposit)?.dataModel!!

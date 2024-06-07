@@ -44,6 +44,22 @@ class APIClient() {
         fun create(sharedPreferencesManager: SharedPreferencesManager,context: Context): APIService {
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             val trustManagerFactory =
                 TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
             trustManagerFactory.init(null as KeyStore?)
