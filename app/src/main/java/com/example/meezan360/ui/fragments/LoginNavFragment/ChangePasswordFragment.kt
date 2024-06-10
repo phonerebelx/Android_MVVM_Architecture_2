@@ -110,25 +110,29 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
 
                         myViewModel.viewModelScope.launch {
                             myDockActivity?.showProgressIndicator()
+                            val changePasswordModel =  ChangePasswordModel(
+                                login_id = login_id,
+                                old_password = Utils.encryptPass(
+                                    "23423532",
+                                    "1234567891011121",
+                                    binding.cpEtCurrentPassword.text.toString()
+                                ).toString(),
+                                new_password = Utils.encryptPass(
+                                    "23423532",
+                                    "1234567891011121",
+                                    binding.cpEtNewPass.text.toString()
+                                ).toString(),
+                                new_password_confirmation = Utils.encryptPass(
+                                    "23423532",
+                                    "1234567891011121",
+                                    binding.cpEtConfirmPass.text.toString()
+                                ).toString()
+                            )
                             myViewModel.changePassword(
-                                ChangePasswordModel(
-                                    login_id = login_id,
-                                    old_password = Utils.encryptPass(
-                                        "23423532",
-                                        "1234567891011121",
-                                        binding.cpEtCurrentPassword.text.toString()
-                                    ).toString(),
-                                    new_password = Utils.encryptPass(
-                                        "23423532",
-                                        "1234567891011121",
-                                        binding.cpEtNewPass.text.toString()
-                                    ).toString(),
-                                    new_password_confirmation = Utils.encryptPass(
-                                        "23423532",
-                                        "1234567891011121",
-                                        binding.cpEtConfirmPass.text.toString()
-                                    ).toString()
-                                )
+                                changePasswordModel.login_id,
+                                changePasswordModel.new_password_confirmation,
+                                changePasswordModel.new_password,
+                                changePasswordModel.old_password
                             )
                         }
                     }

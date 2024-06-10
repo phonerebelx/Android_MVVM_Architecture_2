@@ -109,7 +109,11 @@ interface APIService {
 
     @POST("auth/changePassword")
     fun changePassword(
-        @Body changePasswordModel: ChangePasswordModel
+        @Query("login_id") login_id: String,
+        @Query("new_password_confirmation") new_password_confirmation: String,
+        @Query("new_password") new_password: String,
+        @Query("old_password") old_password: String,
+        @Query("prefix") selected_date: String
     ): Call<ResponseBody>
 
     @POST("auth/resetPasswordVerify")

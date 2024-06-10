@@ -1,6 +1,7 @@
 package com.example.meezan360.datamodule.repository
 
 
+import android.util.Log
 import com.app.adcarchitecture.model.otp.OtpModel
 import com.app.adcarchitecture.model.otp.OtpResponse
 import com.example.meezan360.di.NetworkModule
@@ -235,10 +236,15 @@ class DataRepository(private var networkModule: NetworkModule) {
     }
 
     suspend fun changePassword(
-        changePasswordModel: ChangePasswordModel
+         login_id: String,
+         new_password_confirmation: String,
+         new_password: String,
+         old_password: String,
+         prefix: String = "360"
+//        changePasswordModel: ChangePasswordModel
     ): Flow<Call<ResponseBody>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().changePassword(changePasswordModel)
+            val response = networkModule.sourceOfNetwork().changePassword(login_id,new_password_confirmation,new_password,old_password,prefix)
             emit(response)
         }
     }

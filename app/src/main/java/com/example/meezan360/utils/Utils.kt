@@ -33,9 +33,9 @@ class Utils {
                 cipher.init(Cipher.ENCRYPT_MODE, skeySpec, initVector)
                 val encryptedData: ByteArray = cipher.doFinal(data.toByteArray())
                 val base64_EncryptedData: String =
-                    Base64.encodeToString(encryptedData, Base64.DEFAULT)
+                    Base64.encodeToString(encryptedData, Base64.NO_WRAP)
                 val base64_IV: String =
-                    Base64.encodeToString(iv.toByteArray(charset("UTF-8")), Base64.DEFAULT)
+                    Base64.encodeToString(iv.toByteArray(charset("UTF-8")), Base64.NO_WRAP)
                 Log.d( "encryptPass: ","$base64_EncryptedData:$base64_IV")
                 return "$base64_EncryptedData:$base64_IV"
             } catch (ex: Exception) {
