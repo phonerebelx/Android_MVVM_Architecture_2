@@ -44,7 +44,7 @@ class LoginFragment : BaseDockFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        Log.e( "onCreateView: ","logs show" )
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
         handleAPIResponse()

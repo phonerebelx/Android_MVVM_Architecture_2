@@ -71,6 +71,25 @@
     public static *** w(...);
     public static *** v(...);
     public static *** i(...);
+    public static *** e(...);
+}
+
+-assumenosideeffects class timber.log.Timber {
+    public static *** d(...);
+    public static *** w(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** e(...);
+    public static *** wtf(...);
+}
+
+-assumenosideeffects class timber.log.Timber$Tree {
+    public *** d(...);
+    public *** w(...);
+    public *** v(...);
+    public *** i(...);
+    public *** e(...);
+    public *** wtf(...);
 }
 
 -ignorewarnings

@@ -23,7 +23,6 @@ fun <T> AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error
     if (responseModel.message != null) {
         Log.d("res_message", responseModel.message)
         Log.d("res_message2", responseModel.data.toString())
-//        Toast.makeText(applicationContext, "responseModel.message", Toast.LENGTH_SHORT).show()
     }
 
     val response = responseModel.data as? Response<*>
@@ -38,9 +37,6 @@ fun <T> AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error
 
 
         } else if (response.code() == 552) {
-//            change password will be done later first create main activity fragments as main fragment and then create nav graph
-
-//            this scenario is worng and will change later
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         }else if (response.code() == 500) {

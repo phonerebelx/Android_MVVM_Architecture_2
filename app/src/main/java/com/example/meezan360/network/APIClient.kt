@@ -33,8 +33,8 @@ import javax.net.ssl.X509TrustManager
 
 class APIClient() {
     companion object {
-//        private const val BASE_URL = "http://thesalesforceapi.avengers.pk/api/v1/"
-        private const val BASE_URL = "https://bdosales.meezanbank.com:9988/api/v1/"
+        private const val BASE_URL = "http://thesalesforceapi.avengers.pk/api/v1/"
+//        private const val BASE_URL = "https://bdosales.meezanbank.com:9988/api/v1/"
         //al barqa
 //        private const val BASE_URL = "https://salesforceuatapi.albaraka.com.pk/api/v1/"
 //        private const val BASE_URL = "https://salesforceapi.albaraka.com.pk/api/v1/"
@@ -42,23 +42,6 @@ class APIClient() {
 
 
         fun create(sharedPreferencesManager: SharedPreferencesManager,context: Context): APIService {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             val trustManagerFactory =
                 TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
@@ -83,6 +66,7 @@ class APIClient() {
                 writeTimeout(50, TimeUnit.SECONDS)   // Set write timeout
             }
 
+
             client.sslSocketFactory(getSSLConfig(context)?.socketFactory!!, trustManager)
             return Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -91,6 +75,7 @@ class APIClient() {
                 .build()
                 .create(APIService::class.java)
         }
+
         @Throws(
             CertificateException::class,
             IOException::class,
@@ -100,6 +85,7 @@ class APIClient() {
             UnknownHostException::class,
             NullPointerException::class
         )
+
         private fun getSSLConfig(context: Context): SSLContext? {
             val cf = CertificateFactory.getInstance("X.509")
             val cert = context.resources.openRawResource(R.raw.bdosales_meezanbank_com)
@@ -145,7 +131,7 @@ class BaseHeadersInterceptor(private val sharedPreferencesManager: SharedPrefere
                 val token = sharedPreferencesManager.getToken()
                 if (!token.isNullOrBlank()) {
                     header("Authorization", "Bearer $token")
-                    header("response-type", "1") // 0 for static data and 1 for dynamic data
+                    header("response-type", "1")
                 }
             }.build()
 
