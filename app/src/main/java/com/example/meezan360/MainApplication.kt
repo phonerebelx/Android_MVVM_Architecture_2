@@ -2,6 +2,7 @@ package com.example.meezan360
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,7 @@ import com.example.meezan360.di.dataModule
 import com.example.meezan360.utils.InternetHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
-
+import timber.log.Timber
 
 
 class MainApplication : Application(), ThreatListener.ThreatDetected {
@@ -25,6 +26,12 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }else {
+            Timber.plant(ReleaseTree(applicationContext))
+        }
         initTalsec()
 
         internetHelper = InternetHelper(applicationContext)
@@ -92,18 +99,18 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
 
 
     override fun onRootDetected() {
-        Toast.makeText(this, "onRootDetected", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "onRootDetected", Toast.LENGTH_LONG).show()
         System.exit(0)
     }
 
     override fun onDebuggerDetected() {
-        Toast.makeText(this, "onDebuggerDetected", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "onDebuggerDetected", Toast.LENGTH_LONG).show()
 
 //        System.exit(0)
     }
 
     override fun onEmulatorDetected() {
-        Toast.makeText(this, "onEmulatorDetected", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "onEmulatorDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
@@ -117,17 +124,17 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
 
     override fun onHookDetected() {
 
-        Toast.makeText(this, "onHookDetected", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "onHookDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
     override fun onDeviceBindingDetected() {
-        Toast.makeText(this, "onDeviceBindingDetected", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "onDeviceBindingDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
     override fun onObfuscationIssuesDetected() {
-        Toast.makeText(this, "onObfuscationIssuesDetected", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, "onObfuscationIssuesDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
@@ -135,4 +142,11 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
 
 
 
+class ReleaseTree(val context: Context) : Timber.Tree() {
 
+    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+        if (priority == Log.ERROR || priority == Log.WARN) {
+            Toast.makeText(context, "Log Visible: $message", Toast.LENGTH_LONG).show()
+        }
+    }
+}

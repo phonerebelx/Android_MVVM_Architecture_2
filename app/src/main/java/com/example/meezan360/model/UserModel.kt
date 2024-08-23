@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class UserModel(
     @SerializedName("branch_name")
-    val branchName: String,
+    val branchName: String?,
     @SerializedName("company_id")
     val companyId: String,
     @SerializedName("designation_id")
@@ -24,5 +24,7 @@ data class UserModel(
     @SerializedName("user_id")
     val userId: String,
     @SerializedName("user_type")
-    val userType: String
+    val userType: String,
+    @SerializedName("is_new_user")
+    val isNewUser: String
 )

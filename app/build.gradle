@@ -19,7 +19,7 @@ android {
         release {
             //storeFile file('hotworx/hot_worx_keystore.jks')
 
-            storeFile file("C:/Users/Haroon Traders/AndroidStudioProjects/meezan360revamp/meezan360.jks")
+            storeFile file("/Users/macbook/StudioProjects/meezan360revamp/meezan360.jks")
             storePassword '123456'
             keyAlias = '360'
             keyPassword '123456'
@@ -28,8 +28,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources  true
+            minifyEnabled false
+            shrinkResources  false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -56,6 +56,7 @@ android {
         jvmTarget = '1.8'
     }
 }
+
 
 
 dependencies {
@@ -118,4 +119,7 @@ dependencies {
 
     // For root detection
     implementation 'com.aheaditec.talsec.security:TalsecSecurity-Community:9.1.0'
+
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
 }
