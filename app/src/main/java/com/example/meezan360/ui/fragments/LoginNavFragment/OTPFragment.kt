@@ -158,6 +158,7 @@ class OTPFragment : BaseDockFragment() {
                             }
 
                         }else if (comeFromType == "COME_FROM_LOGIN_SCREEN"){
+                            binding.tvHeading.text = "OTP"
                             sharedPreferencesManager.clearSharedPreferences()
                             sharedPreferencesManager.saveToken(it.data?.body()?.token)
                             sharedPreferencesManager.saveUserName(loginID)

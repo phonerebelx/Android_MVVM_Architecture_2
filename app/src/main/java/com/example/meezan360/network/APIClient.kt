@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.util.Log
 import android.widget.Toast
+import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import okhttp3.Interceptor
@@ -33,14 +34,6 @@ import javax.net.ssl.X509TrustManager
 
 class APIClient() {
     companion object {
-//        private const val BASE_URL = "http://thesalesforceapi.avengers.pk/api/v1/"
-        private const val BASE_URL = "https://bdosales.meezanbank.com:9988/api/v1/"
-        //al barqa
-//        private const val BASE_URL = "https://salesforceuatapi.albaraka.com.pk/api/v1/"
-//        private const val BASE_URL = "https://salesforceapi.albaraka.com.pk/api/v1/"
-
-
-
         fun create(sharedPreferencesManager: SharedPreferencesManager,context: Context): APIService {
 
             val trustManagerFactory =
@@ -60,7 +53,10 @@ class APIClient() {
             val client = OkHttpClient.Builder().apply {
 
                 addInterceptor(BaseHeadersInterceptor(sharedPreferencesManager,context))
+                if(BuildConfig.DEBUG){
                 addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                }
+
                 connectTimeout(50, TimeUnit.SECONDS) // Set connection timeout
                 readTimeout(50, TimeUnit.SECONDS)    // Set read timeout
                 writeTimeout(50, TimeUnit.SECONDS)   // Set write timeout
@@ -69,7 +65,7 @@ class APIClient() {
 
             client.sslSocketFactory(getSSLConfig(context)?.socketFactory!!, trustManager)
             return Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(BuildConfig.API_KEY)
                 .client(client.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()

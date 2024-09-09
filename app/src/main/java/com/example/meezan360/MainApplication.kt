@@ -13,6 +13,9 @@ import com.aheaditec.talsec_security.security.api.TalsecConfig
 import com.aheaditec.talsec_security.security.api.ThreatListener
 import com.example.meezan360.di.appModule
 import com.example.meezan360.di.dataModule
+import com.example.meezan360.security.EncryptionKeyStoreImpl
+import com.example.meezan360.security.logger.SecureLogger
+import com.example.meezan360.utils.Constants
 import com.example.meezan360.utils.InternetHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -22,11 +25,19 @@ import timber.log.Timber
 class MainApplication : Application(), ThreatListener.ThreatDetected {
 
     lateinit var internetHelper: InternetHelper
-
+    val encryptionKeyStore = EncryptionKeyStoreImpl.instance
 
     override fun onCreate() {
         super.onCreate()
+        encryptionKeyStore.setContext(this)
+        encryptionKeyStore.generateKey()
 
+        SecureLogger.init(this)
+        try {
+            SecureLogger.processLogcat(this)
+        } catch (e: Exception) {
+            Log.e("MainApplication", "Error processing logcat", e)
+        }
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }else {

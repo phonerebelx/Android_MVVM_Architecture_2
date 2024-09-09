@@ -42,6 +42,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.ButterKnife
 import butterknife.Unbinder
+import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.adapter.ExpListAdapter
 import com.example.meezan360.adapter.FragmentPagerAdapter
@@ -348,6 +349,7 @@ class MainActivity : DockActivity(){
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
+                        sharedPreferencesManager.clearSharedPreferences()
                           Toast.makeText(this@MainActivity,it.message?:"", Toast.LENGTH_LONG).show()
                           val intent = Intent(this@MainActivity, LoginScreen::class.java)
                           startActivity(intent)
@@ -361,7 +363,7 @@ class MainActivity : DockActivity(){
 
     private fun logout() {
         showProgressIndicator()
-        sharedPreferencesManager.clearSharedPreferences()
+//        sharedPreferencesManager.clearSharedPreferences()
         myViewModel.viewModelScope.launch {
             myViewModel.logoutRequest()
         }
