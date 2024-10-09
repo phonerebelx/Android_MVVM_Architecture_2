@@ -228,7 +228,7 @@ class SearchFragment : BaseDockFragment() {
 
     private fun showBranchArray(branchArray: ArrayList<String>, currentBranch: String = "") {
         binding.actvBranch.text = ""
-
+        Log.d("branchItem", branchItem.toString())
         binding.actvBranch.apply {
             setSpinnerAdapter(IconSpinnerAdapter(this))
             val branchIconSpinnerItems = branchArray.map { IconSpinnerItem(text = it) }
@@ -244,15 +244,15 @@ class SearchFragment : BaseDockFragment() {
 
             branchItem = newItem.text.toString()
             branchCode = branchDict[newItem.text.toString()].toString()
-            Log.d( "showBranchArray: ",branchItem.toString())
 
-//            binding.actvBranch.clearFocus()
+
+            binding.actvBranch.clearFocus()
         }
 
         if (currentBranch != "") {
             branchItem = currentBranch
             branchCode = branchDict[currentBranch].toString()
-            Log.d("TAG", branchItem.toString())
+            Log.d("branchItem", branchItem.toString())
             binding.actvBranch.text = branchItem
 
 

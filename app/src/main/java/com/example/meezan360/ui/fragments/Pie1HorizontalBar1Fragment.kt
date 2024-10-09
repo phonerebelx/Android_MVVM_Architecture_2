@@ -210,8 +210,9 @@ class Pie1HorizontalBar1Fragment(
             val pieEntryValueCA = graph1.pieChartModel.value
             val pieEntries = mutableListOf<PieEntry>()
 
+
             pieEntries.add(PieEntry(pieEntryValueCA))
-//            pieEntries.add(PieEntry(100 - pieEntryValueCA))
+            pieEntries.add(PieEntry(100 - pieEntryValueCA))
 
             val colors: ArrayList<Int> = ArrayList()
             colors.add(Utils.parseColorSafely(graph1.pieChartModel.color))
@@ -228,7 +229,7 @@ class Pie1HorizontalBar1Fragment(
                 centerText = "${pieEntryValueCA}%"
                 extraLeftOffset = 25f
 
-                setTouchEnabled(false) //to stop rotation
+                setTouchEnabled(false)
                 setHoleColor(Color.parseColor("#E0E0E0"))
                 setCenterTextSize(8f)
                 setCenterTextColor(Color.parseColor("#7B7878"))
@@ -236,8 +237,8 @@ class Pie1HorizontalBar1Fragment(
                 invalidate()
             }
         }
-
     }
+
 
 
     private fun handleAPIResponse() {
