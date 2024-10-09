@@ -35,14 +35,14 @@ class DataRepository(private var networkModule: NetworkModule) {
     ): Flow<Response<LoginModel>> {
         return flow {
             try {
-                val response = networkModule.sourceOfNetwork().loginRequest(loginId, password, deviceId)
+                val response =
+                    networkModule.sourceOfNetwork().loginRequest(loginId, password, deviceId)
                 emit(response)
             } catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
             }
-
 
 
         }
@@ -83,7 +83,8 @@ class DataRepository(private var networkModule: NetworkModule) {
     ): Flow<Response<JsonElement>> {
         return flow {
             try {
-                val response = networkModule.sourceOfNetwork().getFooterGraphs(kpiId, tagName, cardId)
+                val response =
+                    networkModule.sourceOfNetwork().getFooterGraphs(kpiId, tagName, cardId)
                 emit(response)
             } catch (e: IOException) {
                 // Handle the IOException here
@@ -146,7 +147,6 @@ class DataRepository(private var networkModule: NetworkModule) {
             try {
                 val response = networkModule.sourceOfNetwork().getSetFilter()
                 emit(response)
-
             } catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
@@ -209,7 +209,8 @@ class DataRepository(private var networkModule: NetworkModule) {
     ): Flow<Response<ResetPwdReqResponse>> {
         return flow {
             try {
-                val response = networkModule.sourceOfNetwork().resetPasswordRequest(resetPasswordModel)
+                val response =
+                    networkModule.sourceOfNetwork().resetPasswordRequest(resetPasswordModel)
                 emit(response)
             } catch (e: IOException) {
                 // Handle the IOException here
@@ -236,15 +237,21 @@ class DataRepository(private var networkModule: NetworkModule) {
     }
 
     suspend fun changePassword(
-         login_id: String,
-         new_password_confirmation: String,
-         new_password: String,
-         old_password: String,
-         prefix: String = "360"
+        login_id: String,
+        new_password_confirmation: String,
+        new_password: String,
+        old_password: String,
+        prefix: String = "360"
 //        changePasswordModel: ChangePasswordModel
     ): Flow<Call<ResponseBody>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().changePassword(login_id,new_password_confirmation,new_password,old_password,prefix)
+            val response = networkModule.sourceOfNetwork().changePassword(
+                login_id,
+                new_password_confirmation,
+                new_password,
+                old_password,
+                prefix
+            )
             emit(response)
         }
     }
@@ -257,6 +264,7 @@ class DataRepository(private var networkModule: NetworkModule) {
             emit(response)
         }
     }
+
     suspend fun logoutRequest(): Flow<Response<LogoutResponse>> {
         return flow {
             val response = networkModule.sourceOfNetwork().logoutRequest()

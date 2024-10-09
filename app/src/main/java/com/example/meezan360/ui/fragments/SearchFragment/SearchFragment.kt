@@ -177,7 +177,7 @@ class SearchFragment : BaseDockFragment() {
                 }
 
 
-                val branch = lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
+                val branch = lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[0]).branch
 
 
                 if (branchArray.isNotEmpty()) {
@@ -210,7 +210,7 @@ class SearchFragment : BaseDockFragment() {
                             branchArray.clear()
                         }
                         val branch =
-                            lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
+                            lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[0]).branch
 
                         for (item in branch) {
                             branchArray.add(item.branch_name)
@@ -431,9 +431,7 @@ class SearchFragment : BaseDockFragment() {
                 when (it) {
                     is ResponseModel.Error -> {
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
+
                     }
 
                     is ResponseModel.Idle -> {

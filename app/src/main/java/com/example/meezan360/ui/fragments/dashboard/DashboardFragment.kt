@@ -474,9 +474,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
                         myDockActivity?.handleErrorResponse(it)
-                        Toast.makeText(
-                            requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
+
                     }
 
                     is ResponseModel.Idle -> {
@@ -488,7 +486,6 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                     is ResponseModel.Success -> {
                         myDockActivity?.hideProgressIndicator()
                         kpi = it.data?.body()?.kpis?.let { it1 -> ArrayList(it1) }
-                        Log.d( "handleAPIResponse: ",kpi.toString())
                         showPieChart(kpi)
                     }
 

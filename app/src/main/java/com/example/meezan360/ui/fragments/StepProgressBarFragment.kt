@@ -86,7 +86,6 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
                             if (responseBody.isJsonArray) {
                                 responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                                     val jsonArray = responseBody.asJsonArray.get(index).toString()
-                                    Log.d("jsonArray", jsonArray.toString())
                                     graphModel.add(
                                         Gson().fromJson(
                                             jsonArray,

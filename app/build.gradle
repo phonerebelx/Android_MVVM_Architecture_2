@@ -25,7 +25,7 @@ android {
         release {
             //storeFile file('hotworx/hot_worx_keystore.jks')
 
-            storeFile file("/Users/macbook/StudioProjects/meezan360revamp/meezan360.jks")
+            storeFile file("C:\\Users\\Haroon Traders\\AndroidStudioProjects\\meezan360revamp\\meezan360.jks")
             storePassword '123456'
             keyAlias = '360'
             keyPassword '123456'
@@ -34,8 +34,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources  false
+            minifyEnabled true
+            shrinkResources  true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }

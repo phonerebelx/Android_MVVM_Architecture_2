@@ -40,8 +40,8 @@
         app:ssb_animationDuration="500"
         app:ssb_crossAxisFilledTrackSize="@dimen/_2sdp"
         app:ssb_crossAxisUnfilledTrackSize="@dimen/_2sdp"
-        app:ssb_filledThumbDrawable="@drawable/green_tick"
-        app:ssb_filledTrackColor="@color/green"
+        app:ssb_filledThumbColor="@color/golden"
+        app:ssb_filledTrackColor="@color/golden"
         app:ssb_stageStepConfig="20,20,20,20"
         app:ssb_unfilledThumbColor="#BBBBBB"
         app:ssb_unfilledTrackColor="#BBBBBB" />

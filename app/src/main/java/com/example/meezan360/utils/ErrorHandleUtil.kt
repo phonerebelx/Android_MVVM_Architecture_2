@@ -6,10 +6,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.model.Error
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.ChangePasswordActivity.ChangePasswordActivity
 import com.example.meezan360.ui.activities.LoginScreen
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import okio.use
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,18 +32,35 @@ fun <T> AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error
     if (response != null) {
         if (response.code() == 551 || response.code() == 401) {
 
-
             sharedPreferencesManager.clearSharedPreferences()
             val intent = Intent(this, LoginScreen::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
+            var errorMessage = "Unknown error occurred"
+
+            try {
+                val errorResponse = Gson().fromJson(response.errorBody()?.string()
+                    , Error::class.java)
+                errorMessage = errorResponse.error
+            } catch (e: JsonSyntaxException) {
+                // Handle invalid JSON format
+                e.printStackTrace()
+            }
+
+            // Show toast with parsed error message
+            Toast.makeText(applicationContext, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
+
 
 
         } else if (response.code() == 552) {
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
-        }else if (response.code() == 500) {
-            Toast.makeText(applicationContext, "error: ${response.errorBody()?.string().toString()}", Toast.LENGTH_SHORT).show()
+        } else if (response.code() == 500) {
+            Toast.makeText(
+                applicationContext,
+                "error: ${response.errorBody()?.string().toString()}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
 
