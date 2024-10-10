@@ -1,0 +1,16 @@
+<!-- res/drawable/tick_icon.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960">
+
+    <!-- Circle background -->
+    <path
+        android:pathData="M480,80 a400,400 0 1,0 0,800 a400,400 0 1,0 0,-800"
+        android:fillColor="@color/red" />
+
+    <path
+        android:pathData="M382,720 L154,492 l57,-57 171,171 367,-367 57,57 -424,424Z"
+        android:fillColor="#FFFFFF" />
+</vector>

@@ -108,7 +108,7 @@ dependencies {
 //    implementation 'com.anton46:stepsview:0.0.2'
 //    implementation 'com.github.baoyachi:StepView:1.9'
 
-    implementation 'com.github.loukwn.StageStepBar:stagestepbar:1.1.0'
+    implementation 'com.github.loukwn.StageStepBar:stagestepbar:1.2.0'
     implementation "com.github.skydoves:powerspinner:1.2.7"
     implementation 'com.github.emreesen27:Android-Nested-Progress:v1.0.2'
     //pinView for OTP
@@ -127,5 +127,7 @@ dependencies {
     implementation 'com.aheaditec.talsec.security:TalsecSecurity-Community:9.1.0'
 
     implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    implementation 'com.github.shuhart:stepview:1.5.1'
 
 }

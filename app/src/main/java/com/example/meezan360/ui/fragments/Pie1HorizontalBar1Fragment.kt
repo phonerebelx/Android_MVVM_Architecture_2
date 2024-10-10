@@ -37,6 +37,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class Pie1HorizontalBar1Fragment(
@@ -231,7 +232,7 @@ class Pie1HorizontalBar1Fragment(
                 extraLeftOffset = 25f
                 setTouchEnabled(false)
                 setHoleColor(Color.parseColor("#FFFFFF"))
-                setCenterTextSize(16f)
+                setCenterTextSize(12f)
                 holeRadius = 80f
                  setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
 //                setCenterTextColor(Color.parseColor("#7B7878"))
@@ -269,10 +270,15 @@ class Pie1HorizontalBar1Fragment(
                         val pie1Bar1Model: Pie1HorizontalBar1Model? = try {
                             Gson().fromJson(responseBody, Pie1HorizontalBar1Model::class.java)
                         } catch (e: JsonSyntaxException) {
+
                             null
                         }
 
-                        showPieChart(pie1Bar1Model?.graph1, binding.pieChart)
+                        if ( pie1Bar1Model?.graph1 != null){
+                            showPieChart(pie1Bar1Model?.graph1, binding.pieChart)
+                        }else{
+                            binding.pieChart.visibility = View.GONE
+                        }
                         showHorizontalBarChart(
                             pie1Bar1Model?.graph2,
                             binding.horizontalBarChart
