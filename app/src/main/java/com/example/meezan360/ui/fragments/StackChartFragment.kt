@@ -180,8 +180,10 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         val barData = BarData(barDataSet)
         if (entries.size > 5){
             barData.barWidth = 0.7f
+        }else if (entries.size > 4){
+            barData.barWidth = 0.5f
         }else{
-            barData.barWidth = 0.3f
+            barData.barWidth = 0.6f
         }
 
         // Customize value formatter to hide 0 values

@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.example.meezan360.R
 import com.example.meezan360.databinding.FragmentDepositCompositionBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.PieGraphModel
@@ -102,9 +104,12 @@ class Pie2Bar2Fragment() : Fragment() {
                 legend.isEnabled = false
                 centerText = "$pieEntryValueCA%"
                 setHoleColor(Color.parseColor("#FFFFFF"))
-                setCenterTextSize(14f)
+                setCenterTextSize(16f)
+                holeRadius = 80f
+                setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
                 setCenterTextColor(Color.parseColor("#7B7878"))
                 setTouchEnabled(false) //to stop rotation
+                setCenterTextColor(Color.parseColor("#765CB4"))
                 data = PieData(pieDataSet)
                 invalidate()
             }

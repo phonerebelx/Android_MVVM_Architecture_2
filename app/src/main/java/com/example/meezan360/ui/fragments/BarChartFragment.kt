@@ -121,9 +121,9 @@ class BarChartFragment(
         if (entries.size > 5){
             barData.barWidth = 0.7f
         }else if (entries.size > 4){
-            barData.barWidth = 0.1f
+            barData.barWidth = 0.5f
         }else{
-            barData.barWidth = 0.2f
+            barData.barWidth = 0.6f
         }
 
         // Scatter chart (to place squares on top of each bar)
