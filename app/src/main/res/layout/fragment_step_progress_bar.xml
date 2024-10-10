@@ -9,13 +9,20 @@
     android:orientation="vertical"
     tools:context=".ui.fragments.StepProgressBarFragment">
 
-
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Enhanced Customer Due Diligence"
+        android:textColor="@color/black"
         android:textSize="@dimen/_12ssp" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/_10ssp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -39,6 +46,5 @@
     <!--        android:thumb="@drawable/tick_mark"-->
     <!--        android:thumbTint="@color/purple_dark"-->
     <!--        />-->
-
 
 </LinearLayout>

@@ -114,7 +114,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
         pieChartAngleDegree["Deposit"] = 254.03897F
         pieChartAngleDegree["Cross Sell"] = 216.70924F
-        pieChartAngleDegree["Profitability"] = 182.16922F
+        pieChartAngleDegree["Profitibility"] = 182.16922F
         pieChartAngleDegree["Controls"] = 146.08641F
         pieChartAngleDegree["Premium"] = 109.59214F
         pieChartAngleDegree["Cash"] = 75.48029F

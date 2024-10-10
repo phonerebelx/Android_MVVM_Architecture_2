@@ -186,14 +186,14 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
 
         topBarDataSet.colors = topColors
         bottomBarDataSet.valueTextColor = Color.WHITE
-        bottomBarDataSet.colors = bottomColors // You can use different colors for top and bottom bars if needed
+        bottomBarDataSet.colors = bottomColors
 
         val mData = BarData(topBarDataSet, bottomBarDataSet)
 
         //Display the axis on the left
         val xAxis = horizontalBarChart.xAxis
-        xAxis.spaceMin = mData.barWidth / 2f // First bar to show properly
-        xAxis.spaceMax = mData.barWidth / 2f // Last bar to show properly
+        xAxis.spaceMin = mData.barWidth / 2f
+        xAxis.spaceMax = mData.barWidth / 2f
         xAxis.setDrawGridLines(false)
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawAxisLine(true)
@@ -261,9 +261,12 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                     is ResponseModel.Idle -> {
                     }
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+
+                    }
 
                     is ResponseModel.Success -> {
+
                         val responseBody = it.data?.body()
                         val listItems: ArrayList<String> = arrayListOf()
 
@@ -284,7 +287,6 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                             graphModel[0].top,
                             binding.horizontalBarChart
                         )
-
                     }
                 }
             }

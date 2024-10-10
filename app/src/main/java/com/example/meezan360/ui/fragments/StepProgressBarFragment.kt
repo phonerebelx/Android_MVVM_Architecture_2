@@ -23,6 +23,7 @@ import com.google.gson.Gson
 import com.loukwn.stagestepbar.StageStepBar
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
@@ -38,6 +39,7 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentStepProgressBarBinding.inflate(layoutInflater)
+        binding.tvTitle.text = dataModel.cardTitle
         binding.tvTitle.text = dataModel.cardTitle
         myViewModel.viewModelScope.launch {
             myViewModel.getFooterGraphs(kpiId.toString(), tagName, dataModel.cardId)
@@ -86,12 +88,15 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
                             if (responseBody.isJsonArray) {
                                 responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                                     val jsonArray = responseBody.asJsonArray.get(index).toString()
+
                                     graphModel.add(
                                         Gson().fromJson(
                                             jsonArray,
                                             HorizontalGraphModel::class.java
                                         )
                                     )
+
+                                    binding.tvDescription.text = graphModel[0].description
                                 }
 
 
