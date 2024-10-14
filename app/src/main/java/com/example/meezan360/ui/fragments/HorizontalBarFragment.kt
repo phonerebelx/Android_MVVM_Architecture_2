@@ -173,13 +173,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
             updatedIndex++
         }
 
-//        chartModelBottom.forEach { dataModel ->
-//
-//            bottomEntries.add(BarEntry(updatedIndex, dataModel.value))
-//            bottomColors.add(Utils.parseColorSafely(dataModel.valueColor))
-//            labels.add(dataModel.key)
-//            updatedIndex++
-//        }
+
 
         val topBarDataSet = BarDataSet(topEntries, "Top Bars")
         val bottomBarDataSet = BarDataSet(bottomEntries, "Bottom Bars")
