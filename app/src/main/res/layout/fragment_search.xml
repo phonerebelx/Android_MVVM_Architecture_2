@@ -187,7 +187,7 @@
                         android:padding="10dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/grey"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="15dp"
                         android:textStyle="bold"
                         app:spinner_arrow_drawable="@color/grey2"
                         app:spinner_arrow_gravity="end"
@@ -195,7 +195,7 @@
                         app:spinner_divider_color="@color/white"
                         app:spinner_divider_show="true"
                         app:spinner_divider_size="0.4dp"
-                        app:spinner_item_height="46dp"
+                        app:spinner_item_height="54dp"
                         app:spinner_popup_height="@dimen/_300sdp"
                         app:spinner_popup_animation="dropdown"
                         app:spinner_popup_elevation="14dp" />

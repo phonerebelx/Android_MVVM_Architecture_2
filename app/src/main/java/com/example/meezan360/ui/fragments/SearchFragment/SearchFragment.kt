@@ -452,12 +452,12 @@ class SearchFragment : BaseDockFragment() {
 
                             for (item in lovsModel) {
                                 regionArray.add(item.region_name)
-                                item.area.forEach {
-                                    areaArray.add(it.area_name)
-                                    it.branch.forEach {
-                                        branchDict[it.branch_name] = it.branch_code
-                                        branchArray.add(it.branch_name)
-
+                                item.area.forEach { area ->
+                                    areaArray.add(area.area_name)
+                                    area.branch.forEach { branch ->
+                                        val branchCode_Name = "${branch.branch_code} - ${branch.branch_name}"
+                                        branchDict[branch.branch_name] = branch.branch_code
+                                        branchArray.add(branchCode_Name)
                                     }
                                 }
                             }
