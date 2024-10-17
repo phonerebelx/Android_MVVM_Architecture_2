@@ -27,6 +27,15 @@
         android:id="@+id/anyChartView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
-
+    <TextView
+        android:id="@+id/tvView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Data will update soon "
+        android:textSize="@dimen/_12sdp"
+        android:visibility="gone"
+        android:fontFamily="@font/montserrat_medium"
+        android:gravity="center"
+        />
 
 </LinearLayout>

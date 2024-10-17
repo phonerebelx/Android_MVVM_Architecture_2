@@ -209,10 +209,13 @@ class Pie1HorizontalBar1Fragment(
     private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
 
         graph1?.let {
-            val pieEntryValueCA = graph1.pieChartModel.value
+            // Get the value from the model
+            val actualValue = graph1.pieChartModel.value
+
+            // Clamp the value to 100 if it exceeds
+            val pieEntryValueCA = if (actualValue > 100) 100f else actualValue
+
             val pieEntries = mutableListOf<PieEntry>()
-
-
             pieEntries.add(PieEntry(pieEntryValueCA))
             pieEntries.add(PieEntry(100 - pieEntryValueCA))
 
@@ -228,14 +231,13 @@ class Pie1HorizontalBar1Fragment(
             pieChart.apply {
                 legend.isEnabled = false
                 description.isEnabled = false
-                centerText = "${pieEntryValueCA}%"
+                centerText = "${actualValue}%"  // Show the actual percentage in the center
                 extraLeftOffset = 25f
                 setTouchEnabled(false)
                 setHoleColor(Color.parseColor("#FFFFFF"))
                 setCenterTextSize(12f)
                 holeRadius = 80f
-                 setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
-//                setCenterTextColor(Color.parseColor("#7B7878"))
+                setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
                 setCenterTextColor(Color.parseColor("#765CB4"))
 
                 data = PieData(pieDataSet)
@@ -270,7 +272,9 @@ class Pie1HorizontalBar1Fragment(
                         val pie1Bar1Model: Pie1HorizontalBar1Model? = try {
                             Gson().fromJson(responseBody, Pie1HorizontalBar1Model::class.java)
                         } catch (e: JsonSyntaxException) {
-
+                            binding.horizontalBarChart.visibility = View.GONE
+                            binding.pieChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
                             null
                         }
 
@@ -279,10 +283,17 @@ class Pie1HorizontalBar1Fragment(
                         }else{
                             binding.pieChart.visibility = View.GONE
                         }
-                        showHorizontalBarChart(
-                            pie1Bar1Model?.graph2,
-                            binding.horizontalBarChart
-                        )
+
+                        if ( pie1Bar1Model?.graph2 != null){
+                            showHorizontalBarChart(
+                                pie1Bar1Model?.graph2,
+                                binding.horizontalBarChart
+                            )
+                        }else{
+                            binding.horizontalBarChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
+
 
                     }
                 }

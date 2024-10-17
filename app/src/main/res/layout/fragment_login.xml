@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:backgroundTint="@color/white"
-        android:text="zubair360"
+
         android:hint="Email Address"
         android:inputType="textEmailAddress"
         android:textColor="@color/white"
@@ -50,7 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:backgroundTint="@color/white"
-        android:text="Uhf@1234"
         android:hint="@string/password"
         android:inputType="textPassword"
         android:textColor="@color/white"

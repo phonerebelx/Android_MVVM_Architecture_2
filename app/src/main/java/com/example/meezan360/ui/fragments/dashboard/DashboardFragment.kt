@@ -62,6 +62,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.lang.Math.abs
 
 class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View.OnClickListener {
@@ -152,6 +153,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
             footerList?.forEachIndexed { index, footer ->
                 //to access fragments by passing cardType to Enum
+                Timber.tag("footerList[index].cardType").d(footerList[index].cardType)
                 when (footerList[index].cardType) {
                     "pie_chart" -> fragmentsList.add(
                         PieChartFragment(

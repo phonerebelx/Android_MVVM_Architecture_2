@@ -61,12 +61,14 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
         binding.switchTD.setOnCheckedChangeListener { _, isChecked ->
 
             Log.d("graphArrayWithTd",graphArrayWithTd.toString())
+            if (graphArrayWithoutTd.isNotEmpty()){
+                if (isChecked){
+                    graphArrayWithTd[0]?.let { showBarChart(it, binding.barChart, isChecked) }
+                }else  {
+                    graphArrayWithoutTd[0]?.let { graph -> graph.stackChartData.removeIf { it.key == "TD" } }
+                    graphArrayWithoutTd[0]?.let { showBarChart(it, binding.barChart, isChecked) }
+                }
 
-            if (isChecked){
-                graphArrayWithTd[0]?.let { showBarChart(it, binding.barChart, isChecked) }
-            }else  {
-                graphArrayWithoutTd[0]?.let { graph -> graph.stackChartData.removeIf { it.key == "TD" } }
-                graphArrayWithoutTd[0]?.let { showBarChart(it, binding.barChart, isChecked) }
             }
 
 
@@ -283,6 +285,11 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
 
                     is ResponseModel.Success -> {
                         val responseBody = it.data?.body()
+
+                        if (responseBody?.asJsonArray?.isEmpty == true){
+                            binding.barChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
                         val recyclerViewItems: ArrayList<String> = arrayListOf()
                         graphArrayWithTd = arrayListOf()
                         graphArrayWithoutTd = arrayListOf()

@@ -37,6 +37,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class BarChartFragment(
@@ -163,9 +164,9 @@ class BarChartFragment(
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             if (entries.size <= 2) {
                 xAxis.axisMinimum = -0.5f
-                xAxis.axisMaximum = 0.5f
+                xAxis.axisMaximum = entries.size.toFloat() - 0.5f
             }
-            xAxis.setLabelCount(labels.size,false)
+            xAxis.setLabelCount(labels.size, false)
             xAxis.granularity = 1f
             xAxis.valueFormatter =  object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
@@ -213,10 +214,15 @@ class BarChartFragment(
 
                     is ResponseModel.Success -> {
                         val responseBody = it.data?.body()
-                        val listItems: ArrayList<String> = arrayListOf()
 
+                        val listItems: ArrayList<String> = arrayListOf()
+                        if (responseBody?.asJsonArray?.isEmpty == true){
+                            binding.combineChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                             val jsonArray = responseBody.asJsonArray.get(index).toString()
+
                             graphModel.add(
                                 Gson().fromJson(
                                     jsonArray,

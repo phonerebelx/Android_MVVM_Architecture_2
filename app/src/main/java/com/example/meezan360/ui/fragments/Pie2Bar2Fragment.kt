@@ -109,7 +109,7 @@ class Pie2Bar2Fragment() : Fragment() {
                 setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
                 setCenterTextColor(Color.parseColor("#7B7878"))
                 setTouchEnabled(false) //to stop rotation
-                setCenterTextColor(Color.parseColor("#765CB4"))
+                setCenterTextColor(Color.parseColor(graph1.pieChartModel.color))
                 data = PieData(pieDataSet)
                 invalidate()
             }
@@ -234,9 +234,7 @@ class Pie2Bar2Fragment() : Fragment() {
                         }
 
                         if (pie2Bar2Model != null) {
-                            if (pie2Bar2Model.graph1 != null){
 
-                            }
                         }
 
                         try{

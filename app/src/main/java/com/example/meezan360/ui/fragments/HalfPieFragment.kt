@@ -107,6 +107,10 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
 
                     is ResponseModel.Success -> {
                         val responseBody = it.data?.body()
+                        if (responseBody?.asJsonArray?.isEmpty == true){
+                            binding.pieChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
                         val recyclerViewItems: ArrayList<String> = arrayListOf()
 
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->

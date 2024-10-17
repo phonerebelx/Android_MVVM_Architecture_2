@@ -262,6 +262,11 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                     is ResponseModel.Success -> {
 
                         val responseBody = it.data?.body()
+
+                        if (responseBody?.asJsonArray?.isEmpty == true){
+                            binding.horizontalBarChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
                         val listItems: ArrayList<String> = arrayListOf()
 
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
