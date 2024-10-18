@@ -34,6 +34,7 @@ import com.skydoves.powerspinner.IconSpinnerAdapter
 import com.skydoves.powerspinner.IconSpinnerItem
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -177,7 +178,7 @@ class SearchFragment : BaseDockFragment() {
                 }
 
 
-                val branch = lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[0]).branch
+                val branch = lovsModel[indexArrayForAllLovs[0]].area[indexArrayForAllLovs[1]].branch
 
 
                 if (branchArray.isNotEmpty()) {
@@ -210,7 +211,7 @@ class SearchFragment : BaseDockFragment() {
                             branchArray.clear()
                         }
                         val branch =
-                            lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[0]).branch
+                            lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
 
                         for (item in branch) {
                             branchArray.add(item.branch_name)
@@ -228,7 +229,7 @@ class SearchFragment : BaseDockFragment() {
 
     private fun showBranchArray(branchArray: ArrayList<String>, currentBranch: String = "") {
         binding.actvBranch.text = ""
-        Log.d("branchItem", branchItem.toString())
+
         binding.actvBranch.apply {
             setSpinnerAdapter(IconSpinnerAdapter(this))
             val branchIconSpinnerItems = branchArray.map { IconSpinnerItem(text = it) }
@@ -243,18 +244,20 @@ class SearchFragment : BaseDockFragment() {
 
 
             branchItem = newItem.text.toString()
-            branchCode = branchDict[newItem.text.toString()].toString()
-
+            val branchCodeSend = if (branchItem.isNotEmpty()) branchItem.split("-") else listOf("")
+            branchDict.forEach {
+                if (it.value == branchCodeSend[0].trim()){
+                    branchCode = branchDict[it.key].toString()
+                }
+            }
 
             binding.actvBranch.clearFocus()
         }
 
         if (currentBranch != "") {
             branchItem = currentBranch
-            branchCode = branchDict[currentBranch].toString()
-            Log.d("branchItem", branchItem.toString())
+            branchCode = currentBranch.split("-")[0].trim()
             binding.actvBranch.text = branchItem
-
 
         }
     }
@@ -280,6 +283,7 @@ class SearchFragment : BaseDockFragment() {
                         }
                     }
                 }
+
                 binding.actvArea.apply {
                     setSpinnerAdapter(IconSpinnerAdapter(this))
                     val areaIconSpinnerItems = areaArray.map { IconSpinnerItem(text = it) }
@@ -366,6 +370,7 @@ class SearchFragment : BaseDockFragment() {
                     selected_branch = branchCode,
                     selected_date = selectedDate
                 )
+                Log.d("setOnClickListener: ",setFilterResponse.toString())
                 setFilter(
                     setFilterResponse.selected_area,
                     setFilterResponse.selected_region,
@@ -477,7 +482,7 @@ class SearchFragment : BaseDockFragment() {
                             if (branchArray.isNotEmpty()){
                                 showBranchArray(
                                     branchArray,
-                                    getSetFilterModel.selected_branch_name
+                                    "${getSetFilterModel.selected_branch} - ${getSetFilterModel.selected_branch_name}"
                                 )
                             }
 

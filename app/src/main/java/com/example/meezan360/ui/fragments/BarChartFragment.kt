@@ -94,7 +94,6 @@ class BarChartFragment(
         barChartModel: ArrayList<HorizontalBarChartDataModel>,
         combineChart: CombinedChart
     ) {
-
         if (barChartModel.isEmpty()){
             return
         }
@@ -242,7 +241,16 @@ class BarChartFragment(
     }
 
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
-        showCombineChart(graphModel[position].barChartModel, binding.combineChart)
+
+        if (graphModel[position].barChartModel.isEmpty()){
+            binding.combineChart.visibility = View.GONE
+            binding.tvView.visibility = View.VISIBLE
+        }else{
+            binding.combineChart.visibility =View.VISIBLE
+            binding.tvView.visibility = View.GONE
+            showCombineChart(graphModel[position].barChartModel, binding.combineChart)
+        }
+
     }
 
 }

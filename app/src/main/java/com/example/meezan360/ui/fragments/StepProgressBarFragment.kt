@@ -97,8 +97,8 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
                                         )
                                     )
                                 }
-                                binding.tvDescription.text =graphModel[0].description
 
+                                if (graphModel.isNotEmpty()) binding.tvDescription.text = graphModel[0].description
                                 if (graphModel.isNotEmpty()) setupRecyclerView(graphModel[0].barChartModel)
                             }
                         }

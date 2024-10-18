@@ -36,6 +36,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
     Fragment(), OnItemClickListener {
@@ -341,6 +342,16 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
     }
 
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
-        graphModel?.get(position)?.let { showBarChart(it, binding.barChart, false) }
+
+        if (graphModel?.get(position)?.stackChartData?.isEmpty() == true){
+            binding.barChart.visibility = View.GONE
+            binding.tvView.visibility = View.VISIBLE
+        }else{
+            binding.barChart.visibility =View.VISIBLE
+            binding.tvView.visibility = View.GONE
+            graphModel?.get(position)?.let { showBarChart(it, binding.barChart, false) }
+        }
+
+
     }
 }

@@ -183,7 +183,7 @@
                         android:layout_weight="10"
                         android:background="@color/white"
                         android:gravity="left"
-                        android:hint="@string/tap_to_select_area"
+                        android:hint="@string/tap_to_select_branch"
                         android:padding="10dp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/grey"

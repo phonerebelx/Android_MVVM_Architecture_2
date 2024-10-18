@@ -32,6 +32,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 
 class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
@@ -207,11 +208,15 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         val minValue = (topEntries + bottomEntries).minByOrNull { it.y }
 
         horizontalBarChart.apply {
-            axisLeft.axisMaximum = maxValue?.y!!
+            axisLeft.axisMaximum = maxValue?.y ?: 0f
             //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
-            axisLeft.axisMinimum = minValue?.y!!
-            axisRight.axisMinimum = minValue.y
-            axisRight.axisMaximum = maxValue.y
+            axisLeft.axisMinimum = minValue?.y?: 0f
+            if (minValue != null) {
+                axisRight.axisMinimum = minValue.y
+            }
+            if (maxValue != null) {
+                axisRight.axisMaximum = maxValue.y
+            }
             legend.isEnabled = false
             setDrawValueAboveBar(false)
             axisLeft.isEnabled = false
@@ -293,11 +298,20 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
     }
 
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
-        showBarChart(
-            graphModel[position].bottom,
-            graphModel[position].top,
-            binding.horizontalBarChart
-        )
+
+        if (graphModel[position].bottom.isEmpty() && graphModel[position].top.isEmpty()){
+            binding.horizontalBarChart.visibility = View.GONE
+            binding.tvView.visibility = View.VISIBLE
+        }else{
+            binding.horizontalBarChart.visibility =View.VISIBLE
+            binding.tvView.visibility = View.GONE
+            showBarChart(
+                graphModel[position].bottom,
+                graphModel[position].top,
+                binding.horizontalBarChart
+            )
+        }
+
     }
 
 
