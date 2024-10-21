@@ -124,12 +124,27 @@ class PieChartFragment() : Fragment() {
     }
 
 
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.pieChartRatio.visibility = View.GONE
+
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.pieChartRatio.visibility = View.VISIBLE
+    }
     private fun handleAPIResponse() {
 
         lifecycleScope.launch {
             myViewModel.footerGraph.collect {
                 when (it) {
+
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -140,10 +155,12 @@ class PieChartFragment() : Fragment() {
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody: String = it.data?.body()?.toString() ?: ""
 
                         val pieChartModel: PieChartModel? = try {

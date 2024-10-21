@@ -65,6 +65,7 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -75,10 +76,12 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
                         if (responseBody?.asJsonArray?.isEmpty == true){
                             binding.recyclerView.visibility = View.GONE
@@ -110,6 +113,24 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
         }
 
     }
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.tvDescription.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
 
+
+
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.tvDescription.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.VISIBLE
+
+
+    }
 
 }

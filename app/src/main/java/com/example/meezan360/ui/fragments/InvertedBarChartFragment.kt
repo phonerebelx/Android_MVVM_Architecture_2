@@ -61,53 +61,98 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
         return binding.root
     }
 
-    private fun showBarChart(horizontalGraphModel: HorizontalGraphModel, barChart: BarChart) {
+//    private fun showBarChart(horizontalGraphModel: HorizontalGraphModel, barChart: BarChart) {
+//
+//        val valueList = ArrayList<Double>()
+//        val entries: ArrayList<BarEntry> = ArrayList()
+//        val colors = ArrayList<Int>()
+//        val labels = ArrayList<String>()
+//
+//        horizontalGraphModel.barChartModel.forEachIndexed { index, chartData ->
+//            val barEntry = BarEntry(index.toFloat(), chartData.value)
+//            entries.add(barEntry)
+//            colors.add(Utils.parseColorSafely(chartData.valueColor))
+//            labels.add(chartData.key)
+//        }
+//
+//
+//        val barDataSet = BarDataSet(entries,"")
+//        barDataSet.setDrawValues(true)
+//        barDataSet.valueTextColor = Color.BLACK
+//        barDataSet.valueTextSize = 6f
+//        barDataSet.colors = colors
+//        val barData = BarData(barDataSet)
+//        barData.barWidth = 0.5f
+//
+//
+//
+//        barChart.apply {
+//            setDrawValueAboveBar(true)
+//            extraBottomOffset = 10f
+//            axisLeft.isEnabled = false
+//            axisRight.isEnabled = false
+//            description.isEnabled = false
+//            xAxis.labelRotationAngle = rotationAngle
+//            xAxis.setDrawGridLines(false)
+//            xAxis.setDrawAxisLine(true)
+//            xAxis.position = XAxis.XAxisPosition.BOTTOM
+//            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
+//            xAxis.labelCount = labels.size
+//            xAxis.textSize = 7f
+//            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+//            legend.isEnabled = false
+//            setTouchEnabled(false)
+//            data = barData
+//            animateY(800)
+//            invalidate()
+//        }
+//
+//    }
+private fun showBarChart(horizontalGraphModel: HorizontalGraphModel, barChart: BarChart) {
 
-        val valueList = ArrayList<Double>()
-        val entries: ArrayList<BarEntry> = ArrayList()
-        val colors = ArrayList<Int>()
-        val labels = ArrayList<String>()
+    val valueList = ArrayList<Double>()
+    val entries: ArrayList<BarEntry> = ArrayList()
+    val colors = ArrayList<Int>()
+    val labels = ArrayList<String>()
 
-        horizontalGraphModel.barChartModel.forEachIndexed { index, chartData ->
-            val barEntry = BarEntry(index.toFloat(), chartData.value)
-            entries.add(barEntry)
-            colors.add(Utils.parseColorSafely(chartData.valueColor))
-            labels.add(chartData.key)
-        }
-
-
-        val barDataSet = BarDataSet(entries,"")
-        barDataSet.setDrawValues(true)
-        barDataSet.valueTextColor = Color.BLACK
-        barDataSet.valueTextSize = 6f
-        barDataSet.colors = colors
-        val barData = BarData(barDataSet)
-        barData.barWidth = 0.5f
-
-//        setupLegend()
-
-        barChart.apply {
-            setDrawValueAboveBar(true)
-            extraBottomOffset = 10f
-            axisLeft.isEnabled = false
-            axisRight.isEnabled = false
-            description.isEnabled = false
-            xAxis.labelRotationAngle = rotationAngle
-            xAxis.setDrawGridLines(false)
-            xAxis.setDrawAxisLine(true)
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
-            xAxis.labelCount = labels.size
-            xAxis.textSize = 7f
-            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-            legend.isEnabled = false
-            setTouchEnabled(false)
-            data = barData
-            animateY(800)
-            invalidate()
-        }
-
+    horizontalGraphModel.barChartModel.forEachIndexed { index, chartData ->
+        val barEntry = BarEntry(index.toFloat(), chartData.value)
+        entries.add(barEntry)
+        colors.add(Utils.parseColorSafely(chartData.valueColor))
+        labels.add(chartData.key)
     }
+
+    val barDataSet = BarDataSet(entries, "")
+    barDataSet.setDrawValues(true)
+    barDataSet.valueTextColor = Color.BLACK
+    barDataSet.valueTextSize = 6f
+    barDataSet.colors = colors
+
+    val barData = BarData(barDataSet)
+    barData.barWidth = 0.3f // Adjusted bar width to reduce overlap
+
+    barChart.apply {
+        setDrawValueAboveBar(true)
+        extraBottomOffset = 10f
+        axisLeft.isEnabled = false
+        axisRight.isEnabled = false
+        description.isEnabled = false
+        xAxis.labelRotationAngle = rotationAngle
+        xAxis.setDrawGridLines(false)
+        xAxis.setDrawAxisLine(true)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
+        xAxis.labelCount = labels.size
+        xAxis.granularity = 1f // Ensures each label is only drawn once
+        xAxis.textSize = 7f
+        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        legend.isEnabled = false
+        setTouchEnabled(false)
+        data = barData
+        animateY(800)
+        invalidate()
+    }
+}
 
     private fun setupLegend() {
         val legend: Legend = binding.barChart.legend
@@ -131,6 +176,7 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -141,10 +187,12 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
                         if (responseBody?.asJsonArray?.isEmpty == true){
                             binding.barChart.visibility = View.GONE
@@ -191,5 +239,19 @@ class InvertedBarChartFragment(val kpiId: Int?, val tagName: String, val dataMod
 
     }
 
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
+        binding.barChart.visibility = View.GONE
 
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.barChart.visibility = View.VISIBLE
+    }
 }

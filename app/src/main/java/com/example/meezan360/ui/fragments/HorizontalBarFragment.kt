@@ -249,6 +249,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -261,11 +262,11 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                     }
 
                     is ResponseModel.Loading -> {
-
+                        showProgressIndicator()
                     }
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
 
                         if (responseBody?.asJsonArray?.isEmpty == true){
@@ -314,5 +315,21 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
 
     }
 
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
+        binding.horizontalBarChart.visibility = View.GONE
 
+
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.horizontalBarChart.visibility = View.VISIBLE
+
+    }
 }

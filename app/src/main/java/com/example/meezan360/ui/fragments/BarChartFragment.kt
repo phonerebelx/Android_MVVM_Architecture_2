@@ -196,8 +196,10 @@ class BarChartFragment(
     private fun handleAPIResponse() {
         lifecycleScope.launch {
             myViewModel.footerGraph.collect {
+
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -209,9 +211,12 @@ class BarChartFragment(
                     is ResponseModel.Idle -> {
                     }
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
 
                         val listItems: ArrayList<String> = arrayListOf()
@@ -251,6 +256,24 @@ class BarChartFragment(
             showCombineChart(graphModel[position].barChartModel, binding.combineChart)
         }
 
+    }
+
+
+
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
+        binding.combineChart.visibility = View.GONE
+
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.combineChart.visibility = View.VISIBLE
     }
 
 }

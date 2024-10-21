@@ -122,6 +122,7 @@ class Pie4ChartFragment() : Fragment() {
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -132,10 +133,12 @@ class Pie4ChartFragment() : Fragment() {
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody: String = it.data?.body()?.toString() ?: ""
 
                         val pieChartModel: PieChartModel? = try {
@@ -155,5 +158,32 @@ class Pie4ChartFragment() : Fragment() {
             }
         }
 
+    }
+
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.tvPiePkrTitle.visibility = View.GONE
+        binding.tvPieUsdTitle.visibility = View.GONE
+        binding.tvPieGBPTitle.visibility = View.GONE
+        binding.tvPieEuroTitle.visibility = View.GONE
+        binding.pieChartPkr.visibility = View.GONE
+        binding.pieChartUsd.visibility = View.GONE
+        binding.pieChartGBP.visibility = View.GONE
+        binding.pieChartEuro.visibility = View.GONE
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility =  View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.tvPiePkrTitle.visibility =View.VISIBLE
+        binding.tvPieUsdTitle.visibility =View.VISIBLE
+        binding.tvPieGBPTitle.visibility =View.VISIBLE
+        binding.tvPieEuroTitle.visibility =View.VISIBLE
+        binding.pieChartPkr.visibility =View.VISIBLE
+        binding.pieChartUsd.visibility =View.VISIBLE
+        binding.pieChartGBP.visibility =View.VISIBLE
+        binding.pieChartEuro.visibility =View.VISIBLE
     }
 }

@@ -105,8 +105,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0' //for all other charts
     implementation 'com.github.AnyChart:AnyChart-Android:1.1.5' //for pyramid chart
 
-//    implementation 'com.anton46:stepsview:0.0.2'
-//    implementation 'com.github.baoyachi:StepView:1.9'
+
 
     implementation 'com.github.loukwn.StageStepBar:stagestepbar:1.2.0'
     implementation "com.github.skydoves:powerspinner:1.2.7"

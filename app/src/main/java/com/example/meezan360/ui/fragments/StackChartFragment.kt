@@ -272,6 +272,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -282,9 +283,12 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
 
                         if (responseBody?.asJsonArray?.isEmpty == true){
@@ -354,4 +358,25 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
 
 
     }
+
+
+
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.switchTD.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
+        binding.switchTD.visibility = View.GONE
+
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.switchTD.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.switchTD.visibility = View.VISIBLE
+    }
+
 }

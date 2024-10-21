@@ -13,12 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentDepositCompositionBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.PieGraphModel
 import com.example.meezan360.model.footerGraph.BarGraphModel
 import com.example.meezan360.model.graphs.Pie2Bar2Model
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.progress.ProgressDialog
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
@@ -39,6 +42,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import com.uhfsolutions.carlutions.progress.ProgressIndicator
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -210,6 +214,7 @@ class Pie2Bar2Fragment() : Fragment() {
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -220,10 +225,12 @@ class Pie2Bar2Fragment() : Fragment() {
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
 
                         val pie2Bar2Model: Pie2Bar2Model? = try {
@@ -253,4 +260,20 @@ class Pie2Bar2Fragment() : Fragment() {
 
     }
 
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.pieChartCA.visibility = View.GONE
+        binding.horizontalBarChart.visibility = View.GONE
+        binding.horizontalBarChart2.visibility = View.GONE
+        binding.pieChartCASA.visibility = View.GONE
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.pieChartCA.visibility = View.VISIBLE
+        binding.horizontalBarChart.visibility = View.VISIBLE
+        binding.horizontalBarChart2.visibility = View.VISIBLE
+        binding.pieChartCASA.visibility = View.VISIBLE
+    }
 }

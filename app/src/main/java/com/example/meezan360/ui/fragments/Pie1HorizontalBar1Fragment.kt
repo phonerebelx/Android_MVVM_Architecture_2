@@ -253,6 +253,7 @@ class Pie1HorizontalBar1Fragment(
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -263,10 +264,12 @@ class Pie1HorizontalBar1Fragment(
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody: String = it.data?.body()?.toString() ?: ""
 
                         val pie1Bar1Model: Pie1HorizontalBar1Model? = try {
@@ -301,6 +304,20 @@ class Pie1HorizontalBar1Fragment(
         }
 
     }
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.pieChart.visibility = View.GONE
+        binding.horizontalBarChart.visibility = View.GONE
 
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.pieChart.visibility =  View.VISIBLE
+        binding.horizontalBarChart.visibility =  View.VISIBLE
+    }
 
 }

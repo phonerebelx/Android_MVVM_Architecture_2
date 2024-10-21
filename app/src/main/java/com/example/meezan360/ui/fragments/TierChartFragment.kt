@@ -88,6 +88,7 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -98,10 +99,10 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {showProgressIndicator()}
 
                     is ResponseModel.Success -> {
-
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
                         if (responseBody?.asJsonArray?.isEmpty == true){
                             binding.anyChartView.visibility = View.GONE
@@ -147,6 +148,22 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
         setupPyramidChart(graphModel[position])
 
+    }
+
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
+        binding.anyChartView.visibility = View.GONE
+
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.anyChartView.visibility = View.VISIBLE
     }
 
 }

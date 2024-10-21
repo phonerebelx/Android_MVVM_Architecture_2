@@ -93,6 +93,7 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
             myViewModel.footerGraph.collect {
                 when (it) {
                     is ResponseModel.Error -> {
+                        hideProgressIndicator()
                         (requireActivity() as AppCompatActivity).handleErrorResponse(it)
                         Toast.makeText(
                             context,
@@ -103,9 +104,12 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
 
                     is ResponseModel.Idle -> {}
 
-                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Loading -> {
+                        showProgressIndicator()
+                    }
 
                     is ResponseModel.Success -> {
+                        hideProgressIndicator()
                         val responseBody = it.data?.body()
                         if (responseBody?.asJsonArray?.isEmpty == true){
                             binding.pieChart.visibility = View.GONE
@@ -158,4 +162,23 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
         showPieChart(graphModel[position])
     }
+
+    private fun showProgressIndicator() {
+        binding.rlLoader.visibility = View.VISIBLE
+        binding.tvTitle.visibility = View.GONE
+        binding.recyclerView.visibility = View.GONE
+        binding.recyclerView2.visibility = View.GONE
+        binding.pieChart.visibility = View.GONE
+
+    }
+
+
+    private fun hideProgressIndicator() {
+        binding.rlLoader.visibility = View.GONE
+        binding.tvTitle.visibility = View.VISIBLE
+        binding.recyclerView.visibility = View.VISIBLE
+        binding.recyclerView2.visibility = View.VISIBLE
+        binding.pieChart.visibility = View.VISIBLE
+    }
+
 }

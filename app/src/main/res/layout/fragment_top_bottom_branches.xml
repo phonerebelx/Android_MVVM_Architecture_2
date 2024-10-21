@@ -7,6 +7,28 @@
     android:orientation="vertical"
     tools:context=".ui.fragments.HorizontalBarFragment">
 
+    <RelativeLayout
+        android:id="@+id/rlLoader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <com.sn.lib.NestedProgress
+            style="@style/AVLoadingIndicatorView"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            app:innerLoaderColor="@color/transparent"
+            app:outerLoaderColor="@color/purple_dark" />
+
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
