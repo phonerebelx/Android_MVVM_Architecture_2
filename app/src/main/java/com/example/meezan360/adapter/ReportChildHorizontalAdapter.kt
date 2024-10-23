@@ -21,7 +21,8 @@ class ReportChildHorizontalAdapter(
     val myContext: Context,
     private val itemList: ArrayList<ReportsColumnData>,
     val onTtypeItemClickListener: OnTypeItemClickListener,
-    private val getScreenSize: Int
+    private val getScreenSize: Int,
+    var isSubValue: String = "yes"
 ) :
     RecyclerView.Adapter<ReportChildHorizontalAdapter.ViewHolder>() {
     private var selectedPosition = 0
@@ -40,7 +41,7 @@ class ReportChildHorizontalAdapter(
             layoutParams.width = getScreenSize // Assuming getScreenSize is the desired width in pixels
             setTextColor(Utils.parseColorSafely(item.valueColor))
         }
-        if (item.sub_value != null && item.sub_value.isNotEmpty() ){
+        if (item.sub_value != null && item.sub_value.isNotEmpty() && isSubValue == "yes"){
             binding.tvSubChild.apply {
                 text = item.sub_value
                 layoutParams.width = getScreenSize // Assuming getScreenSize is the desired width in pixels

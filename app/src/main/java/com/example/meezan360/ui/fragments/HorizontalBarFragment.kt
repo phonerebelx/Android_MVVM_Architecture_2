@@ -208,6 +208,11 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
         val minValue = (topEntries + bottomEntries).minByOrNull { it.y }
 
         horizontalBarChart.apply {
+            setPadding(0, 0, 0, 0)
+            extraRightOffset = 0f
+            extraLeftOffset = 0f
+            extraTopOffset = 0f
+            extraBottomOffset = 10f
             axisLeft.axisMaximum = maxValue?.y ?: 0f
             //must define axis maximum and minimum to show text labels inside horizontal bars (this condition only applicable for horizontal bars)
             axisLeft.axisMinimum = minValue?.y?: 0f
@@ -223,6 +228,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
             axisRight.isEnabled = false
             data = mData
             description.isEnabled = false
+            animateXY(1000, 800)
             invalidate()
         }
     }

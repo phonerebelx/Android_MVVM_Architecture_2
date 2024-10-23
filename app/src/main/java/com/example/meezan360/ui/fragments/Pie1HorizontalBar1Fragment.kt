@@ -72,79 +72,44 @@ class Pie1HorizontalBar1Fragment(
             val labels: ArrayList<String> = arrayListOf()
             val entries: ArrayList<BarEntry> = arrayListOf()
             val targetEntries: ArrayList<BarEntry> = arrayListOf()
-            val Value: ArrayList<Float> = arrayListOf()
-            val targetValue: ArrayList<Float> = arrayListOf()
             val colors: ArrayList<Int> = arrayListOf()
             val targetColors: ArrayList<Int> = arrayListOf()
             val percentages: ArrayList<Float> = arrayListOf()
 
-            for (index in graph2.barChartModel.size - 1 downTo 0) {
+            // Process data in reverse order for correct display
+            for (index in graph2.barChartModel.indices.reversed()) {
                 val barChartModel = graph2.barChartModel[index]
+                val percentage = barChartModel.percentage ?: 0f
+                val target = 100f
+
                 labels.add(barChartModel.key)
-                entries.add(BarEntry(((graph2.barChartModel.size - 1) - index).toFloat(), barChartModel.percentage!!))
-                targetEntries.add(BarEntry(((graph2.barChartModel.size - 1) - index).toFloat(), 100F))
-                Value.add(barChartModel.value)
-                targetValue.add(barChartModel.target!!)
-                targetEntries.add(BarEntry(((graph2.barChartModel.size - 1) - index).toFloat(), 100F))
+                entries.add(BarEntry((graph2.barChartModel.size - 1 - index).toFloat(), percentage))
+                targetEntries.add(BarEntry((graph2.barChartModel.size - 1 - index).toFloat(), target))
+
                 colors.add(Utils.parseColorSafely(barChartModel.valueColor))
                 targetColors.add(Utils.parseColorSafely(barChartModel.targetColor))
-                barChartModel.percentage?.let { percentages.add(it) }
+                percentages.add(percentage)
             }
 
-            val barDataSet = BarDataSet(entries, "Target")
+            val barDataSet = BarDataSet(entries, "Value")
             barDataSet.colors = colors
 
-            val barDataSet2 = BarDataSet(targetEntries, "Target2")
+            val barDataSet2 = BarDataSet(targetEntries, "Target (100%)")
             barDataSet2.colors = targetColors
             barDataSet2.setDrawValues(false)
 
-
-
-            var index = 0
+            // ValueFormatter that directly uses the entry's Y value (which is the percentage)
             barDataSet.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    if (index < barDataSet.entryCount) {
-                        val value = "${percentages[index]}%"
-                        index++
-                        return value
-                    } else {
-                        index = 0
-                    }
-                    val outsideValue = percentages[index]
-                    index++
-                    return "${outsideValue}%"
+                    return String.format("%.2f%%", value)
                 }
             }
-
 
             barDataSet.setDrawValues(true)
             barDataSet.valueTextSize = 8f
             barDataSet.valueTextColor = Color.WHITE
 
-
-
-            val yAxis = horizontalBarChart.axisLeft
-
-
-
-
-            val limitLine = LimitLine(100F, "")
-            limitLine.lineWidth = 2f
-//            limitLine.enableDashedLine(10f, 10f, 0f)
-            limitLine.lineColor = ContextCompat.getColor(requireContext(), R.color.red);
-            limitLine.labelPosition = LimitLine.LimitLabelPosition.LEFT_BOTTOM
-            yAxis.addLimitLine(limitLine)
-            yAxis.setDrawLimitLinesBehindData(false)
-
-
-
-
-
-            val mData = BarData(barDataSet2, barDataSet)
-            mData.barWidth = 0.7f
-            mData.isHighlightEnabled = false
-
-
+            // Configure X Axis
             val xl: XAxis = horizontalBarChart.xAxis
             xl.position = XAxis.XAxisPosition.BOTTOM
             xl.setDrawAxisLine(true)
@@ -160,50 +125,56 @@ class Pie1HorizontalBar1Fragment(
             }
             xl.granularity = 1f
 
-            setupLegend()
+            // Set up BarData
+            val barData = BarData(barDataSet2, barDataSet)
+            barData.barWidth = 0.7f
+            barData.isHighlightEnabled = false
 
-            val axisMax = entries.maxOfOrNull {
-                it.y
-            }
+            // Dynamically calculate axis maximum
+            val maxEntryValue = maxOf(
+                entries.maxOfOrNull { it.y } ?: 0f,
+                targetEntries.maxOfOrNull { it.y } ?: 100f
+            )
 
+            // Apply chart settings
             horizontalBarChart.apply {
+                setPadding(0, 0, 0, 0)
+                extraRightOffset = 0f
+                extraLeftOffset = 0f
+                data = barData
                 setTouchEnabled(false)
-                marker = CustomMarker(context, R.layout.marker_layout)
-                if (axisMax != null) {
-                    axisLeft.axisMaximum = axisMax
+                axisLeft.apply {
+                    axisMaximum = maxEntryValue
+                    axisMinimum = 0f
+                    isEnabled = true
+                    setDrawAxisLine(false)
+                    setDrawLabels(false)
+                    setDrawGridLines(false)
                 }
-                axisLeft.axisMinimum = 0f
+                axisRight.apply {
+                    isEnabled = true
+                    setDrawGridLines(false)
+                    setDrawAxisLine(true)
+                    setDrawLabels(false)
+                }
                 setDrawValueAboveBar(false)
-                axisLeft.isEnabled = true
                 description.isEnabled = false
-                axisLeft.setDrawAxisLine(false)
-                axisLeft.setDrawLabels(false)
-                axisLeft.setDrawGridLines(false)
-                axisRight.isEnabled = true
-                axisRight.setDrawGridLines(false)
-                axisRight.setDrawAxisLine(true)
-                axisRight.setDrawLabels(false)
-                data = mData
-                description.isEnabled = false
-                animateY(800)
+                val legend: Legend = horizontalBarChart.legend
+                legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+                legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
+                legend.xEntrySpace = 25f
+                val l1 = LegendEntry(
+                    "Achievement", Legend.LegendForm.SQUARE, 8f, 0f, null, colors[0]
+                )
+                val l2 = LegendEntry(
+                    "Target", Legend.LegendForm.DEFAULT, 8f, 0f, null, targetColors[0]
+                )
+                legend.setCustom(arrayOf(l1, l2))
+
+                animateXY(1000, 800)
                 invalidate()
             }
         }
-    }
-
-
-    private fun setupLegend() {
-        val legend: Legend = binding.horizontalBarChart.legend
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.LEFT
-        legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
-        legend.xEntrySpace = 10f
-        val l1 = LegendEntry(
-            "Target", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#E8544F")
-        )
-        val l2 = LegendEntry(
-            "Achievement", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#1F753E")
-        )
-        legend.setCustom(arrayOf(l1, l2))
     }
 
     private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
@@ -232,15 +203,16 @@ class Pie1HorizontalBar1Fragment(
                 legend.isEnabled = false
                 description.isEnabled = false
                 centerText = "${actualValue}%"  // Show the actual percentage in the center
-                extraLeftOffset = 25f
+                extraLeftOffset = 15f
                 setTouchEnabled(false)
                 setHoleColor(Color.parseColor("#FFFFFF"))
                 setCenterTextSize(12f)
-                holeRadius = 80f
+                holeRadius = 70f
                 setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
                 setCenterTextColor(Color.parseColor("#765CB4"))
 
                 data = PieData(pieDataSet)
+                animateY(1000)
                 invalidate()
             }
         }

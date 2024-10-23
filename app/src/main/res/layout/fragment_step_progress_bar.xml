@@ -50,7 +50,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
         tools:itemCount="4"
         tools:listitem="@layout/step_progress_bar_item" />
 

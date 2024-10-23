@@ -28,6 +28,7 @@ import com.example.meezan360.model.reports.ReportDataArrayModel
 import com.example.meezan360.model.reports.ReportsColumnData
 import com.example.meezan360.ui.activities.CardLevel.CardLevelActivity
 import com.example.meezan360.ui.activities.ReportLevel2Activity
+import timber.log.Timber
 import kotlin.math.log
 
 
@@ -35,11 +36,12 @@ class ReportParentAdapter(
     private var myContext: Context,
     private val reportList: ArrayList<Report>?,
     private var kpiId: String = ""
+
 ) : RecyclerView.Adapter<ReportParentAdapter.ViewHolder>(), OnTypeItemClickListener {
     private var selectedPosition = 0
     lateinit var binding: ReportItemParentBinding
     lateinit var getScreenSize: String
-
+    var isSubValue: String = "yes"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = ReportItemParentBinding.inflate(LayoutInflater.from(myContext), parent, false)
@@ -66,12 +68,12 @@ class ReportParentAdapter(
             myContext.resources.displayMetrics
         ).toInt() - 10
 
-        if ( myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt() > dpSize){
+        if (myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt() > dpSize) {
             dpSize = myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt()
         }
 
         //it creates textview for header dynamically on the basis of column items
-        item.column?.forEachIndexed{ index, column ->
+        item.column?.forEachIndexed { index, column ->
 
             val valueTV = TextView(myContext)
             val typeface = ResourcesCompat.getFont(myContext, R.font.montserrat_light)
@@ -84,7 +86,7 @@ class ReportParentAdapter(
                 myContext.resources.getDimension(com.intuit.sdp.R.dimen._8sdp)
             )
             valueTV.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
-            valueTV.setTextColor(ContextCompat.getColor(myContext,R.color.white))
+            valueTV.setTextColor(ContextCompat.getColor(myContext, R.color.white))
 
             valueTV.layoutParams = LinearLayout.LayoutParams(
 //                myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt(),
@@ -108,10 +110,11 @@ class ReportParentAdapter(
                     it,
                     columnsData,
                     item.tableId, this,
-                    dpSize
+                    dpSize,
+                    isSubValue
                 )
             } else {
-                ReportChildVerticalAdapter(myContext, it, arrayListOf(), item.tableId, this,dpSize)
+                ReportChildVerticalAdapter(myContext, it, arrayListOf(), item.tableId, this, dpSize)
             }
         }
 

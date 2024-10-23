@@ -67,7 +67,6 @@ class BarChartFragment(
         else
             -0f
 
-
         handleAPIResponse()
 
         return binding.root
@@ -144,7 +143,7 @@ class BarChartFragment(
         val legend: Legend = combineChart.legend
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
-        legend.xEntrySpace = 25f
+//        legend.xEntrySpace = 25f
         val l1 = LegendEntry(
             "Target", Legend.LegendForm.SQUARE, 8f, 0f, null, colorsTarget[0]
         )
@@ -155,7 +154,9 @@ class BarChartFragment(
 
         combineChart.apply {
             setTouchEnabled(false)
+            setPadding(0, 0, 0, 0)
             extraBottomOffset = 10f
+            extraTopOffset = 0f
             description.isEnabled = false
             xAxis.spaceMin = barData.barWidth / 2f
             xAxis.spaceMax = barData.barWidth / 2f

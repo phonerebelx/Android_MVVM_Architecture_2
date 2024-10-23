@@ -452,7 +452,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             }
             it.lvCenterView.setOnClickListener {
                 if (kpiId == 1) {
-                    //for deposit
+
                     val intent = Intent(requireContext(), ReportLevel1Activity::class.java)
                     startActivity(intent)
                 } else {

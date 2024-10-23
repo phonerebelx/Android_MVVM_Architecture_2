@@ -198,6 +198,10 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
 
         barChart.apply {
             setDrawValueAboveBar(false)
+            setPadding(0, 0, 0, 0)
+            extraRightOffset = 0f
+            extraLeftOffset = 0f
+            extraTopOffset = 0f
             extraBottomOffset = 10f
             axisLeft.isEnabled = false
             axisRight.isEnabled = false

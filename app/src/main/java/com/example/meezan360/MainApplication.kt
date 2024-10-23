@@ -62,16 +62,7 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
             override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
             override fun onActivityDestroyed(activity: Activity) {}
         })
-
-
     }
-
-
-
-
-
-
-
 
     private fun initKoin() {
         startKoin {

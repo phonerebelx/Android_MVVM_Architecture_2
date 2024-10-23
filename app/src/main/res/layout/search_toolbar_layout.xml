@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/_16sdp"
+        android:textSize="@dimen/_13sdp"
         android:textStyle="bold"
         style="@style/textViewStyle"
         android:layout_gravity="center"/>

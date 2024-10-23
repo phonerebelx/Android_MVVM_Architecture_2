@@ -52,8 +52,7 @@
     <com.github.mikephil.charting.charts.CombinedChart
         android:id="@+id/combineChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_10sdp" />
+        android:layout_height="match_parent" />
 
 
     <TextView

@@ -50,8 +50,7 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_20sdp" />
+        android:layout_height="match_parent" />
     <TextView
         android:id="@+id/tvView"
         android:layout_width="match_parent"

@@ -82,46 +82,48 @@ class Pie2Bar2Fragment() : Fragment() {
 
         return binding.root
     }
-
     private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
 
         graph1?.let {
             try {
+                val pieEntryValueCA = graph1.pieChartModel.value
 
-            val pieEntryValueCA = graph1.pieChartModel.value
+                val pieEntriesCA = mutableListOf<PieEntry>()
+                pieEntriesCA.add(PieEntry(pieEntryValueCA))
+                pieEntriesCA.add(PieEntry(100 - pieEntryValueCA))
 
-            val pieEntriesCA = mutableListOf<PieEntry>()
-            pieEntriesCA.add(PieEntry(pieEntryValueCA))
-            pieEntriesCA.add(PieEntry(100 - pieEntryValueCA))
+                val colors: ArrayList<Int> = ArrayList()
+                colors.add(Utils.parseColorSafely(graph1.pieChartModel.color))
+                colors.add(Color.parseColor("#FAFAFA"))
 
-            val colors: ArrayList<Int> = ArrayList()
-            colors.add(Utils.parseColorSafely(graph1.pieChartModel.color))
-            colors.add(Color.parseColor("#FAFAFA"))
+                val pieDataSet = PieDataSet(pieEntriesCA, "")
+                pieDataSet.valueTextSize = 0f
+                pieDataSet.colors = colors
+                pieDataSet.selectionShift = 0f
 
-            val pieDataSet = PieDataSet(pieEntriesCA, "")
-            pieDataSet.valueTextSize = 0f
-            pieDataSet.colors = colors
-            pieDataSet.selectionShift = 0f
+                pieChart.apply {
+                    description.isEnabled = false
+                    legend.isEnabled = false
+                    centerText = "$pieEntryValueCA%"
+                    setHoleColor(Color.parseColor("#FFFFFF"))
+                    setCenterTextSize(16f)
+                    holeRadius = 60f
+                    setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
+                    setCenterTextColor(Color.parseColor("#7B7878"))
+                    setTouchEnabled(false)
+                    setCenterTextColor(Color.parseColor(graph1.pieChartModel.color))
+                    data = PieData(pieDataSet)
 
-            pieChart.apply {
-                description.isEnabled = false
-                legend.isEnabled = false
-                centerText = "$pieEntryValueCA%"
-                setHoleColor(Color.parseColor("#FFFFFF"))
-                setCenterTextSize(16f)
-                holeRadius = 80f
-                setCenterTextTypeface(ResourcesCompat.getFont(context, R.font.montserrat_regular))
-                setCenterTextColor(Color.parseColor("#7B7878"))
-                setTouchEnabled(false) //to stop rotation
-                setCenterTextColor(Color.parseColor(graph1.pieChartModel.color))
-                data = PieData(pieDataSet)
-                invalidate()
+
+                    animateY(1000)
+
+                    invalidate()
+                }
+            } catch (e: Exception) {
+                null
+//                Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
             }
-        } catch (e: Exception){
-                Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
         }
-        }
-
     }
 
     private fun showBarChart(graph2: BarGraphModel?, horizontalBarChart: HorizontalBarChart) {
@@ -138,7 +140,6 @@ class Pie2Bar2Fragment() : Fragment() {
 
         val xl: XAxis = horizontalBarChart.xAxis
         xl.position = XAxis.XAxisPosition.BOTTOM
-
         xl.setDrawAxisLine(true)
         xl.setDrawGridLines(false)
         xl.textSize = 9f
@@ -189,24 +190,27 @@ class Pie2Bar2Fragment() : Fragment() {
             data = barData
             description.isEnabled = false
             legend.isEnabled = true
-            animateY(800)
-            xAxis.setDrawAxisLine(true)
-            legend.form = Legend.LegendForm.SQUARE // Choose the form shape, e.g., CIRCLE, SQUARE, etc.
+
+            // Custom legend for the chart
+            legend.form = Legend.LegendForm.SQUARE
             legend.setCustom(
                 arrayOf(
                     LegendEntry(
-                        graph2?.label, // Label for the legend entry
-                        Legend.LegendForm.SQUARE, // Form shape
-                        10f, // Form size
-                        Float.NaN, // Form line width
-                        null, // Form color
+                        graph2?.label,
+                        Legend.LegendForm.SQUARE,
+                        10f,
+                        Float.NaN,
+                        null,
                         set1.color
                     )
                 )
             )
+            animateXY(1000, 800)
+
             invalidate()
         }
     }
+
 
     private fun handleAPIResponse() {
 
@@ -250,7 +254,8 @@ class Pie2Bar2Fragment() : Fragment() {
                         showBarChart(pie2Bar2Model?.graph2, binding.horizontalBarChart)
                         showBarChart(pie2Bar2Model?.graph4, binding.horizontalBarChart2)
                         }catch (e: Exception){
-                            Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
+                            null
+//                            Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
                         }
 
                     }

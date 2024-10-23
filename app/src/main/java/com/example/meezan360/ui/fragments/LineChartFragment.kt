@@ -88,16 +88,22 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
         binding.lineChart.apply {
             description.isEnabled = false
             setDrawMarkers(false)
+            setPadding(0, 0, 0, 0)
+            extraRightOffset = 0f
+            extraLeftOffset = 0f
+            extraTopOffset = 0f
+            extraBottomOffset = 10f
             legend.isEnabled = false
             axisRight.isEnabled = false
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(true)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.isGranularityEnabled = true
-            xAxis.granularity = 1.0f
+            xAxis.granularity = 5.0f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             xAxis.labelCount = labels.count()
             data = lineData
+            animateXY(1000, 1000)
             if (dataModel.isVerticalLegend == "1"){
                 xAxis.labelRotationAngle = -90f
             }

@@ -43,6 +43,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
     private var tableId: String = "0"
     private var identifierType: String = ""
     private var identifier: String = ""
+    private var isSubValue: String = "yes"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReportLevel2Binding.inflate(layoutInflater)
@@ -61,6 +62,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
             tableId = extras.getString("tableId").toString()
             identifierType = extras.getString("identifierType").toString()
             identifier = extras.getString("identifier").toString()
+            isSubValue = extras.getString("isSubValue").toString()
         }
 
 
@@ -202,6 +204,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
         binding.recyclerViewReport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         reportParentAdapter = ReportParentAdapter(this, reportList, kpiId!!)
+        reportParentAdapter.isSubValue = isSubValue
         reportParentAdapter.getScreenSize = getScreenHeight("width")
         binding.recyclerViewReport.adapter = reportParentAdapter
     }

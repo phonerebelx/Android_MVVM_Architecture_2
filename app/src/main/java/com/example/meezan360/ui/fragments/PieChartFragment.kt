@@ -117,7 +117,7 @@ class PieChartFragment() : Fragment() {
                 holeRadius = 80f
                 setTouchEnabled(false)
                 data = PieData(pieDataSet)
-
+                animateY(1000)
                 invalidate()
             }
         }

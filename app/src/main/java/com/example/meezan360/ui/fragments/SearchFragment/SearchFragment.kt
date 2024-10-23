@@ -176,17 +176,14 @@ class SearchFragment : BaseDockFragment() {
                        }
                     }
                 }
-
-
                 val branch = lovsModel[indexArrayForAllLovs[0]].area[indexArrayForAllLovs[1]].branch
-
-
                 if (branchArray.isNotEmpty()) {
                     branchArray.clear()
                 }
-
                 for (item in branch) {
-                    branchArray.add(item.branch_name)
+                    val branchCode_Name = "${item.branch_code} - ${item.branch_name}"
+
+                    branchArray.add(branchCode_Name)
                 }
 
                 if (branchArray.isNotEmpty()) {
@@ -214,11 +211,15 @@ class SearchFragment : BaseDockFragment() {
                             lovsModel.get(indexArrayForAllLovs[0]).area.get(indexArrayForAllLovs[1]).branch
 
                         for (item in branch) {
-                            branchArray.add(item.branch_name)
+                            val branchCode_Name = "${item.branch_code} - ${item.branch_name}"
+                            Log.d("showAreaArray: ",branchCode_Name)
+                            branchArray.add(branchCode_Name)
                         }
 
                         if (branchArray.isNotEmpty()) {
-                            showBranchArray(branchArray, getSetFilterModel.selected_branch)
+                            showBranchArray(
+                                branchArray,
+                                "${getSetFilterModel.selected_branch} - ${getSetFilterModel.selected_branch_name}")
                         }
                     }
 
@@ -245,13 +246,15 @@ class SearchFragment : BaseDockFragment() {
 
             branchItem = newItem.text.toString()
             val branchCodeSend = if (branchItem.isNotEmpty()) branchItem.split("-") else listOf("")
+
             branchDict.forEach {
                 if (it.value == branchCodeSend[0].trim()){
                     branchCode = branchDict[it.key].toString()
+
                 }
             }
 
-            binding.actvBranch.clearFocus()
+//            binding.actvBranch.clearFocus()
         }
 
         if (currentBranch != "") {

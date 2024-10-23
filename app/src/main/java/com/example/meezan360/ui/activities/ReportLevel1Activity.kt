@@ -94,6 +94,10 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
 
                     is ResponseModel.Success -> {
                         val responseBody = it.data?.body()
+
+
+
+
                         setupTopBoxes(responseBody?.topBoxes)
                         setupReportsRecyclerView(responseBody?.report)
                         setupFooterRecyclerView(responseBody?.footerBoxes)
@@ -133,10 +137,10 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
         when (type) {
             "On_Deposit_Footer" -> {
                 val getItem = item as FooterBoxes
-
                 val intent = Intent(this, ReportLevel2Activity::class.java)
                 intent.putExtra("kpiId", "1")
                 intent.putExtra("tableId", getItem.tableId.toString())
+                intent.putExtra("isSubValue", getItem.isSubValue.toString())
                 intent.putExtra(
                     "identifierType",
                     ""

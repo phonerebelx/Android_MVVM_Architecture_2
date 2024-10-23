@@ -133,7 +133,11 @@ private fun showBarChart(horizontalGraphModel: HorizontalGraphModel, barChart: B
 
     barChart.apply {
         setDrawValueAboveBar(true)
-        extraBottomOffset = 10f
+        setPadding(0, 0, 0, 0)
+        extraRightOffset = 0f
+        extraLeftOffset = 0f
+        extraTopOffset = 0f
+        extraBottomOffset = 15f
         axisLeft.isEnabled = false
         axisRight.isEnabled = false
         description.isEnabled = false

@@ -26,6 +26,7 @@ class ReportChildVerticalAdapter(
     private val tableId: String,
     val onTypeItemClickListener: OnTypeItemClickListener,
     private val getScreenSize: Int,
+    var isSubValue: String = "yes"
 
 
 ) : RecyclerView.Adapter<ReportChildVerticalAdapter.ViewHolder>(),OnTypeItemClickListener {
@@ -39,7 +40,12 @@ class ReportChildVerticalAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = dataArrayList[position]
 
-        val horizontalAdapter = ReportChildHorizontalAdapter(myContext, columnList[position].data,this,getScreenSize)
+        val horizontalAdapter = ReportChildHorizontalAdapter(
+            myContext,
+            columnList[position].data,
+            this,
+            getScreenSize,isSubValue
+        )
         binding.rvHorizontalChild?.adapter = horizontalAdapter
 
 //        holder.cardView.setOnClickListener {
