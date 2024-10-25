@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +23,7 @@ import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.interfaces.ApiListener
 import com.example.meezan360.model.resetPassword.ResetPasswordModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainActivity
 import com.example.meezan360.utils.handleErrorResponse
@@ -89,7 +90,7 @@ class ForgetPasswordFragment : BaseDockFragment() {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
 
 
                     }

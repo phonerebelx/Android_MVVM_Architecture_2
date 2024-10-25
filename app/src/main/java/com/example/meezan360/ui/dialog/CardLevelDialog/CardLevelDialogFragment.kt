@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -21,6 +21,7 @@ import com.example.meezan360.databinding.FragmentCardLevelDialogBinding
 import com.example.meezan360.model.CardLevelModel.Data
 import com.example.meezan360.model.CardLevelModel.GetCardLevelDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.ReportViewModel
 import kotlinx.coroutines.launch
@@ -62,12 +63,8 @@ class CardLevelDialogFragment() : BaseDialogFragment() {
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            requireContext(),
-                            "my error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {

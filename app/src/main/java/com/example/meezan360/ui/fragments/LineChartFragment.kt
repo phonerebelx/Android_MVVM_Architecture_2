@@ -6,18 +6,20 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meezan360.adapter.LineChartAdapter
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentDepositTrendBinding
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
@@ -34,7 +36,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
-    Fragment(), OnItemClickListener {
+    BaseDockFragment(), OnItemClickListener {
     private lateinit var binding: FragmentDepositTrendBinding
     private val myViewModel: DashboardViewModel by viewModel()
     private lateinit var adapter: LineChartAdapter
@@ -92,14 +94,14 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             extraRightOffset = 0f
             extraLeftOffset = 0f
             extraTopOffset = 0f
-            extraBottomOffset = 10f
+            extraBottomOffset = 15f
             legend.isEnabled = false
             axisRight.isEnabled = false
             xAxis.setDrawGridLines(false)
             xAxis.setDrawAxisLine(true)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.isGranularityEnabled = true
-            xAxis.granularity = 5.0f
+            xAxis.granularity = 1.0f
             xAxis.valueFormatter = IndexAxisValueFormatter(labels)
             xAxis.labelCount = labels.count()
             data = lineData
@@ -130,12 +132,8 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            context,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {}

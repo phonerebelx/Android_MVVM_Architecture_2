@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+
 import androidx.core.app.ActivityCompat.finishAffinity
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
@@ -101,18 +101,15 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
 
 
     override fun onRootDetected() {
-//        Toast.makeText(this, "onRootDetected", Toast.LENGTH_LONG).show()
-        System.exit(0)
+       System.exit(0)
     }
 
     override fun onDebuggerDetected() {
-//        Toast.makeText(this, "onDebuggerDetected", Toast.LENGTH_LONG).show()
 
 //        System.exit(0)
     }
 
     override fun onEmulatorDetected() {
-//        Toast.makeText(this, "onEmulatorDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
@@ -126,17 +123,14 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
 
     override fun onHookDetected() {
 
-//        Toast.makeText(this, "onHookDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
     override fun onDeviceBindingDetected() {
-//        Toast.makeText(this, "onDeviceBindingDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
     override fun onObfuscationIssuesDetected() {
-//        Toast.makeText(this, "onObfuscationIssuesDetected", Toast.LENGTH_LONG).show()
 //        System.exit(0)
     }
 
@@ -148,7 +142,7 @@ class ReleaseTree(val context: Context) : Timber.Tree() {
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         if (priority == Log.ERROR || priority == Log.WARN) {
-            Toast.makeText(context, "Log Visible: $message", Toast.LENGTH_LONG).show()
+
         }
     }
 }

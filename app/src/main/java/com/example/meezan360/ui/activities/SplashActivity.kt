@@ -8,6 +8,8 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
+import com.airbnb.lottie.LottieCompositionFactory
+import com.airbnb.lottie.LottieDrawable
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivitySplashBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
@@ -28,7 +30,11 @@ class SplashActivity : DockActivity() {
 
         setContentView(binding.root)
 
-        // Initialize gesture detector
+        LottieCompositionFactory.fromRawRes(this, R.raw.meezan).addListener { composition ->
+            binding.lottieAnimationView.setComposition(composition)
+            binding.lottieAnimationView.playAnimation()
+        }
+
         gestureDetector = GestureDetectorCompat(this, MyGestureListener())
 
         if (sharedPreferenceManager.getToken() != null) {

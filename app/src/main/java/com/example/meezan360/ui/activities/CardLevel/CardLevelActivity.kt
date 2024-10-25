@@ -2,7 +2,7 @@ package com.example.meezan360.ui.activities.CardLevel
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +34,7 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
     private lateinit var topBoxesAdapter: TopBoxesAdapter
     private lateinit var cardParentAdapter: CardLevelAdapter
     private lateinit var footerAdapter: DepositFooterAdapter
+    var kpiName: String? = null
     private lateinit var topMenuAdapter: TopMenuAdapter
     var kpiId: String? = null
     private var tableId: String = "0"
@@ -55,9 +56,10 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
         val extras = intent.extras
         if (extras != null) {
             kpiId = extras.getString("kpiId")
+            kpiName = extras.getString("kpiName")
             tableId = extras.getString("tableId").toString()
         }
-
+        binding.tbMainFrag.toolbarTitle.text = kpiName
         myViewModel.viewModelScope.launch {
             showProgressIndicator()
             kpiId?.let { myViewModel.getLevelTwo(it, tableId, identifierType, identifier) }
@@ -101,13 +103,10 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
                 hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-
                         handleErrorResponse(it)
-                        Toast.makeText(
-                            this@CardLevelActivity,
-                            "my error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (it.data?.code() == 400 &&  it.data?.message() == "Bad Request"){
+                            onBackPressed()
+                        }
                     }
 
                     is ResponseModel.Idle -> {
@@ -121,7 +120,7 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
 
                             val topMenuList = ArrayList<String>()
                             responseBody = it.data?.body()
-                            binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(0).table.get(0).table_title
+//                            binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(0).table.get(0).table_title
                             for (i in responseBody!!) {
                                 i.topMenu?.let { it1 -> topMenuList.add(it1) }
                             }
@@ -149,7 +148,7 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
     }
 
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
-        binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(position).table.get(0).table_title
+//        binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(position).table.get(0).table_title
         setupTopBoxes(responseBody?.get(position)?.boxes)
         setupCardRecyclerView(responseBody?.get(position)?.table!![0].card)
     }

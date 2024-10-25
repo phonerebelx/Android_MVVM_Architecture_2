@@ -1,4 +1,4 @@
-package com.app.adcarchitecture.model.otp
+package com.example.meezan360.model.otp
 
 data class OtpModel(
     var login_id: String? = null,

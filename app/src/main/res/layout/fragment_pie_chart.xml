@@ -35,8 +35,9 @@
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_regular"
         android:text="Cash Ratio Position"
-        android:textSize="@dimen/_12ssp" />
+        android:textSize="@dimen/_10sdp" />
 
 
     <TextView

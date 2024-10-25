@@ -7,18 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentPie4ChartBinding
 import com.example.meezan360.databinding.FragmentPieChartBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.SinglePieModel.Graph1
 import com.example.meezan360.model.footerGraph.SinglePieModel.PieChartModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.github.mikephil.charting.charts.PieChart
@@ -32,7 +32,7 @@ import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class Pie4ChartFragment() : Fragment() {
+class Pie4ChartFragment() : BaseDockFragment() {
     private lateinit var binding: FragmentPie4ChartBinding
     private val myViewModel: DashboardViewModel by viewModel()
     private var kpiId: Int? = null
@@ -123,12 +123,7 @@ class Pie4ChartFragment() : Fragment() {
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            context,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
                     }
 
                     is ResponseModel.Idle -> {}
@@ -140,13 +135,11 @@ class Pie4ChartFragment() : Fragment() {
                     is ResponseModel.Success -> {
                         hideProgressIndicator()
                         val responseBody: String = it.data?.body()?.toString() ?: ""
-
                         val pieChartModel: PieChartModel? = try {
                             Gson().fromJson(responseBody, PieChartModel::class.java)
                         } catch (e: JsonSyntaxException) {
                             null
                         }
-
                         showPieChart(pieChartModel?.graph1, binding.pieChartPkr)
                         showPieChart(pieChartModel?.graph2, binding.pieChartUsd)
                         showPieChart(pieChartModel?.graph3, binding.pieChartGBP)

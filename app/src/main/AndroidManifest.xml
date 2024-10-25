@@ -11,9 +11,9 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/logo"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Meezan360"
         android:usesCleartextTraffic="true"
@@ -21,23 +21,30 @@
 
         <activity
             android:name=".ui.activities.ChangePasswordActivity.ChangePasswordActivity"
-            android:exported="false" />
+            android:screenOrientation = "portrait"
+            android:exported="false"
+            tools:ignore="DiscouragedApi" />
         <activity
             android:name=".ui.activities.CardLevel.CardLevelActivity"
+            android:screenOrientation = "portrait"
             android:exported="false"
             android:label="@string/title_activity_card_level2"
             android:theme="@style/Theme.Meezan360" />
         <activity
             android:name=".ui.activities.MainFragActivity"
+            android:screenOrientation = "portrait"
             android:exported="false" />
         <activity
             android:name=".ui.activities.ReportLevel2Activity"
+            android:screenOrientation = "portrait"
             android:exported="false" />
         <activity
             android:name=".ui.activities.ReportLevel1Activity"
+            android:screenOrientation = "portrait"
             android:exported="false" />
         <activity
             android:name=".ui.activities.SplashActivity"
+            android:screenOrientation = "portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,9 +58,11 @@
         </activity>
         <activity
             android:name=".ui.activities.MainActivity"
+            android:screenOrientation = "portrait"
             android:exported="false" />
         <activity
             android:name=".ui.activities.LoginScreen"
+            android:screenOrientation = "portrait"
             android:exported="false" />
     </application>
 

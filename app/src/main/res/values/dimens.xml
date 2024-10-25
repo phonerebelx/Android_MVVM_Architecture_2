@@ -8,12 +8,13 @@
     <dimen name="text_size_medium">@dimen/_14ssp</dimen>
     <dimen name="text_size_small">@dimen/_12ssp</dimen>
     <dimen name="text_size_extra_small">@dimen/_10ssp</dimen>
+    <dimen name="text_size_extra_small_2">@dimen/_10sdp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="cardView">16dp</dimen>
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_extra_small">4dp</dimen>
-    <dimen name="textview_width">@dimen/_70sdp</dimen>
+    <dimen name="textview_width">@dimen/_45sdp</dimen>
     <dimen name="textview_height">@dimen/_20sdp</dimen>
     <dimen name="padding_small">8dp</dimen>
 

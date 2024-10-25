@@ -7,18 +7,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meezan360.adapter.BarChartAdapter
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentTopBottomBranchesBinding
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.InvertedHorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
@@ -36,7 +38,7 @@ import timber.log.Timber
 
 
 class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
-    Fragment(), OnItemClickListener {
+    BaseDockFragment(), OnItemClickListener {
 
     private lateinit var binding: FragmentTopBottomBranchesBinding
     private lateinit var adapter: BarChartAdapter
@@ -256,12 +258,8 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            context,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {

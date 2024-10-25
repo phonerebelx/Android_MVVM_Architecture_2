@@ -5,18 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meezan360.adapter.levelTwoAdapter.StepProgressBarAdapter
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentStepProgressBarBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.HorizontalGraphModel
 import com.example.meezan360.model.footerGraph.data.HorizontalBarChartDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.google.gson.Gson
@@ -26,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) :
-    Fragment() {
+    BaseDockFragment() {
 
     private lateinit var binding: FragmentStepProgressBarBinding
     private var currentState: StageStepBar.State = StageStepBar.State(2, 0)
@@ -66,12 +65,7 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            context,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
                     }
 
                     is ResponseModel.Idle -> {}

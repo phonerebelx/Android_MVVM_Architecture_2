@@ -5,20 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meezan360.adapter.BarChartAdapter
 import com.example.meezan360.adapter.HalfPieAdapter
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentProductWiseChartBinding
 import com.example.meezan360.interfaces.OnItemClickListener
 import com.example.meezan360.model.dashboardByKpi.DataModel
 import com.example.meezan360.model.footerGraph.TierGraphModel
 import com.example.meezan360.model.footerGraph.data.TierChartDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
@@ -29,7 +29,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) : Fragment(),
+class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataModel) : BaseDockFragment(),
     OnItemClickListener {
 
     private lateinit var binding: FragmentProductWiseChartBinding
@@ -94,12 +94,8 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            context,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {}

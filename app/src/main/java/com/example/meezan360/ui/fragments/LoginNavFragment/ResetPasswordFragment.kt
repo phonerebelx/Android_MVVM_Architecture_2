@@ -21,6 +21,7 @@ import com.example.meezan360.interfaces.ApiListener
 import com.example.meezan360.model.changePassword.VerifyPassModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.ChangePasswordActivity.ChangePasswordActivity
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
@@ -94,7 +95,7 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
 //                        myDockActivity?.showErrorMessage(it.data!!.message)
                     }
 

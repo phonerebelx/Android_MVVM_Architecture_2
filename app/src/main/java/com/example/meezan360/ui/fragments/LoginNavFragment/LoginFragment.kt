@@ -14,10 +14,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
@@ -48,7 +49,7 @@ class LoginFragment : BaseDockFragment() {
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
         handleAPIResponse()
-
+        findNavController().popBackStack(R.id.OTPFragment, true)
         initViews()
         return binding.root
     }
@@ -85,31 +86,20 @@ class LoginFragment : BaseDockFragment() {
             }
 
             if (TextUtils.isEmpty(email)) {
-                Toast.makeText(requireContext(), "Please Enter email", Toast.LENGTH_SHORT)
-                    .show()
+
+                myDockActivity?.showErrorMessage("Please Enter email")
                 return@setOnClickListener
             }
 
             if (TextUtils.isEmpty(password)) {
-                Toast.makeText(requireContext(), "Please Enter password", Toast.LENGTH_SHORT)
-                    .show()
+
+                myDockActivity?.showErrorMessage("Please Enter password")
                 return@setOnClickListener
             }
 
             myViewModel.viewModelScope.launch {
                 myViewModel.loginRequest(email, password!!, deviceId)
 
-
-//                myViewModel.isOnline.observe(requireActivity()) { isOnline ->
-//                    lifecycleScope.launch {
-//                        if (isOnline) {
-//
-//                        } else {
-//                            myDockActivity?.showErrorMessage("Internet not available")
-//                        }
-//                    }
-//
-//                }
             }
         }
 
@@ -127,10 +117,6 @@ class LoginFragment : BaseDockFragment() {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
                         myDockActivity?.handleErrorResponse(it)
-//                        val jsonObject = JSONObject(it.data?.errorBody()?.string().toString())
-//                        val error: String = jsonObject.getString("error")
-//                        Toast.makeText(requireContext(), "error: ${error}", Toast.LENGTH_SHORT).show()
-
 
                     }
 
@@ -142,11 +128,7 @@ class LoginFragment : BaseDockFragment() {
                     is ResponseModel.Loading ->{
                         myDockActivity?.showProgressIndicator()
                     }
-//                        Toast.makeText(
-//                            applicationContext,
-//                            "Loading.. ",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
+
 
                     is ResponseModel.Success -> {
                         if (it.data?.body()?.twoFactor == "yes"){

@@ -10,10 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -26,6 +23,7 @@ import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFil
 import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterRequestDataModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.MainActivity
 import com.example.meezan360.ui.activities.MainFragActivity
 import com.example.meezan360.utils.handleErrorResponse
@@ -212,7 +210,7 @@ class SearchFragment : BaseDockFragment() {
 
                         for (item in branch) {
                             val branchCode_Name = "${item.branch_code} - ${item.branch_name}"
-                            Log.d("showAreaArray: ",branchCode_Name)
+
                             branchArray.add(branchCode_Name)
                         }
 
@@ -276,6 +274,7 @@ class SearchFragment : BaseDockFragment() {
                 binding.actvBranch.text = ""
                 regionItem = ""
                 areaItem = ""
+                branchCode = ""
                 branchItem = ""
 
                 for (item in lovsModel) {
@@ -313,6 +312,7 @@ class SearchFragment : BaseDockFragment() {
                 binding.actvArea.text = ""
                 binding.actvBranch.text = ""
                 areaItem = ""
+                branchCode = ""
                 branchItem = ""
                 for (item in lovsModel) {
                     item.area.forEach {
@@ -334,7 +334,9 @@ class SearchFragment : BaseDockFragment() {
             }
 
             it.ivBranchCross.setOnClickListener {
+                Log.d("setOnClickListener: ",indexArrayForAllLovs.toString())
                 binding.actvBranch.text = ""
+                branchCode = ""
                 branchItem = ""
                 indexArrayForAllLovs[2] = 0
             }
@@ -438,7 +440,7 @@ class SearchFragment : BaseDockFragment() {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
 
                     }
 
@@ -501,10 +503,8 @@ class SearchFragment : BaseDockFragment() {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {
@@ -535,10 +535,8 @@ class SearchFragment : BaseDockFragment() {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {
@@ -568,10 +566,8 @@ class SearchFragment : BaseDockFragment() {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {

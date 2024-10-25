@@ -20,6 +20,7 @@ import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.interfaces.ApiListener
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.LoginScreen.Companion.navController
 import com.example.meezan360.utils.Utils
@@ -153,7 +154,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
             myViewModel.changePasswordpData.collect {
 
                 when (it) {
-                    is ResponseModel.Error -> { (requireActivity() as AppCompatActivity).handleErrorResponse(it) }
+                    is ResponseModel.Error -> { (requireActivity() as DockActivity).handleErrorResponse(it) }
 
                     is ResponseModel.Idle -> {}
 

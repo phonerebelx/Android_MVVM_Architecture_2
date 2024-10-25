@@ -31,7 +31,7 @@ class BarChartAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val item = itemList?.get(position)
-        if (item?.length!! >5){
+        if (item?.length!! <= 5 ){
             holder.text?.layoutParams = textSize()
         }
         holder.text?.text = item
@@ -54,9 +54,7 @@ class BarChartAdapter(
     }
     fun textSize(): LayoutParams {
         val widthInPx = context.resources.getDimensionPixelSize(R.dimen.textview_width)
-        val heightInPx = context.resources.getDimensionPixelSize(R.dimen.textview_height) // Adjust if you want to set height as well
-
-        // Create a LayoutParams object with the desired size
+        val heightInPx = context.resources.getDimensionPixelSize(R.dimen.textview_height)
         val layoutParams = LayoutParams(
             widthInPx,
             heightInPx

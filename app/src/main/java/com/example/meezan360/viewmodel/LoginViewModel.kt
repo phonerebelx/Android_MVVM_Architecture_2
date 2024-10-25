@@ -7,8 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.adcarchitecture.model.otp.OtpModel
-import com.app.adcarchitecture.model.otp.OtpResponse
+import com.example.meezan360.model.otp.OtpModel
+import com.example.meezan360.model.otp.OtpResponse
 import com.example.meezan360.datamodule.repository.ConnectivityRepository
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.datamodule.repository.DataRepository
@@ -16,8 +16,7 @@ import com.example.meezan360.interfaces.ApiListener
 import com.example.meezan360.model.LoginModel
 import com.example.meezan360.model.changePassword.VerifyPassModel
 import com.example.meezan360.model.changePassword.VerifyPassResponse
-import com.example.meezan360.model.changePassword.VerifyPwdReqResponse
-import com.example.meezan360.model.changenewpassword.ChangePasswordModel
+
 import com.example.meezan360.model.changenewpassword.ChangePasswordResponse
 import com.example.meezan360.model.logout.LogoutResponse
 import com.example.meezan360.model.resetPassword.ResetPasswordModel

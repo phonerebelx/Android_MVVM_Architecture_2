@@ -87,8 +87,9 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -127,7 +128,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:textColor="@color/purple_dark"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -139,7 +140,7 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:gravity="center"
                         android:textColor="@color/purple_dark"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
@@ -152,6 +153,7 @@
                     android:layout_marginStart="@dimen/_20sdp"
                     android:background="@drawable/custom_button_purple_gradient"
                     android:text="PE-Deposit"
+                    android:fontFamily="@font/montserrat_regular"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_9ssp"
@@ -164,6 +166,7 @@
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_25sdp"
                     android:layout_marginEnd="@dimen/_20sdp"
+                    android:fontFamily="@font/montserrat_regular"
                     android:background="@drawable/custom_button_grey_gradient"
                     android:text="AVG-Deposit"
                     android:textAllCaps="false"

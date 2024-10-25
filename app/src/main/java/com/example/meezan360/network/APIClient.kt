@@ -3,8 +3,7 @@ package com.example.meezan360.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
-import android.widget.Toast
+
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
@@ -44,7 +43,7 @@ class APIClient() {
             check(!(trustManagers.size != 1 || trustManagers[0] !is X509TrustManager)) {
                 "Unexpected default trust managers:" + Arrays.toString(
                     trustManagers
-                )   
+                )
             }
 
             val trustManager = trustManagers.get(0) as X509TrustManager

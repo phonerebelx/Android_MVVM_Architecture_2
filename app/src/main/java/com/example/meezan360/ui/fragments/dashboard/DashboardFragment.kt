@@ -11,9 +11,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -84,7 +81,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private lateinit var getSetFilterModel: GetSetFilterDataResponseModel
     //for top header
     private lateinit var adapter: TopBoxesAdapter
-
+    private var centerText = ""
     //for bottom footer
     private var viewPagerAdapter: FragmentPagerAdapter? = null
 
@@ -94,9 +91,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private var tagName: String = Constants.general
 
     private var footerData: List<FooterModel>? = null
-    private var index = 0
-    private var isRotateFirst: Boolean = true
-    private var rotationAngleMovement: Float = 0f
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -160,6 +155,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                             kpiId, tagName, footerList[index]
                         )
                     )
+
                     "4pie_chart" -> fragmentsList.add(
                         Pie4ChartFragment(
                             kpiId, tagName, footerList[index]
@@ -227,16 +223,14 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                             kpiId, tagName, footerList[index]
                         )
                     )
-
                 }
             }
-
             viewPagerAdapter = FragmentPagerAdapter(childFragmentManager, lifecycle)
             viewPagerAdapter?.setFragmentsForItem("", fragmentsList)
             binding.viewpager.adapter = viewPagerAdapter
 
         } else {
-            Toast.makeText(requireContext(), "Footer Data is Empty", Toast.LENGTH_SHORT).show()
+            myDockActivity?.showErrorMessage("Footer Data is Empty")
         }
     }
 
@@ -253,7 +247,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
 
     override fun onNothingSelected() {
-        //pie chart nothing selected
+
         binding.pieChart.onTouchListener?.setLastHighlighted(null)
         binding.pieChart.highlightValues(null)
     }
@@ -263,7 +257,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
 
         val newColor = Color.parseColor("#765CB4")
-        currentIndex = h?.x?.toInt() ?: -1 // Retrieve the selected slice index
+        currentIndex = h?.x?.toInt() ?: -1
 
         if (lastSelectedSliceIndex == currentIndex) {
             lastSelectedSliceIndex -= 1
@@ -271,7 +265,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         if (currentIndex != lastSelectedSliceIndex) {
 
 
-            // Reset color for the last selected slice
+
             if (lastSelectedSliceIndex != -1) {
                 val colors = binding.pieChart.data.getDataSetByIndex(h!!.dataSetIndex).colors
                 colors[lastSelectedSliceIndex] = Color.parseColor("#E0E0E0")
@@ -281,27 +275,15 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                     .getEntryForIndex(lastSelectedSliceIndex)
                 lastSelectedEntry.icon?.colorFilter = null
             }
-
-            // Change color for the newly selected slice
             val colors = binding.pieChart.data.getDataSetByIndex(h!!.dataSetIndex).colors
-
             colors[currentIndex] = newColor
-
-            // Tint the selected icon white
             val selectedEntry = binding.pieChart.data.getDataSetByIndex(h.dataSetIndex)
                 .getEntryForIndex(currentIndex)
             selectedEntry.icon?.colorFilter =
                 PorterDuffColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
 
-            // Update the center text based on the selected entry
             val mCenterText = iconsList[currentIndex].second
-
-
-
-
-
-
-//            binding.pieChart.centerText = mCenterText
+            centerText = mCenterText
             binding.centerTextView.text = mCenterText
             kpiId = kpi?.get(currentIndex)?.kpiId
             tagName = if (kpiId == 1) {
@@ -320,12 +302,6 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
             }
 
-
-            val angle = if (binding.pieChart.getAngleForPoint(h.x, h.y).isNaN()) {
-                270.0F
-            } else {
-                binding.pieChart.getAngleForPoint(h.x, h.y)
-            }
 
             lastSelectedSliceIndex = currentIndex // Update the last selected slice index
             binding.pieChart.invalidate() // Refresh the chart
@@ -372,7 +348,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             }
         }
 
-        Log.d( "showPieChart: ",icons.size.toString())
+
         iconsList = icons.toList()
 
         // Initializing colors for the entries
@@ -402,12 +378,12 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             legend.isEnabled = false
             description.isEnabled = false
             setCenterTextSize(20f)
-            holeRadius = 60f //to fix the white border of center of circle
+            holeRadius = 60f
             setCenterTextColor(Color.parseColor("#765CB4"))
             data = PieData(pieDataSet)
             highlightValue(
                 selectedKpiIndex.toFloat(), selectedKpiIndex
-            ) //Select First element by default i.e. Deposit
+            )
             invalidate()
         }
 
@@ -458,6 +434,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                 } else {
                     val intent = Intent(requireContext(), ReportLevel2Activity::class.java)
                     intent.putExtra("kpiId", kpiId.toString())
+                    intent.putExtra("kpiName", centerText)
                     intent.putExtra("identifierType", "")
                     intent.putExtra("identifier", "")
                     startActivity(intent)
@@ -503,28 +480,20 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
                         myDockActivity?.handleErrorResponse(it)
-                        Toast.makeText(
-                            requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
+
                     }
-
                     is ResponseModel.Idle -> {}
-
                     is ResponseModel.Loading -> {}
-
                     is ResponseModel.Success -> {
                         myDockActivity?.hideProgressIndicator()
-                        //for header
+
                         val topBoxesData = it.data?.body()?.topBoxes
                         binding.recyclerView.layoutManager = LinearLayoutManager(
                             requireContext(), LinearLayoutManager.HORIZONTAL, false
                         )
                         adapter = TopBoxesAdapter(requireContext(), topBoxesData)
                         binding.recyclerView.adapter = adapter
-
-                        //for footer
                         footerData = it.data?.body()?.footer
-
                         if (tagName == Constants.peDeposit || tagName == Constants.general) {
                             footerSetupUp(footerData, 0)
                         } else {
@@ -541,10 +510,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             myDockActivity?.hideProgressIndicator()
             when (it) {
                 is ResponseModel.Error -> {
-                    (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                    Toast.makeText(
-                        requireContext(), "error: " + it.message, Toast.LENGTH_SHORT
-                    ).show()
+                    (requireActivity() as DockActivity).handleErrorResponse(it)
                 }
 
                 is ResponseModel.Idle -> {

@@ -20,7 +20,7 @@ import android.view.View.OnClickListener
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.Toast
+
 import android.widget.Toolbar
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
@@ -154,7 +154,7 @@ class MainActivity : DockActivity(){
         drawerLayout = binding.drawerLayout
         setSupportActionBar(findViewById(R.id.toolBar))
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolBar)
-        val dpSizeInDp = getScreenHeight("width").toFloat()/5 // Your dp value
+        val dpSizeInDp = getScreenHeight("width").toFloat()/5
         val titleMarginStartInPx = dpToPx(dpSizeInDp)
         toolbar.titleMarginStart = titleMarginStartInPx
 
@@ -169,12 +169,11 @@ class MainActivity : DockActivity(){
         val window: Window = this.window
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
 
-        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        // finally change the color
+
         window.statusBarColor = ContextCompat.getColor(this, R.color.purple_light)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home,
@@ -204,10 +203,6 @@ class MainActivity : DockActivity(){
         binding.drawerLayout.closeDrawer(GravityCompat.START)
     }
     private fun animateNavigationDrawer(drawerLayout: DrawerLayout) {
-
-//        Add any color or remove it to use the default one!
-//        To make it transparent use Color.Transparent in side setScrimColor();
-//        drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -350,7 +345,8 @@ class MainActivity : DockActivity(){
 
                     is ResponseModel.Success -> {
                         sharedPreferencesManager.clearSharedPreferences()
-                          Toast.makeText(this@MainActivity,it.message?:"", Toast.LENGTH_LONG).show()
+
+                        it.message?.let { it1 -> showSuccessMessage(it1) }
                           val intent = Intent(this@MainActivity, LoginScreen::class.java)
                           startActivity(intent)
                     }

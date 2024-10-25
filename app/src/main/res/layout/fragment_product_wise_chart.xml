@@ -34,7 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Product Wise Chart"
-        android:textSize="@dimen/_12ssp" />
+        android:fontFamily="@font/montserrat_regular"
+        android:textSize="@dimen/_10sdp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

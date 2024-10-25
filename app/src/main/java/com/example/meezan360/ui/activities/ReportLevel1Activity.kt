@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import android.widget.Toast
+
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -37,6 +37,7 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
     private lateinit var reportParentAdapter: ReportParentAdapter
     private lateinit var footerAdapter: DepositFooterAdapter
     private val myViewModel: ReportViewModel by viewModel()
+    private val deposit: String= "Deposit"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,8 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
                 R.color.purple_dark
             )
         )
-        binding.tbMainFrag.toolbarTitle.text = "Reports"
+
+        binding.tbMainFrag.toolbarTitle.text = deposit
         myViewModel.viewModelScope.launch {
             showProgressIndicator()
             myViewModel.getDepositDetails()
@@ -83,9 +85,7 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
                 when (it) {
                     is ResponseModel.Error -> {
                         handleErrorResponse(it)
-                        Toast.makeText(
-                            this@ReportLevel1Activity, "error: " + it.message, Toast.LENGTH_SHORT
-                        ).show()
+
                     }
 
                     is ResponseModel.Idle -> {}
@@ -113,7 +113,7 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
 
         binding.recyclerViewReport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        reportParentAdapter = ReportParentAdapter(this, reportList, kpiId = "1")
+        reportParentAdapter = ReportParentAdapter(this, reportList, kpiId = "1",deposit)
         reportParentAdapter.getScreenSize = getScreenHeight("width")
         binding.recyclerViewReport.adapter = reportParentAdapter
     }
@@ -139,6 +139,7 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
                 val getItem = item as FooterBoxes
                 val intent = Intent(this, ReportLevel2Activity::class.java)
                 intent.putExtra("kpiId", "1")
+                intent.putExtra("kpiName", deposit)
                 intent.putExtra("tableId", getItem.tableId.toString())
                 intent.putExtra("isSubValue", getItem.isSubValue.toString())
                 intent.putExtra(

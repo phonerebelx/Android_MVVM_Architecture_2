@@ -2,11 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
     android:layout_marginStart="@dimen/_5sdp"
     android:layout_marginTop="@dimen/_3sdp"
     android:layout_marginEnd="@dimen/_5sdp"
     android:layout_marginBottom="@dimen/_3sdp"
-
     android:orientation="vertical">
 
     <TextView
@@ -14,13 +15,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/purple_rounded_gradient"
-        android:paddingStart="@dimen/_25sdp"
-        android:paddingTop="@dimen/_10sdp"
-        android:paddingEnd="@dimen/_25sdp"
-        android:paddingBottom="@dimen/_10sdp"
+        android:paddingStart="@dimen/_10sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingEnd="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_8sdp"
         android:text="AMIM Loaded"
         style="@style/textViewStyle"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_extra_small" />
+        android:textSize="@dimen/text_size_extra_small_2" />
 
 </LinearLayout>

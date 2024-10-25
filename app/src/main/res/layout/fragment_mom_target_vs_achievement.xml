@@ -36,7 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="MoM Target vs Achievement"
-        android:textSize="@dimen/_12ssp" />
+        android:fontFamily="@font/montserrat_regular"
+        android:textSize="@dimen/_10sdp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

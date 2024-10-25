@@ -11,15 +11,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.OnBackPressedCallback
+
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.app.adcarchitecture.model.otp.OtpModel
+import androidx.navigation.fragment.findNavController
+import com.example.meezan360.model.otp.OtpModel
 import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentOTPBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainActivity
 import com.example.meezan360.utils.Utils
@@ -41,6 +44,8 @@ class OTPFragment : BaseDockFragment() {
     private var resetPassJob: Job? = null
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val myViewModel: LoginViewModel by viewModel()
+    private var backPressedTime: Long = 0
+    private val backPressInterval = 2000
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,7 +63,24 @@ class OTPFragment : BaseDockFragment() {
         sharedPreferencesManager = SharedPreferencesManager(sharedPreferences)
         binding.loginID.text = loginID
         isResetPassword = arguments?.getBoolean("RESET_PASSWORD") == true
+
+        if (comeFromType == "COME_FROM_LOGIN_SCREEN"){
+            binding.tvHeading.text = "OTP"
+        }
+
         handleAPIResponse()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedTime + backPressInterval > System.currentTimeMillis()) {
+                    isEnabled = false // Disable callback to prevent infinite loop
+                    findNavController().navigate(R.id.action_OTPFragment_to_login_Fragment)
+                } else {
+                    Toast.makeText(requireContext(), "Press back again to go to Login", Toast.LENGTH_SHORT).show()
+                }
+                backPressedTime = System.currentTimeMillis()
+            }
+        })
         return binding.root
     }
 
@@ -124,8 +146,8 @@ class OTPFragment : BaseDockFragment() {
         binding.let {
 
             it.pressBack.setOnClickListener {
+                LoginScreen.navController.navigate(R.id.action_OTPFragment_to_login_Fragment)
 
-                LoginScreen.navController.popBackStack()
             }
 
         }
@@ -137,7 +159,7 @@ class OTPFragment : BaseDockFragment() {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
                     }
 
                     is ResponseModel.Idle -> {
@@ -149,9 +171,9 @@ class OTPFragment : BaseDockFragment() {
 
                     is ResponseModel.Success -> {
 
-                        if (comeFromType == "COME_FROM_FORGET_PASSWORD"){
-                            if (it.data?.body() != null && it.data.body()?.token!!.isNotEmpty()) {
-                                sharedPreferencesManager.saveToken(it.data.body()?.token.toString())
+                        if (comeFromType == "COME_FROM_FORGET_PASSWORD") {
+                            if (it.data?.body() != null && it.data?.body()?.token!!.isNotEmpty()) {
+                                sharedPreferencesManager.saveToken(it.data?.body()?.token.toString())
                                 val bundle = Bundle()
                                 bundle.putString("LOGIN_ID", loginID)
                                 LoginScreen.navController.navigate(R.id.action_OTPFragment_to_resetPasswordFragment, bundle)
@@ -167,8 +189,6 @@ class OTPFragment : BaseDockFragment() {
                             startActivity(intent)
                             requireActivity().finish();
                         }
-
-
 
                     }
                 }

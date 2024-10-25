@@ -6,10 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.Fragment
+
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
@@ -47,7 +45,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class Pie2Bar2Fragment() : Fragment() {
+class Pie2Bar2Fragment() : BaseDockFragment() {
 
     private lateinit var binding: FragmentDepositCompositionBinding
 
@@ -121,8 +119,7 @@ class Pie2Bar2Fragment() : Fragment() {
                 }
             } catch (e: Exception) {
                 null
-//                Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
-            }
+          }
         }
     }
 
@@ -219,12 +216,8 @@ class Pie2Bar2Fragment() : Fragment() {
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            context,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {}
@@ -245,8 +238,25 @@ class Pie2Bar2Fragment() : Fragment() {
                         }
 
                         if (pie2Bar2Model != null) {
-
+                            if (pie2Bar2Model.graph1 == null && pie2Bar2Model.graph2 == null && pie2Bar2Model.graph3 == null && pie2Bar2Model.graph4 == null) {
+                                binding.llMain1.visibility = View.GONE
+                                binding.llMain2.visibility = View.GONE
+                                binding.tvView.visibility = View.VISIBLE
+                            }
+                            if (pie2Bar2Model.graph1 == null) {
+                                binding.pieChartCA.visibility = View.GONE
+                            }
+                            if (pie2Bar2Model.graph2 == null) {
+                                binding.horizontalBarChart.visibility = View.GONE
+                            }
+                            if (pie2Bar2Model.graph3 == null) {
+                                binding.pieChartCASA.visibility = View.GONE
+                            }
+                            if (pie2Bar2Model.graph4 == null) {
+                                binding.horizontalBarChart2.visibility = View.GONE
+                            }
                         }
+
 
                         try{
                         showPieChart(pie2Bar2Model?.graph1, binding.pieChartCA)
@@ -255,7 +265,6 @@ class Pie2Bar2Fragment() : Fragment() {
                         showBarChart(pie2Bar2Model?.graph4, binding.horizontalBarChart2)
                         }catch (e: Exception){
                             null
-//                            Toast.makeText(requireContext(), e.message.toString(), Toast.LENGTH_LONG).show()
                         }
 
                     }

@@ -9,13 +9,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.example.meezan360.R
+import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentDepositCompositionBinding
 import com.example.meezan360.databinding.FragmentPieChartBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
@@ -24,6 +22,7 @@ import com.example.meezan360.model.footerGraph.SinglePieModel.Graph1
 import com.example.meezan360.model.graphs.Pie2Bar2Model
 import com.example.meezan360.model.footerGraph.SinglePieModel.PieChartModel
 import com.example.meezan360.network.ResponseModel
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
@@ -39,7 +38,7 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class PieChartFragment() : Fragment() {
+class PieChartFragment() : BaseDockFragment() {
     private lateinit var binding: FragmentPieChartBinding
     private val myViewModel: DashboardViewModel by viewModel()
     private var kpiId: Int? = null
@@ -145,12 +144,8 @@ class PieChartFragment() : Fragment() {
 
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as AppCompatActivity).handleErrorResponse(it)
-                        Toast.makeText(
-                            context,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        (requireActivity() as DockActivity).handleErrorResponse(it)
+
                     }
 
                     is ResponseModel.Idle -> {}

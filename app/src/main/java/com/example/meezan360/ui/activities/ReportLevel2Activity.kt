@@ -3,7 +3,7 @@ package com.example.meezan360.ui.activities
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -40,6 +40,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
     private var responseBody: ArrayList<Level2ReportModel>? = arrayListOf()
     private lateinit var reportArray: ArrayList<Report>
     var kpiId: String? = null
+    var kpiName: String? = null
     private var tableId: String = "0"
     private var identifierType: String = ""
     private var identifier: String = ""
@@ -56,17 +57,20 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
                 R.color.purple_dark
             )
         )
+
         val extras = intent.extras
         if (extras != null) {
             kpiId = extras.getString("kpiId")
+            kpiName = extras.getString("kpiName")
             tableId = extras.getString("tableId").toString()
             identifierType = extras.getString("identifierType").toString()
             identifier = extras.getString("identifier").toString()
             isSubValue = extras.getString("isSubValue").toString()
         }
 
+        binding.tbMainFrag.toolbarTitle.text = kpiName
 
-        myViewModel.viewModelScope.launch {
+            myViewModel.viewModelScope.launch {
             showProgressIndicator()
             kpiId?.let { myViewModel.getLevelTwo(it, tableId, identifierType, identifier) }
         }
@@ -76,8 +80,6 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
         binding.tbMainFrag.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
-
-
     }
 
     private fun setupTopMenu(topBoxes: ArrayList<String>) {
@@ -133,11 +135,9 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
                         handleErrorResponse(it)
-                        Toast.makeText(
-                            this@ReportLevel2Activity,
-                            "error: " + it.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        if (it.data?.code() == 400 &&  it.data?.message() == "Bad Request"){
+                            onBackPressed()
+                        }
                     }
 
                     is ResponseModel.Idle -> {
@@ -152,7 +152,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
                         responseBody = it.data?.body()
 
                         if (responseBody != null && responseBody!!.isNotEmpty()) {
-                            binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(0).table.get(0).table_title
+//                            binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(0).table.get(0).table_title
 
 
                                 for (i in responseBody!!) {
@@ -203,7 +203,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
     private fun setupReportsRecyclerView(reportList: ArrayList<Report>?) {
         binding.recyclerViewReport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        reportParentAdapter = ReportParentAdapter(this, reportList, kpiId!!)
+        reportParentAdapter = ReportParentAdapter(this, reportList, kpiId!!,kpiName!!)
         reportParentAdapter.isSubValue = isSubValue
         reportParentAdapter.getScreenSize = getScreenHeight("width")
         binding.recyclerViewReport.adapter = reportParentAdapter
@@ -225,9 +225,9 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
             binding.tvRatingTitle.text = responseBody?.get(position)?.rating?.rating_title
             if (responseBody?.get(position)?.rating?.rating_data?.isNotEmpty() == true) {
                 setupTopRating(responseBody?.get(position)?.rating!!.rating_data)
-            } else setupTopRating(arrayListOf())
-
-
+            } else {
+                setupTopRating(arrayListOf())
+            }
 
             binding.tvNoOfBranches.text = responseBody?.get(position)?.rating?.rating_footer
         } else {
@@ -246,7 +246,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
         }else{
             binding.cvRatingDetailBox.visibility = View.GONE
         }
-        binding.tbMainFrag.toolbarTitle.text = table?.get(position)?.table?.get(0)?.table_title
+//        binding.tbMainFrag.toolbarTitle.text = table?.get(position)?.table?.get(0)?.table_title
         setupReportsRecyclerView(reportArray)
     }
 

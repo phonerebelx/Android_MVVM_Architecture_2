@@ -31,7 +31,7 @@
 -keep class com.squareup.okhttp.** { *; }
 -keep class com.squareup.okhttp3.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
-
+-keep class com.github.mikephil.charting.** { *; }
 # Keep Your Specific App Classes
 -keep class com.example.meezan360.model** { *; }
 -keep class com.example.meezan360.model{ *; }

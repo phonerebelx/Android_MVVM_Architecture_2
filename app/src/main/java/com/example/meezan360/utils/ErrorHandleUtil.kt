@@ -3,13 +3,12 @@ package com.example.meezan360.utils
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.model.Error
 import com.example.meezan360.model.changenewpassword.ChangePasswordModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.ChangePasswordActivity.ChangePasswordActivity
+import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
@@ -19,7 +18,7 @@ import org.json.JSONObject
 import retrofit2.Response
 
 
-fun <T> AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error<T>) {
+fun <T> DockActivity.handleErrorResponse(responseModel: ResponseModel.Error<T>) {
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     val sharedPreferences = getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
     sharedPreferencesManager = SharedPreferencesManager(sharedPreferences)
@@ -46,21 +45,13 @@ fun <T> AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error
                 // Handle invalid JSON format
                 e.printStackTrace()
             }
-
-            // Show toast with parsed error message
-            Toast.makeText(applicationContext, "Error: $errorMessage", Toast.LENGTH_SHORT).show()
-
-
+            showErrorMessage(errorMessage)
 
         } else if (response.code() == 552) {
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         } else if (response.code() == 500) {
-            Toast.makeText(
-                applicationContext,
-                "error: ${response.errorBody()?.string().toString()}",
-                Toast.LENGTH_SHORT
-            ).show()
+            showErrorMessage("Internal Server Error")
         }
 
 
@@ -70,7 +61,8 @@ fun <T> AppCompatActivity.handleErrorResponse(responseModel: ResponseModel.Error
             try {
                 val jsonObject = JSONObject(errorBodyString)
                 val error: String = jsonObject.getString("error")
-                Toast.makeText(applicationContext, "error: $error", Toast.LENGTH_SHORT).show()
+
+                showErrorMessage(error)
             } catch (e: JSONException) {
                 e.printStackTrace()
             }

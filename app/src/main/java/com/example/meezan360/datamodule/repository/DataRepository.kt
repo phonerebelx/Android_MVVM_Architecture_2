@@ -2,8 +2,8 @@ package com.example.meezan360.datamodule.repository
 
 
 import android.util.Log
-import com.app.adcarchitecture.model.otp.OtpModel
-import com.app.adcarchitecture.model.otp.OtpResponse
+import com.example.meezan360.model.otp.OtpModel
+import com.example.meezan360.model.otp.OtpResponse
 import com.example.meezan360.di.NetworkModule
 import com.example.meezan360.model.CardLevelModel.GetCardLevelDataModel
 import com.example.meezan360.model.KPIModel

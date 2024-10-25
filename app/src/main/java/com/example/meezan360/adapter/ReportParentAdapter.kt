@@ -12,7 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
+
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -35,7 +35,8 @@ import kotlin.math.log
 class ReportParentAdapter(
     private var myContext: Context,
     private val reportList: ArrayList<Report>?,
-    private var kpiId: String = ""
+    private var kpiId: String = "",
+    private var kpiName: String = ""
 
 ) : RecyclerView.Adapter<ReportParentAdapter.ViewHolder>(), OnTypeItemClickListener {
     private var selectedPosition = 0
@@ -153,6 +154,7 @@ class ReportParentAdapter(
                                 "card" -> {
                                     val intent = Intent(myContext, CardLevelActivity::class.java)
                                     intent.putExtra("kpiId", kpiId)
+                                    intent.putExtra("kpiName", kpiName)
                                     intent.putExtra("tableId", report.tableId)
                                     myContext.startActivity(intent)
                                 }
@@ -160,6 +162,7 @@ class ReportParentAdapter(
                                 "table" -> {
                                     val intent = Intent(myContext, ReportLevel2Activity::class.java)
                                     intent.putExtra("kpiId", kpiId)
+                                    intent.putExtra("kpiName", kpiName)
                                     intent.putExtra("tableId", report.tableId)
                                     intent.putExtra(
                                         "identifierType",
