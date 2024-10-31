@@ -1,105 +1,47 @@
 package com.example.meezan360.ui.activities
 
-import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.view.GestureDetector
-import android.view.MotionEvent
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GestureDetectorCompat
 import com.airbnb.lottie.LottieCompositionFactory
-import com.airbnb.lottie.LottieDrawable
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivitySplashBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
-
 import org.koin.android.ext.android.inject
-class SplashActivity : DockActivity() {
 
-    lateinit var binding: ActivitySplashBinding
+class SplashActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivitySplashBinding
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
 
-    private lateinit var gestureDetector: GestureDetectorCompat
-
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySplashBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
+        // Initialize Lottie animation
         LottieCompositionFactory.fromRawRes(this, R.raw.meezan).addListener { composition ->
             binding.lottieAnimationView.setComposition(composition)
             binding.lottieAnimationView.playAnimation()
         }
 
-        gestureDetector = GestureDetectorCompat(this, MyGestureListener())
 
-        if (sharedPreferenceManager.getToken() != null) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-
-        // Set onTouchListener to detect swipe-up gesture
-        binding.root.setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
-            true
-        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            navigateToNextScreen()
+        }, 3000)
     }
 
-
-    // this gesture calculate your swipe up gesture
-    inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
-        private val SWIPE_THRESHOLD = 100
-        private val SWIPE_VELOCITY_THRESHOLD = 100
-
-        override fun onFling(
-            downEvent: MotionEvent?,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
-        ): Boolean {
-            if (e2 == null || downEvent == null) return false
-
-            val diffY = e2.y - downEvent.y
-            if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-
-                val intent = Intent(this@SplashActivity, LoginScreen::class.java)
-                val options = ActivityOptions.makeCustomAnimation(this@SplashActivity, R.anim.slide_up_in, R.anim.slide_up_out)
-                startActivity(intent, options.toBundle())
-                finish()
-                return true
-            }
-            return false
+    private fun navigateToNextScreen() {
+        val nextActivity = if (sharedPreferenceManager.getToken() != null) {
+            MainActivity::class.java
+        } else {
+            LoginScreen::class.java
         }
+        val intent = Intent(this, nextActivity)
+        startActivity(intent)
+        finish()
     }
 }
-
-//class SplashActivity : DockActivity() {
-//
-//    lateinit var binding: ActivitySplashBinding
-//    private val sharedPreferenceManager: SharedPreferencesManager by inject()
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        binding = ActivitySplashBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//        if (sharedPreferenceManager.getToken() != null) {
-//            val intent = Intent(this, MainActivity::class.java)
-//            startActivity(intent)
-//            finish()
-//        }
-//
-//        binding.tvSwipe.setOnClickListener {
-//            val intent = Intent(this, LoginScreen::class.java)
-//            startActivity(intent)
-//            finish()
-//
-//        }
-//
-//    }
-//}

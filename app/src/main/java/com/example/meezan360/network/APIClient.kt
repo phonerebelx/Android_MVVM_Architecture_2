@@ -52,9 +52,9 @@ class APIClient() {
             val client = OkHttpClient.Builder().apply {
 
                 addInterceptor(BaseHeadersInterceptor(sharedPreferencesManager,context))
-                if(BuildConfig.DEBUG){
+//                if(BuildConfig.DEBUG){
                 addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                }
+//                }
 
                 connectTimeout(50, TimeUnit.SECONDS) // Set connection timeout
                 readTimeout(50, TimeUnit.SECONDS)    // Set read timeout

@@ -9,15 +9,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.meezan360.R
+import com.example.meezan360.adapter.DepositFooterAdapter
 import com.example.meezan360.adapter.RatingAdapter.RatingLevelAdapter
 import com.example.meezan360.adapter.ReportParentAdapter
 import com.example.meezan360.adapter.TopBoxesAdapter
 import com.example.meezan360.adapter.levelTwoAdapter.TopMenuAdapter
 import com.example.meezan360.databinding.ActivityReportLevel2Binding
 import com.example.meezan360.interfaces.OnItemClickListener
+import com.example.meezan360.interfaces.OnTypeItemClickListener
 import com.example.meezan360.model.dashboardByKpi.TopBoxesModel
+import com.example.meezan360.model.reports.FooterBoxes
 import com.example.meezan360.model.reports.Level2ReportModel
 import com.example.meezan360.model.reports.RatingModels.Rating
 import com.example.meezan360.model.reports.RatingModels.RatingData
@@ -30,11 +34,12 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.log
 
-class ReportLevel2Activity : DockActivity(), OnItemClickListener {
+class ReportLevel2Activity : DockActivity(), OnItemClickListener, OnTypeItemClickListener {
     private lateinit var binding: ActivityReportLevel2Binding
     private val myViewModel: ReportViewModel by viewModel()
     private lateinit var topBoxesAdapter: TopBoxesAdapter
     private lateinit var topRatingAdapter: RatingLevelAdapter
+    private lateinit var footerAdapter: DepositFooterAdapter
     private lateinit var reportParentAdapter: ReportParentAdapter
     private lateinit var topMenuAdapter: TopMenuAdapter
     private var responseBody: ArrayList<Level2ReportModel>? = arrayListOf()
@@ -193,11 +198,26 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
 
                             setupTopBoxes(responseBody?.get(0)?.boxes)
                             setupReportsRecyclerView(reportArray)
+
                         }
                     }
                 }
             }
         }
+    }
+    private fun setupFooterRecyclerView(footerBoxesList: ArrayList<FooterBoxes>?) {
+        binding.recyclerViewFooter.layoutManager = GridLayoutManager(this, 2)
+        (binding.recyclerViewFooter.layoutManager as GridLayoutManager).spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                when (position) {
+                    0 -> return 2
+                    else -> return 1
+                }
+            }
+        }
+
+        footerAdapter = DepositFooterAdapter(this, footerBoxesList,this)
+        binding.recyclerViewFooter.adapter = footerAdapter
     }
 
     private fun setupReportsRecyclerView(reportList: ArrayList<Report>?) {
@@ -248,6 +268,10 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener {
         }
 //        binding.tbMainFrag.toolbarTitle.text = table?.get(position)?.table?.get(0)?.table_title
         setupReportsRecyclerView(reportArray)
+    }
+
+    override fun <T> onClick(type: String, item: T, position: Int, checked: Boolean?) {
+        TODO("Not yet implemented")
     }
 
 }
