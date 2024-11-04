@@ -105,6 +105,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         // Inflate the layout for this fragment
         binding = FragmentDashboardBinding.inflate(layoutInflater)
 
+        myDockActivity?.showSuccessMessage(requireContext(),"testing purpose")
         val sharedPreferences =
             myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
@@ -230,7 +231,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             binding.viewpager.adapter = viewPagerAdapter
 
         } else {
-            myDockActivity?.showErrorMessage("Footer Data is Empty")
+            myDockActivity?.showErrorMessage(requireContext(),"Footer Data is Empty")
         }
     }
 

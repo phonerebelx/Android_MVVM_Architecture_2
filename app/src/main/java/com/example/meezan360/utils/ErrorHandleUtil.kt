@@ -45,13 +45,13 @@ fun <T> DockActivity.handleErrorResponse(responseModel: ResponseModel.Error<T>) 
                 // Handle invalid JSON format
                 e.printStackTrace()
             }
-            showErrorMessage(errorMessage)
+            showErrorMessage(this,errorMessage)
 
         } else if (response.code() == 552) {
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         } else if (response.code() == 500) {
-            showErrorMessage("Internal Server Error")
+            showErrorMessage(this,"Internal Server Error")
         }
 
 
@@ -62,7 +62,7 @@ fun <T> DockActivity.handleErrorResponse(responseModel: ResponseModel.Error<T>) 
                 val jsonObject = JSONObject(errorBodyString)
                 val error: String = jsonObject.getString("error")
 
-                showErrorMessage(error)
+                showErrorMessage(this,error)
             } catch (e: JSONException) {
                 e.printStackTrace()
             }

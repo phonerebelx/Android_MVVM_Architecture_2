@@ -14,6 +14,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
+        android:id="@+id/svCardView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -71,12 +72,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_20sdp"
+                android:visibility="gone"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="2"
                 tools:listitem="@layout/fragment_card_level_adapter" />
-
+            <TextView
+                android:id="@+id/tvView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_400sdp"
+                android:text="Data will update soon "
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                />
         </LinearLayout>
 
     </ScrollView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

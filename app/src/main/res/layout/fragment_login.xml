@@ -36,29 +36,42 @@
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
-
-    <EditText
-        android:id="@+id/etPassword"
+    <RelativeLayout
+        android:id="@+id/TILPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:backgroundTint="@color/white"
-        android:hint="@string/password"
-        android:textSize="@dimen/_10sdp"
-        android:fontFamily="@font/montserrat_regular"
-        android:inputType="textPassword"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/etEmail"
+        tools:layout_editor_absoluteX="39dp">
 
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:backgroundTint="@color/white"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/_10sdp"
+            android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/togglePasswordVisibility"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/etPassword"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:src="@drawable/eye_closed" />
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/llForgetPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword">
+        app:layout_constraintTop_toBottomOf="@+id/TILPassword">
 
 
     <TextView

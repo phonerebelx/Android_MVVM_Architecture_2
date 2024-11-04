@@ -54,7 +54,7 @@ class ReportParentAdapter(
 
         binding.tvRepItemTitle?.text = item?.tableTitle
 
-//        identifierType = item.column?.get(position).header ?:
+
         if (item == null) {
             return
         }
@@ -90,7 +90,6 @@ class ReportParentAdapter(
             valueTV.setTextColor(ContextCompat.getColor(myContext, R.color.white))
 
             valueTV.layoutParams = LinearLayout.LayoutParams(
-//                myContext.resources.getDimension(com.intuit.sdp.R.dimen._45sdp).toInt(),
                 dpSize,
                 LinearLayout.LayoutParams.MATCH_PARENT
 

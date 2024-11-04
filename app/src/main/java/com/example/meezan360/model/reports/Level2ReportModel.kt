@@ -13,6 +13,7 @@ data class Level2ReportModel(
     @SerializedName("rating_detail") var rating_detail: List<RatingDetail>? = null,
     @SerializedName("report") var report: ArrayList<Report> = arrayListOf(),
     @SerializedName("table") var table:  ArrayList<Table> = arrayListOf(),
+    @SerializedName("footer_boxes") var footerBoxes: ArrayList<FooterBoxes> = arrayListOf()
     ){
 
     fun toReport(): ArrayList<Report> {

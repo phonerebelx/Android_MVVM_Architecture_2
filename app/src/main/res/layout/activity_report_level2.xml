@@ -190,6 +190,16 @@
                 app:spanCount="2"
                 tools:itemCount="5"
                 tools:listitem="@layout/deposit_report_footer_item" />
+            <TextView
+                android:id="@+id/tvView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_400sdp"
+                android:text="Data will update soon "
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center"
+                />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

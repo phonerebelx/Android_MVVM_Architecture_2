@@ -6,10 +6,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.meezan360.R
@@ -17,6 +19,7 @@ import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.progress.ProgressDialog
 import com.tapadoo.alerter.Alerter
 import com.uhfsolutions.carlutions.progress.ProgressIndicator
+import io.github.muddz.styleabletoast.StyleableToast
 
 abstract class DockActivity: AppCompatActivity(), ProgressIndicator {
 
@@ -69,26 +72,12 @@ abstract class DockActivity: AppCompatActivity(), ProgressIndicator {
         )
     }
 
-    open fun showErrorMessage(message: String) {
-        Alerter.create(this)
-            .setTitle(getString(R.string.error))
-            .setText(message)
-            .setDuration(5000)
-            .setIcon(R.drawable.ic_close)
-            .setBackgroundColorRes(R.color.error_color)
-            .enableSwipeToDismiss()
-            .show()
+    open fun showErrorMessage(context: Context,message: String) {
+//        DesignerToast.Error(context,message, Gravity.TOP, Toast.LENGTH_SHORT)
     }
-    open fun showSuccessMessage(message: String) {
-        Alerter.create(this)
-            .setTitle(getString(R.string.success))
-            .setText(message)
-            .setDuration(5000)
-            .setIcon(R.drawable.ic_tick)
-            .setBackgroundColorRes(R.color.banner_green_color)
-            .enableSwipeToDismiss()
-            .show()
-    }
+    open fun showSuccessMessage(context: Context,message: String) {
+        StyleableToast.makeText(context, "Hello World!", Toast.LENGTH_LONG, R.style.mytoast).show();
+  }
     fun setPassViewListener(password: EditText, confirmPassword: EditText, warningText: TextView) {
         password.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}

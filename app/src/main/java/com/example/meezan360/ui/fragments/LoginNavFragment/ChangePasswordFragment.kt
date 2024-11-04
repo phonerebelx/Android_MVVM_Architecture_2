@@ -60,7 +60,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
         myDockActivity?.hideProgressIndicator()
         when (tag) {
             "Verify_Password_Data" -> {
-                myDockActivity?.showErrorMessage(message)
+                myDockActivity?.showErrorMessage(requireContext(),message)
             }
         }
     }
@@ -97,11 +97,11 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
             it.cpBtnChangePassword.setOnClickListener {
                 when {
                     binding.cpEtNewPass.text?.isEmpty() == true || binding.cpEtConfirmPass.text?.isEmpty() == true -> {
-                        myDockActivity?.showErrorMessage("Please fill all fields!")
+                        myDockActivity?.showErrorMessage(requireContext(),"Please fill all fields!")
                     }
 
                     binding.cpEtNewPass.text.toString() != binding.cpEtConfirmPass.text.toString() -> {
-                        myDockActivity?.showErrorMessage("Passwords do not match! Please make sure you enter the correct password")
+                        myDockActivity?.showErrorMessage(requireContext(),"Passwords do not match! Please make sure you enter the correct password")
                     }
 
                     else -> {
@@ -161,7 +161,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
-                        myDockActivity?.showSuccessMessage("Password Change Successfully")
+                        myDockActivity?.showSuccessMessage(requireContext(),"Password Change Successfully")
                         sharedPreferencesManager.clearSharedPreferences()
                         startActivity(Intent(requireContext(), LoginScreen::class.java))
                         requireActivity().finish()

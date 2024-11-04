@@ -2,6 +2,7 @@ package com.example.meezan360.ui.activities.CardLevel
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -33,7 +34,7 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
     private var responseBody: ArrayList<Level2ReportModel>? = arrayListOf()
     private lateinit var topBoxesAdapter: TopBoxesAdapter
     private lateinit var cardParentAdapter: CardLevelAdapter
-    private lateinit var footerAdapter: DepositFooterAdapter
+
     var kpiName: String? = null
     private lateinit var topMenuAdapter: TopMenuAdapter
     var kpiId: String? = null
@@ -127,10 +128,17 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
 
                             setupTopMenu(topMenuList)
                             setupTopBoxes(responseBody?.get(0)?.boxes)
-                            responseBody?.get(0)?.table?.get(0)?.card?.let { it1 ->
-                                setupCardRecyclerView(
-                                    it1
-                                )
+                            if (responseBody?.get(0)?.table?.get(0)?.card?.isEmpty() == true) {
+                                binding.recyclerViewReport.visibility = View.GONE
+                                binding.tvView.visibility = View.VISIBLE
+                            }else {
+                                binding.recyclerViewReport.visibility = View.VISIBLE
+                                binding.tvView.visibility = View.GONE
+                                responseBody?.get(0)?.table?.get(0)?.card?.let { it1 ->
+                                    setupCardRecyclerView(
+                                        it1
+                                    )
+                                }
                             }
                         }
                     }
@@ -150,7 +158,14 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
 //        binding.tbMainFrag.toolbarTitle.text = responseBody!!.get(position).table.get(0).table_title
         setupTopBoxes(responseBody?.get(position)?.boxes)
-        setupCardRecyclerView(responseBody?.get(position)?.table!![0].card)
+        if (responseBody?.get(position)?.table!![0].card.isEmpty()) {
+            binding.recyclerViewReport.visibility = View.GONE
+            binding.tvView.visibility = View.VISIBLE
+        }else {
+            binding.recyclerViewReport.visibility = View.VISIBLE
+            binding.tvView.visibility = View.GONE
+            setupCardRecyclerView(responseBody?.get(position)?.table!![0].card)
+        }
     }
 
     override fun <T> onClick(type: String, item: T, position: Int, checked: Boolean?) {

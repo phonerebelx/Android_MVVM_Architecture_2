@@ -137,6 +137,7 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
         when (type) {
             "On_Deposit_Footer" -> {
                 val getItem = item as FooterBoxes
+                Log.d("On_Deposit: ",getItem.isSubValue)
                 val intent = Intent(this, ReportLevel2Activity::class.java)
                 intent.putExtra("kpiId", "1")
                 intent.putExtra("kpiName", deposit)

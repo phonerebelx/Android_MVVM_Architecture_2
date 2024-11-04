@@ -5,9 +5,11 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.text.InputType
 import android.text.TextUtils
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import androidx.annotation.RequiresApi
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -40,6 +43,7 @@ class LoginFragment : BaseDockFragment() {
     private lateinit var binding: FragmentLoginBinding
     private val myViewModel: LoginViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
+    lateinit var montserratFont: Typeface
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +51,11 @@ class LoginFragment : BaseDockFragment() {
     ): View? {
 
         binding = FragmentLoginBinding.inflate(layoutInflater)
+        montserratFont = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular) ?: Typeface.DEFAULT
+
+        binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        binding.etPassword.typeface = Typeface.create(montserratFont, Typeface.BOLD)
+        binding.togglePasswordVisibility.setImageResource(R.drawable.eye_closed) // Set closed eye icon initially
 
         handleAPIResponse()
         findNavController().popBackStack(R.id.OTPFragment, true)
@@ -63,6 +72,21 @@ class LoginFragment : BaseDockFragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     @SuppressLint("HardwareIds")
     private fun setOnCLickListener(){
+        binding.togglePasswordVisibility.setOnClickListener {
+            if (binding.etPassword.inputType == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+
+                binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                binding.togglePasswordVisibility.setImageResource(R.drawable.eye_closed)
+            } else {
+
+                binding.etPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                binding.togglePasswordVisibility.setImageResource(R.drawable.eye_visible)
+            }
+            binding.etPassword.typeface = Typeface.create(montserratFont, Typeface.BOLD)
+            binding.etPassword.setSelection(binding.etPassword.text.length)
+        }
+        montserratFont = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular) ?: Typeface.DEFAULT
+
         binding.btnLogin.setOnClickListener {
 
             var email = binding.etEmail.text.toString() //waqas
@@ -87,13 +111,13 @@ class LoginFragment : BaseDockFragment() {
 
             if (TextUtils.isEmpty(email)) {
 
-                myDockActivity?.showErrorMessage("Please Enter email")
+                myDockActivity?.showErrorMessage(requireContext(),"Please Enter email")
                 return@setOnClickListener
             }
 
             if (TextUtils.isEmpty(password)) {
 
-                myDockActivity?.showErrorMessage("Please Enter password")
+                myDockActivity?.showErrorMessage(requireContext(),"Please Enter password")
                 return@setOnClickListener
             }
 
