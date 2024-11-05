@@ -276,7 +276,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as DockActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
 
                     }
 

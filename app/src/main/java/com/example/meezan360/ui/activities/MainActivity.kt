@@ -334,7 +334,7 @@ class MainActivity : DockActivity(){
                 hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        this@MainActivity.handleErrorResponse(it)
+                        this@MainActivity.handleErrorResponse(this@MainActivity,it)
                     }
 
                     is ResponseModel.Idle -> {

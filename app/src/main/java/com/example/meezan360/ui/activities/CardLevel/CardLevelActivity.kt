@@ -104,7 +104,7 @@ class CardLevelActivity : DockActivity(), OnItemClickListener, OnTypeItemClickLi
                 hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        handleErrorResponse(it)
+                        handleErrorResponse(this@CardLevelActivity,it)
                         if (it.data?.code() == 400 &&  it.data?.message() == "Bad Request"){
                             onBackPressed()
                         }

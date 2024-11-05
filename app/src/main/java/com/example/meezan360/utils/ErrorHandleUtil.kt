@@ -1,5 +1,6 @@
 package com.example.meezan360.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -18,7 +19,7 @@ import org.json.JSONObject
 import retrofit2.Response
 
 
-fun <T> DockActivity.handleErrorResponse(responseModel: ResponseModel.Error<T>) {
+fun <T> DockActivity.handleErrorResponse(activity: Activity,responseModel: ResponseModel.Error<T>) {
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     val sharedPreferences = getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
     sharedPreferencesManager = SharedPreferencesManager(sharedPreferences)
@@ -51,7 +52,7 @@ fun <T> DockActivity.handleErrorResponse(responseModel: ResponseModel.Error<T>) 
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         } else if (response.code() == 500) {
-            showErrorMessage(this,"Internal Server Error")
+            showErrorMessage(activity,"Internal Server Error")
         }
 
 
@@ -62,7 +63,7 @@ fun <T> DockActivity.handleErrorResponse(responseModel: ResponseModel.Error<T>) 
                 val jsonObject = JSONObject(errorBodyString)
                 val error: String = jsonObject.getString("error")
 
-                showErrorMessage(this,error)
+                showErrorMessage(activity,error)
             } catch (e: JSONException) {
                 e.printStackTrace()
             }

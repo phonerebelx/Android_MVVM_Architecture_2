@@ -258,7 +258,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as DockActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
 
                     }
 

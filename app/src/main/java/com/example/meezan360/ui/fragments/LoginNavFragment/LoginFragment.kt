@@ -111,13 +111,13 @@ class LoginFragment : BaseDockFragment() {
 
             if (TextUtils.isEmpty(email)) {
 
-                myDockActivity?.showErrorMessage(requireContext(),"Please Enter email")
+                myDockActivity?.showErrorMessage(myDockActivity!!,"Please Enter email")
                 return@setOnClickListener
             }
 
             if (TextUtils.isEmpty(password)) {
 
-                myDockActivity?.showErrorMessage(requireContext(),"Please Enter password")
+                myDockActivity?.showErrorMessage(myDockActivity!!,"Please Enter password")
                 return@setOnClickListener
             }
 
@@ -140,7 +140,7 @@ class LoginFragment : BaseDockFragment() {
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        myDockActivity?.handleErrorResponse(it)
+                        myDockActivity?.handleErrorResponse(myDockActivity!!,it)
 
                     }
 

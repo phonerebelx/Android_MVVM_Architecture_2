@@ -90,7 +90,7 @@ class ForgetPasswordFragment : BaseDockFragment() {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as DockActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
 
 
                     }

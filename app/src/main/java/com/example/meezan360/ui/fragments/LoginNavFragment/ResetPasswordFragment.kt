@@ -59,10 +59,10 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
                 when {
                     binding.cpEtNewPass.text?.isEmpty() == true ||
                             binding.cpEtConfirmPass.text?.isEmpty() == true -> {
-                        myDockActivity?.showErrorMessage(requireContext(),"Please fill all fields!")
+                        myDockActivity?.showErrorMessage(myDockActivity!!,"Please fill all fields!")
                     }
                     binding.cpEtNewPass.text.toString() != binding.cpEtConfirmPass.text.toString() -> {
-                        myDockActivity?.showErrorMessage(requireContext(),"Passwords do not match! Please make sure you enter the correct password")
+                        myDockActivity?.showErrorMessage(myDockActivity!!,"Passwords do not match! Please make sure you enter the correct password")
                     }
                     else -> {
                         try {
@@ -95,7 +95,7 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
                 myDockActivity?.hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        (requireActivity() as DockActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
 //                        myDockActivity?.showErrorMessage(it.data!!.message)
                     }
 
@@ -110,7 +110,7 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
 
                         if (it.data!= null){
 
-                            myDockActivity?.showSuccessMessage(requireContext(),it.data.message)
+                            myDockActivity?.showSuccessMessage(myDockActivity!!,it.data.message)
                             sharedPreferencesManager.clearSharedPreferences()
                             LoginScreen.navController.navigate(R.id.action_resetPasswordFragment_to_welcome_login)
                         }
@@ -153,7 +153,7 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
         myDockActivity?.hideProgressIndicator()
         when (tag) {
             "Verify_Password_Data" -> {
-                myDockActivity?.showErrorMessage(requireContext(),message)
+                myDockActivity?.showErrorMessage(myDockActivity!!,message)
             }
         }
     }

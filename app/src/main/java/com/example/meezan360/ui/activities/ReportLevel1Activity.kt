@@ -84,7 +84,7 @@ class ReportLevel1Activity : DockActivity(),OnTypeItemClickListener {
                 hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        handleErrorResponse(it)
+                        handleErrorResponse(this@ReportLevel1Activity,it)
 
                     }
 

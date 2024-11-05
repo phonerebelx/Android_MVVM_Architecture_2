@@ -63,7 +63,7 @@ class CardLevelDialogFragment() : BaseDialogFragment() {
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        (requireActivity() as DockActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
 
                     }
 

@@ -143,7 +143,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener, OnTypeItemClic
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        handleErrorResponse(it)
+                        handleErrorResponse(this@ReportLevel2Activity,it)
                         if (it.data?.code() == 400 && it.data?.message() == "Bad Request") {
                             onBackPressed()
                         }

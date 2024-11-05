@@ -60,7 +60,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
         myDockActivity?.hideProgressIndicator()
         when (tag) {
             "Verify_Password_Data" -> {
-                myDockActivity?.showErrorMessage(requireContext(),message)
+                myDockActivity?.showErrorMessage(myDockActivity!!,message)
             }
         }
     }
@@ -97,11 +97,11 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
             it.cpBtnChangePassword.setOnClickListener {
                 when {
                     binding.cpEtNewPass.text?.isEmpty() == true || binding.cpEtConfirmPass.text?.isEmpty() == true -> {
-                        myDockActivity?.showErrorMessage(requireContext(),"Please fill all fields!")
+                        myDockActivity?.showErrorMessage(myDockActivity!!,"Please fill all fields!")
                     }
 
                     binding.cpEtNewPass.text.toString() != binding.cpEtConfirmPass.text.toString() -> {
-                        myDockActivity?.showErrorMessage(requireContext(),"Passwords do not match! Please make sure you enter the correct password")
+                        myDockActivity?.showErrorMessage(myDockActivity!!,"Passwords do not match! Please make sure you enter the correct password")
                     }
 
                     else -> {
@@ -154,14 +154,14 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
             myViewModel.changePasswordpData.collect {
 
                 when (it) {
-                    is ResponseModel.Error -> { (requireActivity() as DockActivity).handleErrorResponse(it) }
+                    is ResponseModel.Error -> { (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it) }
 
                     is ResponseModel.Idle -> {}
 
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
-                        myDockActivity?.showSuccessMessage(requireContext(),"Password Change Successfully")
+                        myDockActivity?.showSuccessMessage(myDockActivity!!,"Password Change Successfully")
                         sharedPreferencesManager.clearSharedPreferences()
                         startActivity(Intent(requireContext(), LoginScreen::class.java))
                         requireActivity().finish()

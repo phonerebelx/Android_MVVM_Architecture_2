@@ -105,7 +105,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         // Inflate the layout for this fragment
         binding = FragmentDashboardBinding.inflate(layoutInflater)
 
-        myDockActivity?.showSuccessMessage(requireContext(),"testing purpose")
+
         val sharedPreferences =
             myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
@@ -231,7 +231,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             binding.viewpager.adapter = viewPagerAdapter
 
         } else {
-            myDockActivity?.showErrorMessage(requireContext(),"Footer Data is Empty")
+            myDockActivity?.showErrorMessage(myDockActivity!!,"Footer Data is Empty")
         }
     }
 
@@ -453,7 +453,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        myDockActivity?.handleErrorResponse(it)
+                        myDockActivity?.handleErrorResponse(myDockActivity!!,it)
 
                     }
 
@@ -480,7 +480,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        myDockActivity?.handleErrorResponse(it)
+                        myDockActivity?.handleErrorResponse(myDockActivity!!,it)
 
                     }
                     is ResponseModel.Idle -> {}
@@ -511,7 +511,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             myDockActivity?.hideProgressIndicator()
             when (it) {
                 is ResponseModel.Error -> {
-                    (requireActivity() as DockActivity).handleErrorResponse(it)
+                    (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
                 }
 
                 is ResponseModel.Idle -> {

@@ -225,7 +225,7 @@ class Pie1HorizontalBar1Fragment(
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as DockActivity).handleErrorResponse(it)
+                        (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
                     }
 
                     is ResponseModel.Idle -> {}
