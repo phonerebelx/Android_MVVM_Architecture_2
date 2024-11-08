@@ -1,12 +1,14 @@
 package com.example.meezan360.ui.fragments.SearchFragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -18,21 +20,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentSearchBinding
-import com.example.meezan360.model.SearchFilterModel.Branch
+import com.example.meezan360.micsAdapter.SearchSpinnerAdapter
 import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
 import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterRequestDataModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.MainActivity
-import com.example.meezan360.ui.activities.MainFragActivity
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.SearchFragViewModel
 import com.skydoves.powerspinner.IconSpinnerAdapter
 import com.skydoves.powerspinner.IconSpinnerItem
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -56,7 +56,6 @@ class SearchFragment : BaseDockFragment() {
     private lateinit var areaAdapterItem: ArrayAdapter<String>
     private lateinit var branchAdapterItem: ArrayAdapter<String>
 
-
     private var indexArrayForAllLovs: ArrayList<Int> = arrayListOf(0, 0, 0)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -67,7 +66,27 @@ class SearchFragment : BaseDockFragment() {
     ): View? {
 
         binding = FragmentSearchBinding.inflate(layoutInflater)
+//        binding.root.setOnTouchListener { _, event ->
 
+//            if (event.action == MotionEvent.ACTION_DOWN) {
+//
+//                val location = IntArray(2)
+//                binding.SearchableSpinner.getLocationOnScreen(location)
+//                val spinnerX = location[0]
+//                val spinnerY = location[1]
+//                val spinnerWidth = binding.SearchableSpinner.width
+//                val spinnerHeight = binding.SearchableSpinner.height
+//
+//
+//                if (event.rawX < spinnerX || event.rawX > spinnerX + spinnerWidth ||
+//                    event.rawY < spinnerY || event.rawY > spinnerY + spinnerHeight
+//                ) {
+//
+//                    binding.SearchableSpinner.hideEdit()
+//                }
+//            }
+//            false
+//        }
 
         getSetFilter()
         handleAPIResponse()
@@ -147,12 +166,28 @@ class SearchFragment : BaseDockFragment() {
 
         binding.actvArea.apply {
             binding.actvRegion.dismiss()
+            val areaSearchSpinnerItems = areaArray.map { it }
+            val adapter =   SearchSpinnerAdapter(requireContext(),areaSearchSpinnerItems)
+            adapter.listItemsTxt
+//            binding.SearchableSpinner.setAdapter(adapter)
+
             setSpinnerAdapter(IconSpinnerAdapter(this))
             val areaIconSpinnerItems = areaArray.map { IconSpinnerItem(text = it) }
             setItems(areaIconSpinnerItems)
             getSpinnerRecyclerView().layoutManager = GridLayoutManager(context, 1)
 
         }
+
+//        binding.SearchableSpinner.setOnItemSelectedListener(object : OnItemSelectedListener {
+//            override fun onItemSelected(view: View?, position: Int, id: Long) {
+//
+//            }
+//
+//            override fun onNothingSelected() {
+//
+//            }
+//        })
+
         binding.actvArea.setOnSpinnerItemSelectedListener<IconSpinnerItem> { oldIndex, oldItem, newIndex, newItem ->
 
             areaItem = newItem.text.toString()
@@ -398,6 +433,15 @@ class SearchFragment : BaseDockFragment() {
             it.actvBranch.setOnSpinnerOutsideTouchListener { view, event ->
                 it.actvBranch.dismiss()
             }
+
+//            binding.SearchableSpinner.setStatusListener(object : IStatusListener {
+//                override fun spinnerIsOpening() {
+//                    binding.SearchableSpinner.hideEdit()
+//                }
+//
+//                override fun spinnerIsClosing() {
+//                }
+//            })
 
 
         }

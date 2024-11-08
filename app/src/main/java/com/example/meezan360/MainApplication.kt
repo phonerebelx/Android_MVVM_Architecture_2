@@ -29,8 +29,7 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
 
     override fun onCreate() {
         super.onCreate()
-        encryptionKeyStore.setContext(this)
-        encryptionKeyStore.generateKey()
+
 
         SecureLogger.init(this)
         try {

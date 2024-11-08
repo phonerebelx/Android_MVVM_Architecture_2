@@ -106,6 +106,9 @@
     <string name="no_of_prod">No of Product:</string>
     <string name="prod_name">Product Name:</string>
     <string name="account">Account:</string>
+    <string name="allow_fingerprint">Would you like to enable Fingerprind ID?</string>
+    <string name="allow_fingerprint_desc">Enabling Fingerprint ID will allow you to log into your App360 instantly</string>
+    <string name="enable">Enable</string>
 
     <string name="number3">1231231</string>
     <string name="number4">0231 1234 1234 1232</string>

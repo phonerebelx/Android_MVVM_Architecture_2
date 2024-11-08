@@ -4,10 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
+import android.hardware.biometrics.BiometricPrompt
 import android.os.Build
 import android.os.Bundle
+import android.os.CancellationSignal
 import android.provider.Settings
 import android.text.InputType
 import android.text.TextUtils
@@ -31,19 +34,29 @@ import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainActivity
+import com.example.meezan360.utils.Constants
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.LoginViewModel
+import com.uhfsolutions.sfts.model.fingerprintLoginData.FingerprintLoginData
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
 class LoginFragment : BaseDockFragment() {
     private lateinit var binding: FragmentLoginBinding
     private val myViewModel: LoginViewModel by viewModel()
     private val sharedPreferenceManager: SharedPreferencesManager by inject()
     lateinit var montserratFont: Typeface
+    lateinit var email: String
+    lateinit var password: String
+    private var isAuthenticated = false
+    private var firstTime = false
+    lateinit var executor: Executor
+    lateinit var bmPrompt: BiometricPrompt
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +64,8 @@ class LoginFragment : BaseDockFragment() {
     ): View? {
 
         binding = FragmentLoginBinding.inflate(layoutInflater)
+
+
         montserratFont = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular) ?: Typeface.DEFAULT
 
         binding.etPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -65,6 +80,7 @@ class LoginFragment : BaseDockFragment() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initViews() {
+        fingerprintPrompt()
         setOnCLickListener()
     }
 
@@ -88,49 +104,17 @@ class LoginFragment : BaseDockFragment() {
         montserratFont = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular) ?: Typeface.DEFAULT
 
         binding.btnLogin.setOnClickListener {
-
-            var email = binding.etEmail.text.toString() //waqas
-            var password = Utils.encryptPass(
-                "23423532",
-                "1234567891011121",
-                binding.etPassword.text.toString()
-            )
-            val deviceId = Settings.Secure.getString(
-                requireContext().contentResolver,
-                Settings.Secure.ANDROID_ID
-            )
-
-            if (BuildConfig.DEBUG) {
-                email =  binding.etEmail.text.toString()
-                password = Utils.encryptPass(
-                    "23423532",
-                    "1234567891011121",
-                    binding.etPassword.text.toString()
-                )
-            }
-
-            if (TextUtils.isEmpty(email)) {
-
-                myDockActivity?.showErrorMessage(myDockActivity!!,"Please Enter email")
-                return@setOnClickListener
-            }
-
-            if (TextUtils.isEmpty(password)) {
-
-                myDockActivity?.showErrorMessage(myDockActivity!!,"Please Enter password")
-                return@setOnClickListener
-            }
-
-            myViewModel.viewModelScope.launch {
-                myViewModel.loginRequest(email, password!!, deviceId)
-
-            }
+            isAuthenticated = false
+            loginUser()
         }
 
         binding.tvForgetPassword.setOnClickListener {
             LoginScreen.navController.navigate(R.id.action_nav_login_fragment_to_nav_forget_pass_fragment)
         }
 
+        binding.ivBiometric.setOnClickListener {
+            fingerprintPrompt()
+        }
     }
 
     private fun handleAPIResponse() {
@@ -141,7 +125,6 @@ class LoginFragment : BaseDockFragment() {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
                         myDockActivity?.handleErrorResponse(myDockActivity!!,it)
-
                     }
 
                     is ResponseModel.Idle -> {
@@ -175,6 +158,17 @@ class LoginFragment : BaseDockFragment() {
                             startActivity(intent)
                             requireActivity().finish();
                         }
+                        try {
+                            if (!isAuthenticated) {
+                                val fingerprintData: FingerprintLoginData = sharedPreferenceManager.getFingerprintLoginData()
+                                val checkEmail = fingerprintData.user_id
+                                if (email != checkEmail) {
+                                    sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
+                                }
+                            }
+                        } catch (E: Exception) { }
+                        // AMMAR - Saves email and password in sharedPrefManager
+                        sharedPreferenceManager.setFingerprintLoginData(FingerprintLoginData(email,password))
 
                     }
                 }
@@ -182,5 +176,107 @@ class LoginFragment : BaseDockFragment() {
             }
         }
 
+    }
+    @SuppressLint("NewApi")
+    private fun checkForFingerPrint() {
+        executor = Executors.newSingleThreadExecutor()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            requireContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_FINGERPRINT) ||
+            requireContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_FACE)
+        ) {
+            bmPrompt = BiometricPrompt.Builder(requireContext())
+                .setTitle("Login")
+                .setDescription("Please scan your fingerprint")
+                .setNegativeButton("Cancel", executor,
+                    { dialogInterface, i -> isAuthenticated = false}).build()
+        }
+
+        if (bmPrompt != null) {
+            bmPrompt.authenticate(
+                CancellationSignal(),
+                executor,
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationFailed() {
+                        super.onAuthenticationFailed()
+                        myDockActivity?.runOnUiThread {
+//                            Log.i("xxResult_Failed", "Authentication Failed!")
+                        }
+                    }
+
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        myDockActivity?.runOnUiThread {
+//                            Log.i("xxResult_Success", result.toString())
+                            isAuthenticated = true
+                            loginUser()
+                        }
+                    }
+
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        super.onAuthenticationError(errorCode, errString)
+//                        Log.d(TAG, "onAuthenticationError -> $errorCode :: $errString")
+                        if(errorCode == BiometricPrompt.BIOMETRIC_ERROR_USER_CANCELED){
+                            isAuthenticated = false
+                        }
+                    }
+                })
+        }
+    }
+
+    private fun loginUser() {
+
+        email = binding.etEmail.text.toString() //waqas
+        password = binding.etPassword.text.toString()
+        val deviceId = Settings.Secure.getString(
+            requireContext().contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+
+        if (BuildConfig.DEBUG) {
+            email =  binding.etEmail.text.toString()
+            password = binding.etPassword.text.toString()
+        }
+
+        if (!isAuthenticated && TextUtils.isEmpty(email)) {
+            myDockActivity?.showErrorMessage(myDockActivity!!,"Please Enter email")
+            return
+        }
+
+        if (!isAuthenticated && TextUtils.isEmpty(password)) {
+            myDockActivity?.showErrorMessage(myDockActivity!!,"Please Enter password")
+            return
+        }
+        if (sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) != null &&
+            sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT)!! && isAuthenticated) {
+            val fingerprintData: FingerprintLoginData = sharedPreferenceManager.getFingerprintLoginData()
+            email = fingerprintData.user_id
+            password = fingerprintData.password
+        }
+
+        myViewModel.viewModelScope.launch {
+            myViewModel.loginRequest(
+                email,  Utils.encryptPass(
+                "23423532",
+                "1234567891011121",
+                password
+            )!!, deviceId)
+        }
+
+    }
+
+
+    private fun fingerprintPrompt() {
+        try {
+            if (sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT)!!) {
+                checkForFingerPrint()
+            } else if (firstTime) {
+                myDockActivity?.showErrorMessage(myDockActivity!!,"Fingerprint is not enabled!")
+            } else {
+                firstTime = true
+            }
+        } catch (E: Exception) {
+            sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
+            firstTime = true
+        }
     }
 }

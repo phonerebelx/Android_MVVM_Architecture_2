@@ -344,8 +344,7 @@ class MainActivity : DockActivity(){
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
-                        sharedPreferencesManager.clearSharedPreferences()
-
+                        sharedPreferencesManager.logout()
                         it.message?.let { it1 -> showSuccessMessage(this@MainActivity,it1) }
                           val intent = Intent(this@MainActivity, LoginScreen::class.java)
                           startActivity(intent)

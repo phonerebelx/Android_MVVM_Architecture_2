@@ -79,7 +79,7 @@ class EncryptionKeyStoreImpl {
         return classObject
     }
 
-    public fun encrypt(value: Any?): String? {
+    fun encrypt(value: Any?): String? {
 
         return if (value != null) {
             encryptor.encryptText(value, key)

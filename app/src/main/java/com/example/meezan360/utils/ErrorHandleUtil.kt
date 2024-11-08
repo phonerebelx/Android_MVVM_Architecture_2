@@ -32,7 +32,7 @@ fun <T> DockActivity.handleErrorResponse(activity: Activity,responseModel: Respo
     if (response != null) {
         if (response.code() == 551 || response.code() == 401) {
 
-            sharedPreferencesManager.clearSharedPreferences()
+            sharedPreferencesManager.logout()
             val intent = Intent(this, LoginScreen::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)

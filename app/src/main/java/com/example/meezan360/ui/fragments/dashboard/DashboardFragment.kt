@@ -2,15 +2,22 @@ package com.example.meezan360.ui.fragments.dashboard
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.hardware.biometrics.BiometricPrompt
+import android.os.Build
 import android.os.Bundle
+import android.os.CancellationSignal
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
@@ -22,6 +29,7 @@ import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.ActivityMainBinding
 import com.example.meezan360.databinding.FragmentDashboardBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.interfaces.OnTypeItemClickListener
 import com.example.meezan360.model.Kpi
 import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
 import com.example.meezan360.model.dashboardByKpi.DataModel
@@ -33,6 +41,8 @@ import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainFragActivity
 import com.example.meezan360.ui.activities.ReportLevel1Activity
 import com.example.meezan360.ui.activities.ReportLevel2Activity
+import com.example.meezan360.ui.dialog.CardLevelDialog.CardLevelDialogFragment
+import com.example.meezan360.ui.dialog.FingerprintPermissionDialog.FingerprintPermissionDialogFragment
 import com.example.meezan360.ui.fragments.BarChartFragment
 import com.example.meezan360.ui.fragments.HalfPieFragment
 import com.example.meezan360.ui.fragments.HorizontalBarFragment
@@ -61,8 +71,14 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.lang.Math.abs
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
 
-class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View.OnClickListener {
+class DashboardFragment :
+    BaseDockFragment(),
+    OnChartValueSelectedListener,
+    View.OnClickListener,
+    OnTypeItemClickListener {
     private var kpiId: Int? = 0
     private var kpi: ArrayList<Kpi>? = null
     private lateinit var iconsList: List<Pair<Int, String>>
@@ -79,9 +95,11 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private var pieChartAngleDegree: HashMap<String, Float> = HashMap<String, Float>()
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private lateinit var getSetFilterModel: GetSetFilterDataResponseModel
+
     //for top header
     private lateinit var adapter: TopBoxesAdapter
     private var centerText = ""
+
     //for bottom footer
     private var viewPagerAdapter: FragmentPagerAdapter? = null
 
@@ -92,7 +110,8 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 
     private var footerData: List<FooterModel>? = null
 
-
+    lateinit var executor: Executor
+    lateinit var bmPrompt: BiometricPrompt
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -104,11 +123,16 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentDashboardBinding.inflate(layoutInflater)
-
-
-        val sharedPreferences =
-            myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
+        val sharedPreferences = myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
+
+        // When app launch for first time
+        if (sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) == false) {
+            val fingerprintDialog = FingerprintPermissionDialogFragment(this)
+            fingerprintDialog.show(childFragmentManager, "FingerprintPermissionDialogFragment")
+        }
+
+
         pieChartAngleDegree["Deposit"] = 254.03897F
         pieChartAngleDegree["Cross Sell"] = 216.70924F
         pieChartAngleDegree["Profitibility"] = 182.16922F
@@ -139,7 +163,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
     private fun footerSetupUp(footerData: List<FooterModel>?, defaultDeposit: Int) {
 
         var footerList = listOf<DataModel>()
-       if (footerData != null) {
+        if (footerData != null) {
 
             if (footerData.size >= defaultDeposit + 1) {
                 footerList = footerData.get(defaultDeposit)?.dataModel!!
@@ -231,7 +255,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             binding.viewpager.adapter = viewPagerAdapter
 
         } else {
-            myDockActivity?.showErrorMessage(myDockActivity!!,"Footer Data is Empty")
+            myDockActivity?.showErrorMessage(myDockActivity!!, "Footer Data is Empty")
         }
     }
 
@@ -264,7 +288,6 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
             lastSelectedSliceIndex -= 1
         }
         if (currentIndex != lastSelectedSliceIndex) {
-
 
 
             if (lastSelectedSliceIndex != -1) {
@@ -339,7 +362,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         if (kpi != null) {
 
             for (i in kpi.indices) {
-                icons[iconsData[kpi[i].kpiId-1]] = kpi[i].name
+                icons[iconsData[kpi[i].kpiId - 1]] = kpi[i].name
 
                 //for default key
                 if (kpi[i].isDefault.toString() == "true") {
@@ -423,7 +446,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                 startActivity(intent)
             }
             it.ivLogout.setOnClickListener {
-                sharedPreferencesManager.clearSharedPreferences()
+                sharedPreferencesManager.logout()
                 val intent = Intent(requireContext(), LoginScreen::class.java)
                 startActivity(intent)
             }
@@ -453,7 +476,7 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        myDockActivity?.handleErrorResponse(myDockActivity!!,it)
+                        myDockActivity?.handleErrorResponse(myDockActivity!!, it)
 
                     }
 
@@ -480,9 +503,10 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
                 when (it) {
                     is ResponseModel.Error -> {
                         myDockActivity?.hideProgressIndicator()
-                        myDockActivity?.handleErrorResponse(myDockActivity!!,it)
+                        myDockActivity?.handleErrorResponse(myDockActivity!!, it)
 
                     }
+
                     is ResponseModel.Idle -> {}
                     is ResponseModel.Loading -> {}
                     is ResponseModel.Success -> {
@@ -507,27 +531,30 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
         }
         resetPassJob = lifecycleScope.launch {
 
-        myViewModel2.getSetFilterResponse.collect {
-            myDockActivity?.hideProgressIndicator()
-            when (it) {
-                is ResponseModel.Error -> {
-                    (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
+            myViewModel2.getSetFilterResponse.collect {
+                myDockActivity?.hideProgressIndicator()
+                when (it) {
+                    is ResponseModel.Error -> {
+                        (requireActivity() as DockActivity).handleErrorResponse(
+                            myDockActivity!!,
+                            it
+                        )
+                    }
+
+                    is ResponseModel.Idle -> {
+                    }
+
+                    is ResponseModel.Loading -> {
+                    }
+
+                    is ResponseModel.Success -> {
+                        getSetFilterModel = it.data?.body()!!
+                        binding.centerTextDateView.text = getSetFilterModel.selected_date
+                    }
+
+
                 }
-
-                is ResponseModel.Idle -> {
-                }
-
-                is ResponseModel.Loading -> {
-                }
-
-                is ResponseModel.Success -> {
-                    getSetFilterModel = it.data?.body()!!
-                    binding.centerTextDateView.text = getSetFilterModel.selected_date
-                }
-
-
             }
-        }
 
         }
     }
@@ -539,6 +566,79 @@ class DashboardFragment : BaseDockFragment(), OnChartValueSelectedListener, View
 //        resetPassJob?.cancel()
 //        myViewModel.checkVersioning.value = ResponseModel.Idle("Idle State")
 //        myViewModel.dashboardByKPI.value = ResponseModel.Idle("Idle State")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun initFingerprint() {
+
+        executor = Executors.newSingleThreadExecutor()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT) ||
+            requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_FACE)
+        ) {
+            bmPrompt = BiometricPrompt.Builder(requireContext())
+                .setTitle("Fingerprint Authentication")
+                .setDescription("Please scan your fingerprint")
+                .setNegativeButton(
+                    "Cancel", executor
+                ) { _, _ ->
+                    myDockActivity?.runOnUiThread {
+                        sharedPreferencesManager.put(false, Constants.IS_FINGERPRINT)
+                    }
+                }.build()
+        }
+
+        if (bmPrompt != null) {
+            bmPrompt.authenticate(
+                CancellationSignal(),
+                executor,
+                @RequiresApi(Build.VERSION_CODES.P)
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationFailed() {
+                        super.onAuthenticationFailed()
+                        myDockActivity?.runOnUiThread {
+                            Log.i("xxResult_Failed", "Authentication Failed!")
+                        }
+                    }
+
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        myDockActivity?.runOnUiThread {
+                            Log.i("xxResult_Success", result.toString())
+                            myDockActivity!!.showSuccessMessage(myDockActivity!!,"Fingerprint Enabled Successfully")
+                        }
+                    }
+
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        super.onAuthenticationError(errorCode, errString)
+//                        Log.d(TAG, "onAuthenticationError -> $errorCode :: $errString")
+                        if (errorCode == BiometricPrompt.BIOMETRIC_ERROR_USER_CANCELED) {
+                            setFingerprintDisabled()
+                        }
+                    }
+                }
+            )
+        }
+
+    }
+
+    private fun setFingerprintDisabled() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            sharedPreferencesManager.put(false, Constants.IS_FINGERPRINT)
+        }, 0)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    override fun <T> onClick(type: String, item: T, position: Int, checked: Boolean?) {
+
+        when (type) {
+            "From_Fingerprint_Dialog" -> {
+                if (checked == true) {
+                    sharedPreferencesManager.put(true, Constants.IS_FINGERPRINT)
+                    initFingerprint()
+                }
+            }
+        }
     }
 
 
