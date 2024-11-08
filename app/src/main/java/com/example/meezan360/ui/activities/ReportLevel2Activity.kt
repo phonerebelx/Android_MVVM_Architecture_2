@@ -213,13 +213,14 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener, OnTypeItemClic
                                     return@forEach
                                 }
                             }
-                            if ( index != 0){
-                                binding.recyclerViewReport.visibility = View.GONE
-                                binding.tvView.visibility = View.VISIBLE
-                            }else {
+                            if ( index == 0){
                                 binding.recyclerViewReport.visibility = View.VISIBLE
                                 binding.tvView.visibility = View.GONE
                                 setupReportsRecyclerView(reportArray)
+                            }else {
+                                binding.recyclerViewReport.visibility = View.GONE
+                                binding.tvView.visibility = View.VISIBLE
+
                             }
                             setupFooterRecyclerView(footerBoxes)
 
@@ -303,13 +304,14 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener, OnTypeItemClic
                 return@forEach
             }
         }
-        if ( index != 0){
-            binding.recyclerViewReport.visibility = View.GONE
-            binding.tvView.visibility = View.VISIBLE
-        }else {
+        if ( index == 0){
             binding.recyclerViewReport.visibility = View.VISIBLE
             binding.tvView.visibility = View.GONE
             setupReportsRecyclerView(reportArray)
+        }else {
+            binding.recyclerViewReport.visibility = View.GONE
+            binding.tvView.visibility = View.VISIBLE
+
         }
         setupFooterRecyclerView(footerBoxes)
     }
