@@ -3,6 +3,10 @@ package com.example.meezan360.network
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.widget.Toast
 
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
@@ -78,7 +82,8 @@ class APIClient() {
             NoSuchAlgorithmException::class,
             KeyManagementException::class,
             UnknownHostException::class,
-            NullPointerException::class
+            NullPointerException::class,
+            NoInternetException::class
         )
 
         private fun getSSLConfig(context: Context): SSLContext? {
@@ -115,38 +120,67 @@ class BaseHeadersInterceptor(private val sharedPreferencesManager: SharedPrefere
     Interceptor {
     @Throws(
         IOException::class,
-    )
+        NoInternetException::class
+     )
     override fun intercept(chain: Interceptor.Chain): Response {
         if (!isConnected()) {
+            throw NoInternetException("Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+        } else {
+            try {
+                val request = chain.request().newBuilder().apply {
+                    val token = sharedPreferencesManager.getToken()
+                    if (!token.isNullOrBlank()) {
+                        header("Authorization", "Bearer $token")
+                        header("response-type", "1")
+                    }
+                }.build()
 
-            throw IOException()
+                return chain.proceed(request)
+            } catch (e: UnknownHostException) {
+                throw IOException("Unable to resolve host", e)
+            }
         }
-        try {
-            val request = chain.request().newBuilder().apply {
-                val token = sharedPreferencesManager.getToken()
-                if (!token.isNullOrBlank()) {
-                    header("Authorization", "Bearer $token")
-                    header("response-type", "1")
-                }
-            }.build()
 
-            return chain.proceed(request)
-        } catch (e: java.net.UnknownHostException) {
-            throw IOException("Unable to resolve host", e)
-        }
     }
 
-    fun isConnected(): Boolean {
-        val connectivityManager =
-            mcontext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val netInfo = connectivityManager.activeNetworkInfo
-        return netInfo != null && netInfo.isConnected
+    private fun isConnected(): Boolean {
+//        val connectivityManager = mcontext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+////        val netInfo = connectivityManager.activeNetworkInfo
+////        return netInfo != null && netInfo.isConnected
+
+        var haveConnectedWifi = false
+        var haveConnectedMobile = false
+        val cm = mcontext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val netInfo = cm.allNetworkInfo
+
+        for (ni in netInfo) {
+            if (ni.typeName.equals("WIFI", ignoreCase = true)) {
+                if (ni.isConnected) {
+                    haveConnectedWifi = true
+                    Log.v("WIFI CONNECTION", "AVAILABLE")
+                } else {
+                    Log.v("WIFI CONNECTION", "NOT AVAILABLE")
+                }
+            }
+            if (ni.typeName.equals("MOBILE", ignoreCase = true)) {
+                if (ni.isConnected) {
+                    haveConnectedMobile = true
+                    Log.v("INTERNET CONNECTION", "AVAILABLE")
+                } else {
+                    Log.v("INTERNET CONNECTION", "NOT AVAILABLE")
+                }
+            }
+        }
+
+//         if (!(haveConnectedWifi || haveConnectedMobile)) {
+//             throw NoInternetException("No internet connection found")
+//             Handler(Looper.getMainLooper()).post {
+//                 Toast.makeText(mcontext, "No internet connection found", Toast.LENGTH_SHORT).show()
+//             }
+//         }
+
+        return haveConnectedWifi || haveConnectedMobile
     }
 }
 
-//class NoConnectivityException : IOException() {
-//
-//    override val message: String
-//        get() = "No Internet Connection"
-//
-//}
+class NoInternetException(message: String) : IOException(message)

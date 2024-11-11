@@ -71,10 +71,7 @@ class LoginViewModel(private var dataRepo: DataRepository?,private val connectiv
         }
     }
 
-    suspend fun changePassword(login_id: String,
-                               new_password_confirmation: String,
-                               new_password: String,
-                               old_password: String) {
+    suspend fun changePassword(login_id: String, new_password_confirmation: String, new_password: String, old_password: String) {
 
         changePasswordpData.emit(ResponseModel.Loading())
         var apiResponse = MutableLiveData<String>()

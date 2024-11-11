@@ -1,7 +1,5 @@
 package com.example.meezan360.datamodule.repository
 
-
-import android.util.Log
 import com.example.meezan360.model.otp.OtpModel
 import com.example.meezan360.model.otp.OtpResponse
 import com.example.meezan360.di.NetworkModule
@@ -13,13 +11,13 @@ import com.example.meezan360.model.SearchFilterModel.ResetFilter.ResetFilterResp
 import com.example.meezan360.model.SearchFilterModel.SearchFilterDataModel
 import com.example.meezan360.model.SearchFilterModel.SetFilterModel.SetFilterResponseDataModel
 import com.example.meezan360.model.changePassword.VerifyPassModel
-import com.example.meezan360.model.changenewpassword.ChangePasswordModel
-import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
+ import com.example.meezan360.model.dashboardByKpi.DashboardByKPIModel
 import com.example.meezan360.model.logout.LogoutResponse
 import com.example.meezan360.model.reports.DepositObject
 import com.example.meezan360.model.reports.Level2ReportModel
 import com.example.meezan360.model.resetPassword.ResetPasswordModel
 import com.example.meezan360.model.resetPassword.ResetPwdReqResponse
+import com.example.meezan360.network.NoInternetException
 import com.google.gson.JsonElement
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -35,16 +33,15 @@ class DataRepository(private var networkModule: NetworkModule) {
     ): Flow<Response<LoginModel>> {
         return flow {
             try {
-                val response =
-                    networkModule.sourceOfNetwork().loginRequest(loginId, password, deviceId)
+                val response = networkModule.sourceOfNetwork().loginRequest(loginId, password, deviceId)
                 emit(response)
-            } catch (e: IOException) {
-                // Handle the IOException here
-                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+            } catch (e: NoInternetException) {
+             val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+            emit(Response.error(1000, errorResponseBody))
+        } catch (e: IOException) {
+                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
             }
-
-
         }
     }
 
@@ -54,7 +51,10 @@ class DataRepository(private var networkModule: NetworkModule) {
             try {
                 val response = networkModule.sourceOfNetwork().checkVersioning()
                 emit(response)
-            } catch (e: IOException) {
+            } catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            }catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
@@ -68,6 +68,9 @@ class DataRepository(private var networkModule: NetworkModule) {
             try {
                 val response = networkModule.sourceOfNetwork().getDashboardByKpi(kpiId, tag)
                 emit(response)
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
             } catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
@@ -86,7 +89,10 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val response =
                     networkModule.sourceOfNetwork().getFooterGraphs(kpiId, tagName, cardId)
                 emit(response)
-            } catch (e: IOException) {
+            } catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            }catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
@@ -101,7 +107,10 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val response = networkModule.sourceOfNetwork().getDepositDetails()
                 emit(response)
 
-            } catch (e: IOException) {
+            } catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            }catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
@@ -120,6 +129,9 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val response = networkModule.sourceOfNetwork()
                     .getLevelTwo(kpiId, tableId, identifierType, identifier)
                 emit(response)
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
             } catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
@@ -134,7 +146,10 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val response = networkModule.sourceOfNetwork().getLovs()
                 emit(response)
 
-            } catch (e: IOException) {
+            } catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            }catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
@@ -147,6 +162,9 @@ class DataRepository(private var networkModule: NetworkModule) {
             try {
                 val response = networkModule.sourceOfNetwork().getSetFilter()
                 emit(response)
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
             } catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
@@ -161,7 +179,10 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val response = networkModule.sourceOfNetwork().resetFilter()
                 emit(response)
 
-            } catch (e: IOException) {
+            } catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            }catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
@@ -181,7 +202,10 @@ class DataRepository(private var networkModule: NetworkModule) {
                     .setFilter(selected_area, selected_region, selected_branch, selected_date)
                 emit(response)
 
-            } catch (e: IOException) {
+            } catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            }catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
@@ -196,6 +220,9 @@ class DataRepository(private var networkModule: NetworkModule) {
             try {
                 val response = networkModule.sourceOfNetwork().getCustomerService("1", cif_id)
                 emit(response)
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
             } catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
@@ -212,7 +239,10 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val response =
                     networkModule.sourceOfNetwork().resetPasswordRequest(resetPasswordModel)
                 emit(response)
-            } catch (e: IOException) {
+            } catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            }catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
                 emit(Response.error(500, errorResponseBody))
@@ -228,6 +258,9 @@ class DataRepository(private var networkModule: NetworkModule) {
                 val response = networkModule.sourceOfNetwork().verifyOtp(otpModel)
                 emit(response)
 
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
             } catch (e: IOException) {
                 // Handle the IOException here
                 val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
@@ -236,23 +269,12 @@ class DataRepository(private var networkModule: NetworkModule) {
         }
     }
 
-    suspend fun changePassword(
-        login_id: String,
-        new_password_confirmation: String,
-        new_password: String,
-        old_password: String,
-        prefix: String = "360"
+    suspend fun changePassword(login_id: String, new_password_confirmation: String, new_password: String, old_password: String, prefix: String = "360"
 //        changePasswordModel: ChangePasswordModel
     ): Flow<Call<ResponseBody>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().changePassword(
-                login_id,
-                new_password_confirmation,
-                new_password,
-                old_password,
-                prefix
-            )
-            emit(response)
+                val response = networkModule.sourceOfNetwork().changePassword(login_id, new_password_confirmation, new_password, old_password, prefix)
+                emit(response)
         }
     }
 
@@ -267,8 +289,18 @@ class DataRepository(private var networkModule: NetworkModule) {
 
     suspend fun logoutRequest(): Flow<Response<LogoutResponse>> {
         return flow {
-            val response = networkModule.sourceOfNetwork().logoutRequest()
-            emit(response)
+            try {
+                val response = networkModule.sourceOfNetwork().logoutRequest()
+                emit(response)
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.i")
+                emit(Response.error(1000, errorResponseBody))
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
+
         }
     }
 

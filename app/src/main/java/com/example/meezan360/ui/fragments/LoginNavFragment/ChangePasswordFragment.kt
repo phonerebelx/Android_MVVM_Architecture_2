@@ -23,6 +23,7 @@ import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.LoginScreen.Companion.navController
+import com.example.meezan360.utils.InternetHelper
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.LoginViewModel
@@ -34,12 +35,14 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
     private lateinit var login_id: String
     lateinit var sharedPreferencesManager: SharedPreferencesManager
     private val myViewModel: LoginViewModel by viewModel()
+    private lateinit var internetHelper: InternetHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         myViewModel.apiListener = this@ChangePasswordFragment
+        internetHelper = InternetHelper(requireContext())
         val sharedPreferences =   myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
         initView()
@@ -108,35 +111,39 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                         // ALI - ProgressIndicator displayed and changePassword request call made
                         myDockActivity?.hideKeyboard(requireView())
 
+                        if(!internetHelper.isNetworkAvailable()){
+                            myDockActivity?.showErrorMessage(requireActivity(),"Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                        } else {
+                            myViewModel.viewModelScope.launch {
+                                myDockActivity?.showProgressIndicator()
+                                val changePasswordModel =  ChangePasswordModel(
+                                    login_id = login_id,
+                                    old_password = Utils.encryptPass(
+                                        "23423532",
+                                        "1234567891011121",
+                                        binding.cpEtCurrentPassword.text.toString()
+                                    ).toString(),
+                                    new_password = Utils.encryptPass(
+                                        "23423532",
+                                        "1234567891011121",
+                                        binding.cpEtNewPass.text.toString()
+                                    ).toString(),
+                                    new_password_confirmation = Utils.encryptPass(
+                                        "23423532",
+                                        "1234567891011121",
+                                        binding.cpEtConfirmPass.text.toString()
+                                    ).toString()
+                                )
+                                myViewModel.changePassword(
+                                    changePasswordModel.login_id,
+                                    changePasswordModel.new_password_confirmation,
+                                    changePasswordModel.new_password,
+                                    changePasswordModel.old_password
+                                )
+                            }
 
-                        myViewModel.viewModelScope.launch {
-                            myDockActivity?.showProgressIndicator()
-                            val changePasswordModel =  ChangePasswordModel(
-                                login_id = login_id,
-                                old_password = Utils.encryptPass(
-                                    "23423532",
-                                    "1234567891011121",
-                                    binding.cpEtCurrentPassword.text.toString()
-                                ).toString(),
-                                new_password = Utils.encryptPass(
-                                    "23423532",
-                                    "1234567891011121",
-                                    binding.cpEtNewPass.text.toString()
-                                ).toString(),
-                                new_password_confirmation = Utils.encryptPass(
-                                    "23423532",
-                                    "1234567891011121",
-                                    binding.cpEtConfirmPass.text.toString()
-                                ).toString()
-                            )
-                            myViewModel.changePassword(
-                                changePasswordModel.login_id,
-                                changePasswordModel.new_password_confirmation,
-                                changePasswordModel.new_password,
-                                changePasswordModel.old_password
-                            )
                         }
-                    }
+                     }
                 }
             }
             myDockActivity?.setPassViewListener(

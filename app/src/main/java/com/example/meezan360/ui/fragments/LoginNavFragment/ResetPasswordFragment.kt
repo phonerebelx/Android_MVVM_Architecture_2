@@ -23,6 +23,7 @@ import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.ChangePasswordActivity.ChangePasswordActivity
 import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
+import com.example.meezan360.utils.InternetHelper
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.LoginViewModel
@@ -34,12 +35,14 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
     private lateinit var binding: FragmentResetPasswordBinding
     private val myViewModel: LoginViewModel by viewModel()
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private lateinit var internetHelper: InternetHelper
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         myViewModel.apiListener = this@ResetPasswordFragment
+        internetHelper = InternetHelper(requireContext())
         initView()
         handleAPIResponse()
         return binding.root
@@ -65,17 +68,23 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
                         myDockActivity?.showErrorMessage(myDockActivity!!,"Passwords do not match! Please make sure you enter the correct password")
                     }
                     else -> {
-                        try {
-                            verifyPwdReq(
-                                Utils.encryptPass(
-                                    "23423532",
-                                    "1234567891011121",
-                                    binding.cpEtNewPass.text.toString()
-                                ).toString()
-                            )
-                        } catch (e: Exception) {
-                            Log.e("onBackPressed", e.message.toString())
-                        }
+
+                            if(!internetHelper.isNetworkAvailable()){
+                                myDockActivity?.showErrorMessage(requireActivity(),"Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                            } else {
+                                try {
+                                    verifyPwdReq(
+                                        Utils.encryptPass(
+                                            "23423532",
+                                            "1234567891011121",
+                                            binding.cpEtNewPass.text.toString()
+                                        ).toString()
+                                    )
+                                } catch (e: Exception) {
+                                    Log.e("onBackPressed", e.message.toString())
+                                }
+                            }
+
                     }
                 }
 

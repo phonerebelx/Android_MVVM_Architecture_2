@@ -24,7 +24,8 @@ import timber.log.Timber
 
 class MainApplication : Application(), ThreatListener.ThreatDetected {
 
-    lateinit var internetHelper: InternetHelper
+    private lateinit var internetHelper: InternetHelper
+
     val encryptionKeyStore = EncryptionKeyStoreImpl.instance
 
     override fun onCreate() {

@@ -53,6 +53,8 @@ fun <T> DockActivity.handleErrorResponse(activity: Activity,responseModel: Respo
             startActivity(intent)
         } else if (response.code() == 500) {
             showErrorMessage(activity,"Internal Server Error")
+        } else if (response.code() == 1000){
+            showErrorMessage(activity,"Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
         }
 
 
