@@ -21,6 +21,7 @@ import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.airbnb.lottie.LottieCompositionFactory
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivityLoginScreenBinding
@@ -50,6 +51,8 @@ class LoginScreen : DockActivity() {
 
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         navController = findNavController(R.id.nav_host_login_fragment)
 

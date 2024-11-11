@@ -25,6 +25,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
+import com.airbnb.lottie.LottieCompositionFactory
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
@@ -65,6 +66,10 @@ class LoginFragment : BaseDockFragment() {
 
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
+        LottieCompositionFactory.fromRawRes(requireContext(), R.raw.fingerprint).addListener { composition ->
+            binding.lottieAnimationView.setComposition(composition)
+            binding.lottieAnimationView.playAnimation()
+        }
 
         montserratFont = ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular) ?: Typeface.DEFAULT
 
@@ -112,7 +117,7 @@ class LoginFragment : BaseDockFragment() {
             LoginScreen.navController.navigate(R.id.action_nav_login_fragment_to_nav_forget_pass_fragment)
         }
 
-        binding.ivBiometric.setOnClickListener {
+        binding.lottieAnimationView.setOnClickListener {
             fingerprintPrompt()
         }
     }

@@ -76,7 +76,7 @@ class BarChartFragment(
 
     private fun setupRecyclerView(listItems: ArrayList<String>) {
 
-        if (listItems.size == 1){
+        if (listItems.size == 1) {
             binding.recyclerView.visibility = View.GONE
         }
 
@@ -95,7 +95,7 @@ class BarChartFragment(
         barChartModel: ArrayList<HorizontalBarChartDataModel>,
         combineChart: CombinedChart
     ) {
-        if (barChartModel.isEmpty()){
+        if (barChartModel.isEmpty()) {
             return
         }
 
@@ -119,11 +119,11 @@ class BarChartFragment(
         barDataSet.colors = colorsBar
         barDataSet.setDrawValues(false)
         val barData = BarData(barDataSet)
-        if (entries.size > 5){
+        if (entries.size > 5) {
             barData.barWidth = 0.7f
-        }else if (entries.size > 4){
+        } else if (entries.size > 4) {
             barData.barWidth = 0.5f
-        }else{
+        } else {
             barData.barWidth = 0.6f
         }
 
@@ -170,7 +170,7 @@ class BarChartFragment(
             }
             xAxis.setLabelCount(labels.size, false)
             xAxis.granularity = 1f
-            xAxis.valueFormatter =  object : ValueFormatter() {
+            xAxis.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     if (value >= 0) {
                         if (value <= labels.size - 1) {
@@ -203,7 +203,10 @@ class BarChartFragment(
                 when (it) {
                     is ResponseModel.Error -> {
                         hideProgressIndicator()
-                        (requireActivity() as DockActivity).handleErrorResponse(myDockActivity!!,it)
+                        (requireActivity() as DockActivity).handleErrorResponse(
+                            myDockActivity!!,
+                            it
+                        )
 
                     }
 
@@ -219,10 +222,15 @@ class BarChartFragment(
                         val responseBody = it.data?.body()
 
                         val listItems: ArrayList<String> = arrayListOf()
-                        if (responseBody?.asJsonArray?.isEmpty == true){
+
+                        if (responseBody?.asJsonArray?.isEmpty == true) {
+                            binding.combineChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        } else if (graphModel.get(0).barChartModel.isEmpty() == true) {
                             binding.combineChart.visibility = View.GONE
                             binding.tvView.visibility = View.VISIBLE
                         }
+
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                             val jsonArray = responseBody.asJsonArray.get(index).toString()
 
@@ -234,9 +242,14 @@ class BarChartFragment(
                             )
                             graphModel[index].label?.let { it1 -> listItems.add(it1) }
                         }
+
                         setupRecyclerView(listItems)
 
-                        if (graphModel.isNotEmpty()) showCombineChart(graphModel[0].barChartModel, binding.combineChart)
+
+                        if (graphModel.isNotEmpty()) showCombineChart(
+                            graphModel[0].barChartModel,
+                            binding.combineChart
+                        )
 
                     }
                 }
@@ -246,17 +259,16 @@ class BarChartFragment(
 
     override fun onClick(item: String?, position: Int, checked: Boolean?) {
 
-        if (graphModel[position].barChartModel.isEmpty()){
+        if (graphModel[position].barChartModel.isEmpty()) {
             binding.combineChart.visibility = View.GONE
             binding.tvView.visibility = View.VISIBLE
-        }else{
-            binding.combineChart.visibility =View.VISIBLE
+        } else {
+            binding.combineChart.visibility = View.VISIBLE
             binding.tvView.visibility = View.GONE
             showCombineChart(graphModel[position].barChartModel, binding.combineChart)
         }
 
     }
-
 
 
     private fun showProgressIndicator() {

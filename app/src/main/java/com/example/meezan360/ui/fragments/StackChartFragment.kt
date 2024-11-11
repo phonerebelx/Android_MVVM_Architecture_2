@@ -334,8 +334,10 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                             binding.recyclerView.visibility = View.GONE
                         }
 
-
-
+                        if (graphModel?.get(0)?.stackChartData?.isEmpty() == true){
+                            binding.barChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
 
                         if (graphModel?.isNotEmpty() == true) graphModel?.get(0)?.let { it1 -> showBarChart(it1, binding.barChart, true) }
                     }

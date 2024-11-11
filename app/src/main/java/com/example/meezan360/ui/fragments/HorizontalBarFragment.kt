@@ -289,6 +289,8 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                             )
                             graphModel[index].label.let { it2 -> listItems.add(it2) }
                         }
+
+
                         setupRecyclerView(listItems)
 
                         if (graphModel.isNotEmpty()) showBarChart(
