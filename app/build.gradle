@@ -134,6 +134,8 @@ dependencies {
 
 
     implementation 'androidx.biometric:biometric:1.0.1'
-    implementation 'com.github.mmoamenn:LuckyWheel_Android:0.3.0'
+    implementation 'com.caverock:androidsvg:1.4'
+
+    implementation project(":WheelView")
 
 }

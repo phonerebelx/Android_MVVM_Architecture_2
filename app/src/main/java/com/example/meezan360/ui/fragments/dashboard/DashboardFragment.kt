@@ -3,9 +3,13 @@ package com.example.meezan360.ui.fragments.dashboard
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.PictureDrawable
+import android.graphics.drawable.VectorDrawable
 import android.hardware.biometrics.BiometricPrompt
 import android.os.Build
 import android.os.Bundle
@@ -17,11 +21,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.caverock.androidsvg.SVG
+import me.sujanpoudel.wheelview.WheelView
 import com.example.meezan360.R
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.adapter.TopBoxesAdapter
@@ -68,11 +77,13 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import me.sujanpoudel.wheelview.ImageArc
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.lang.Math.abs
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import kotlin.math.min
 
 class DashboardFragment :
     BaseDockFragment(),
@@ -123,7 +134,8 @@ class DashboardFragment :
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentDashboardBinding.inflate(layoutInflater)
-        val sharedPreferences = myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
 
         // When app launch for first time
@@ -413,9 +425,7 @@ class DashboardFragment :
 
     }
 
-
     private fun initWheel(kpi: ArrayList<Kpi>?) {
-
         iconsData = arrayListOf(
             R.drawable.deposit_icon,
             R.drawable.cross_sell_icon,
@@ -429,12 +439,94 @@ class DashboardFragment :
             R.drawable.advances_icon
         )
 
+        var selectedKpiIndex = 0
+        if (kpi != null) {
+
+            for (i in kpi.indices) {
+                icons[iconsData[kpi[i].kpiId - 1]] = kpi[i].name
+
+                //for default key
+                if (kpi[i].isDefault.toString() == "true") {
+                    selectedKpiIndex = i
+                }
+
+            }
+        }
+
+
+        //Abdul Ali Grab the isDefault kpi from icon map and insert into 0 index of icon map
+
+        val iconPlacementList = icons.entries.toMutableList()
+        if (selectedKpiIndex in iconPlacementList.indices) {
+
+            val selectedEntry = iconPlacementList.removeAt(selectedKpiIndex)
+            iconPlacementList.add(0, selectedEntry)
+            icons.clear()
+            iconPlacementList.forEach { icons[it.key] = it.value }
+        }
+
+
+        iconsList = icons.toList()
+
+
+        // Abdul Ali :: Load each drawable as a Bitmap or PictureDrawable if it's SVG
+        val drawables = icons.keys.map { drawableId ->
+            val drawable = ContextCompat.getDrawable(requireContext(), drawableId)
+
+            if (drawable is VectorDrawable) {
+                drawable
+            } else {
+                try {
+                    val svg = SVG.getFromResource(resources, drawableId)
+                    val pictureDrawable = PictureDrawable(svg.renderToPicture())
+                    pictureDrawable
+                } catch (e: Exception) {
+                    null
+                }
+            }
+        }
+        setCenterText(0)
+        setupHeaderAndFooter(0)
+        binding.wheelView.apply {
+            titles = icons.values.map { it }
+            arcs = arcs.mapIndexed { index, arc ->
+                arc.copy(image = drawables.getOrNull(index)?.toBitmap())
+            }
+            refresh()
+        }
+
+        binding.wheelView.selectListener = {
+            setCenterText(it)
+            setupHeaderAndFooter(it)
+
+        }
+
     }
 
+    private fun setupHeaderAndFooter(index: Int) {
+        kpiId = kpi?.get(index)?.kpiId
+        tagName = if (kpiId == 1) {
+            Constants.peDeposit
+        } else {
+            Constants.general
+        }
+        setupHeader(kpiId, tagName)
 
+        if (kpiId == 1) {
+            binding.btnPEDeposit.visibility = View.VISIBLE
+            binding.btnAVGDeposit.visibility = View.VISIBLE
+        } else {
+            binding.btnPEDeposit.visibility = View.GONE
+            binding.btnAVGDeposit.visibility = View.GONE
 
+        }
+    }
 
-
+    private fun setCenterText(index: Int) {
+        val mCenterText = iconsList[index].second
+        centerText = mCenterText
+        binding.centerTextView.text = mCenterText
+    }
     override fun onClick(p0: View?) {
 
         when (p0?.id) {
@@ -510,7 +602,8 @@ class DashboardFragment :
                     is ResponseModel.Success -> {
                         myDockActivity?.hideProgressIndicator()
                         kpi = it.data?.body()?.kpis?.let { it1 -> ArrayList(it1) }
-                        showPieChart(kpi)
+                        initWheel(kpi)
+//                        showPieChart(kpi)
                     }
 
 
@@ -626,7 +719,10 @@ class DashboardFragment :
                         super.onAuthenticationSucceeded(result)
                         myDockActivity?.runOnUiThread {
                             Log.i("xxResult_Success", result.toString())
-                            myDockActivity!!.showSuccessMessage(myDockActivity!!,"Fingerprint Enabled Successfully")
+                            myDockActivity!!.showSuccessMessage(
+                                myDockActivity!!,
+                                "Fingerprint Enabled Successfully"
+                            )
                         }
                     }
 

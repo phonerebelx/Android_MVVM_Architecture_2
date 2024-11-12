@@ -98,38 +98,53 @@
                     tools:itemCount="3"
                     tools:listitem="@layout/top_box_item" />
 
-
-                <com.bluehomestudio.luckywheel.LuckyWheel
-                    android:id="@+id/lwv"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-                    android:layout_centerInParent="true"
-                    app:background_color="@color/purple_200"
+                <me.sujanpoudel.wheelview.WheelView
+                    android:id="@+id/wheelView"
+                    android:layout_width="285dp"
+                    android:layout_height="285dp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+                    android:layout_margin="16dp"
+                    app:wheelDividerStrokeWidth="0dp"
+                    app:wheelArcBackgroundColor="@color/grey"
+                    app:wheelSelectedArcBackgroundColor="@color/purple_dark"
+                    app:wheelAnchorAngle="270"
+                    app:wheelStartAngle="315"
+                    app:wheelTextSize="0dp"
+                    app:wheelSelectedTextColor="#FFF"
+                    app:wheelTextColor="#000000"
+                    app:wheelAnimationDuration="400"
+                    app:wheelMode="ANIMATE_TO_ANCHOR"
+                    />
+
+
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart"
                     style="@style/textViewStyle"
+                    android:visibility="gone"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
-                    android:visibility="gone"
                     android:layout_marginTop="@dimen/_20sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
+
+               
                 <LinearLayout
                     android:id="@+id/lvCenterView"
                     android:layout_width="@dimen/_120sdp"
-                    android:layout_height="@dimen/_120sdp"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
+
                     android:gravity="center"
-                    app:layout_constraintBottom_toBottomOf="@+id/lwv"
-                    app:layout_constraintEnd_toEndOf="@+id/lwv"
-                    app:layout_constraintStart_toStartOf="@+id/lwv"
-                    app:layout_constraintTop_toTopOf="@+id/lwv">
+                    app:layout_constraintBottom_toBottomOf="@+id/wheelView"
+                    app:layout_constraintEnd_toEndOf="@+id/wheelView"
+                    app:layout_constraintStart_toStartOf="@+id/wheelView"
+                    app:layout_constraintTop_toTopOf="@+id/wheelView">
 
                     <TextView
                         android:id="@+id/centerTextView"
@@ -169,7 +184,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_9ssp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lwv" />
+                    app:layout_constraintTop_toBottomOf="@+id/wheelView" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAVGDeposit"
@@ -184,7 +199,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_9ssp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lwv" />
+                    app:layout_constraintTop_toBottomOf="@+id/wheelView" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
