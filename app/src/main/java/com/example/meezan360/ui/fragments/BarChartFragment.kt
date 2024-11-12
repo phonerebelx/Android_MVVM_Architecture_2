@@ -223,13 +223,7 @@ class BarChartFragment(
 
                         val listItems: ArrayList<String> = arrayListOf()
 
-                        if (responseBody?.asJsonArray?.isEmpty == true) {
-                            binding.combineChart.visibility = View.GONE
-                            binding.tvView.visibility = View.VISIBLE
-                        } else if (graphModel.get(0).barChartModel.isEmpty() == true) {
-                            binding.combineChart.visibility = View.GONE
-                            binding.tvView.visibility = View.VISIBLE
-                        }
+
 
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
                             val jsonArray = responseBody.asJsonArray.get(index).toString()
@@ -243,6 +237,13 @@ class BarChartFragment(
                             graphModel[index].label?.let { it1 -> listItems.add(it1) }
                         }
 
+                        if (responseBody?.asJsonArray?.isEmpty == true) {
+                            binding.combineChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        } else if (graphModel[0].barChartModel.isEmpty()) {
+                            binding.combineChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
                         setupRecyclerView(listItems)
 
 

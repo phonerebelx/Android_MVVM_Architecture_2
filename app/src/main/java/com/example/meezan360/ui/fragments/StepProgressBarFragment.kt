@@ -77,10 +77,8 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
                     is ResponseModel.Success -> {
                         hideProgressIndicator()
                         val responseBody = it.data?.body()
-                        if (responseBody?.asJsonArray?.isEmpty == true){
-                            binding.recyclerView.visibility = View.GONE
-                            binding.tvView.visibility = View.VISIBLE
-                        }
+
+
                         val graphModel: ArrayList<HorizontalGraphModel> = arrayListOf()
 
                         if (responseBody != null) {
@@ -93,6 +91,14 @@ class StepProgressBarFragment(val kpiId: Int?, val tagName: String, val dataMode
                                             HorizontalGraphModel::class.java
                                         )
                                     )
+                                }
+
+                                if (responseBody?.asJsonArray?.isEmpty == true){
+                                    binding.recyclerView.visibility = View.GONE
+                                    binding.tvView.visibility = View.VISIBLE
+                                }else if ( graphModel[0].barChartModel.isEmpty()) {
+                                    binding.recyclerView.visibility = View.GONE
+                                    binding.tvView.visibility = View.VISIBLE
                                 }
 
                                 if (graphModel.isNotEmpty()) binding.tvDescription.text = graphModel[0].description

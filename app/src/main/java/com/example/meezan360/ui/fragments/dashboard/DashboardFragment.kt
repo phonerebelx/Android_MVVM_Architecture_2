@@ -414,6 +414,27 @@ class DashboardFragment :
     }
 
 
+    private fun initWheel(kpi: ArrayList<Kpi>?) {
+
+        iconsData = arrayListOf(
+            R.drawable.deposit_icon,
+            R.drawable.cross_sell_icon,
+            R.drawable.profitability,
+            R.drawable.controls_icon,
+            R.drawable.premium_icon,
+            R.drawable.cash_icon,
+            R.drawable.adc_icon,
+            R.drawable.wealth_icon,
+            R.drawable.compliance_icon,
+            R.drawable.advances_icon
+        )
+
+    }
+
+
+
+
+
     override fun onClick(p0: View?) {
 
         when (p0?.id) {

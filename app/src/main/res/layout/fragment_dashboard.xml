@@ -99,11 +99,22 @@
                     tools:listitem="@layout/top_box_item" />
 
 
+                <com.bluehomestudio.luckywheel.LuckyWheel
+                    android:id="@+id/lwv"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
+                    android:layout_centerInParent="true"
+                    app:background_color="@color/purple_200"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pieChart"
                     style="@style/textViewStyle"
                     android:layout_width="300dp"
                     android:layout_height="300dp"
+                    android:visibility="gone"
                     android:layout_marginTop="@dimen/_20sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -115,10 +126,10 @@
                     android:layout_height="@dimen/_120sdp"
                     android:orientation="vertical"
                     android:gravity="center"
-                    app:layout_constraintBottom_toBottomOf="@+id/pieChart"
-                    app:layout_constraintEnd_toEndOf="@+id/pieChart"
-                    app:layout_constraintStart_toStartOf="@+id/pieChart"
-                    app:layout_constraintTop_toTopOf="@+id/pieChart">
+                    app:layout_constraintBottom_toBottomOf="@+id/lwv"
+                    app:layout_constraintEnd_toEndOf="@+id/lwv"
+                    app:layout_constraintStart_toStartOf="@+id/lwv"
+                    app:layout_constraintTop_toTopOf="@+id/lwv">
 
                     <TextView
                         android:id="@+id/centerTextView"
@@ -158,7 +169,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_9ssp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pieChart" />
+                    app:layout_constraintTop_toBottomOf="@+id/lwv" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnAVGDeposit"
@@ -173,7 +184,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_9ssp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pieChart" />
+                    app:layout_constraintTop_toBottomOf="@+id/lwv" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"

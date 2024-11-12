@@ -408,9 +408,15 @@ class SearchFragment : BaseDockFragment() {
                     selected_region = regionItem,
                     selected_area = areaItem,
                     selected_branch = branchCode,
-                    selected_date = selectedDate
+                    selected_date = if (::selectedDate.isInitialized) {
+                        selectedDate
+                    }else {
+                        ""
+                    }
+
+
                 )
-                Log.d("setOnClickListener: ",setFilterResponse.toString())
+
                 setFilter(
                     setFilterResponse.selected_area,
                     setFilterResponse.selected_region,

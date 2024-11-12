@@ -273,10 +273,7 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                         hideProgressIndicator()
                         val responseBody = it.data?.body()
 
-                        if (responseBody?.asJsonArray?.isEmpty == true){
-                            binding.horizontalBarChart.visibility = View.GONE
-                            binding.tvView.visibility = View.VISIBLE
-                        }
+
                         val listItems: ArrayList<String> = arrayListOf()
 
                         responseBody?.asJsonArray?.forEachIndexed { index, _ ->
@@ -290,6 +287,15 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
                             graphModel[index].label.let { it2 -> listItems.add(it2) }
                         }
 
+                        if (responseBody?.asJsonArray?.isEmpty == true){
+                            binding.horizontalBarChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        } else if (graphModel[0].top.isEmpty() &&
+                                    graphModel[0].bottom.isEmpty()
+                            ) {
+                            binding.horizontalBarChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
 
                         setupRecyclerView(listItems)
 

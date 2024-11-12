@@ -290,10 +290,7 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                         hideProgressIndicator()
                         val responseBody = it.data?.body()
 
-                        if (responseBody?.asJsonArray?.isEmpty == true){
-                            binding.barChart.visibility = View.GONE
-                            binding.tvView.visibility = View.VISIBLE
-                        }
+
                         val recyclerViewItems: ArrayList<String> = arrayListOf()
                         graphArrayWithTd = arrayListOf()
                         graphArrayWithoutTd = arrayListOf()
@@ -325,6 +322,13 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                                 }
                             }
                         }
+                        if (responseBody?.asJsonArray?.isEmpty == true){
+                            binding.barChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }else if (graphModel?.get(0)?.stackChartData?.isEmpty() == true){
+                            binding.barChart.visibility = View.GONE
+                            binding.tvView.visibility = View.VISIBLE
+                        }
 
                         if (cardTypeId == "4") {
                             setupRecyclerView(recyclerViewItems)
@@ -334,10 +338,6 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                             binding.recyclerView.visibility = View.GONE
                         }
 
-                        if (graphModel?.get(0)?.stackChartData?.isEmpty() == true){
-                            binding.barChart.visibility = View.GONE
-                            binding.tvView.visibility = View.VISIBLE
-                        }
 
                         if (graphModel?.isNotEmpty() == true) graphModel?.get(0)?.let { it1 -> showBarChart(it1, binding.barChart, true) }
                     }

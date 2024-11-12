@@ -150,10 +150,10 @@ class StepProgressBarAdapter(
 
         // Calculate the number of completed steps based on percentage
         val completedSteps = when {
-            percentage in 0.1f..25f -> 1 // 1 circle filled for 1% to 25%
-            percentage in 26f..50f -> 2 // 2 circles filled for 26% to 50%
-            percentage in 51f..75f -> 3 // 3 circles filled for 51% to 75%
-            percentage in 76f..100f -> 4 // 4 circles filled for 76% to 100%
+            percentage in 0.1f..25.0f -> 1 // 1 circle filled for 1% to 25%
+            percentage in 25.1f..50.0f -> 2 // 2 circles filled for 26% to 50%
+            percentage in 50.1f..75.0f -> 3 // 3 circles filled for 51% to 75%
+            percentage in 75.1f..100f -> 4 // 4 circles filled for 76% to 100%
             else -> 0 // No circles filled if percentage < 1%
         }
 

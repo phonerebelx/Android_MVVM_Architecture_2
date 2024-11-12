@@ -140,6 +140,25 @@ class Pie4ChartFragment() : BaseDockFragment() {
                         } catch (e: JsonSyntaxException) {
                             null
                         }
+                        if (pieChartModel != null) {
+                            if (pieChartModel.graph1 == null && pieChartModel.graph1 == null && pieChartModel.graph3 == null && pieChartModel.graph4 == null) {
+                                binding.llPieChart1.visibility = View.GONE
+                                binding.llPieChart2.visibility = View.GONE
+                                binding.tvView.visibility = View.VISIBLE
+                            }
+                            if (pieChartModel.graph1 == null) {
+                                binding.pieChartPkr.visibility = View.GONE
+                            }
+                            if (pieChartModel.graph2 == null) {
+                                binding.pieChartUsd.visibility = View.GONE
+                            }
+                            if (pieChartModel.graph3 == null) {
+                                binding.pieChartGBP.visibility = View.GONE
+                            }
+                            if (pieChartModel.graph4 == null) {
+                                binding.pieChartEuro.visibility = View.GONE
+                            }
+                        }
                         showPieChart(pieChartModel?.graph1, binding.pieChartPkr)
                         showPieChart(pieChartModel?.graph2, binding.pieChartUsd)
                         showPieChart(pieChartModel?.graph3, binding.pieChartGBP)

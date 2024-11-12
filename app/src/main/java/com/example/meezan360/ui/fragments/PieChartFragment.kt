@@ -163,7 +163,14 @@ class PieChartFragment() : BaseDockFragment() {
                         } catch (e: JsonSyntaxException) {
                             null
                         }
+                        if (pieChartModel != null) {
 
+
+                            if (pieChartModel.graph1 == null) {
+                                binding.pieChartRatio.visibility = View.GONE
+                                binding.tvView.visibility = View.VISIBLE
+                            }
+                        }
                         showPieChart(pieChartModel?.graph1, binding.pieChartRatio)
 
 
