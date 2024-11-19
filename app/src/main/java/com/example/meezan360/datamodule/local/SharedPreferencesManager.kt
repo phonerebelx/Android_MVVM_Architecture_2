@@ -97,7 +97,7 @@ class SharedPreferencesManager( @PublishedApi internal val sharedPreferences: Sh
 
     @SuppressLint("CommitPrefEdits")
     fun logout(): Boolean {
-        return if (get<Boolean>(Constants.IS_FINGERPRINT)!!) {
+        return if (get<Boolean>(Constants.IS_FINGERPRINT) != null && get<Boolean>(Constants.IS_FINGERPRINT)!!) {
             return try {
                 // AMMAR - Gets login data
                 val fingerprintLoginData: FingerprintLoginData = getFingerprintLoginData()

@@ -1,10 +1,12 @@
 package com.example.meezan360.ui.activities
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -247,6 +249,7 @@ class ReportLevel2Activity : DockActivity(), OnItemClickListener, OnTypeItemClic
         binding.recyclerViewFooter.adapter = footerAdapter
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun setupReportsRecyclerView(reportList: ArrayList<Report>?) {
         binding.recyclerViewReport.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)

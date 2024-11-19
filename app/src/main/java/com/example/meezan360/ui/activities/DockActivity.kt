@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.meezan360.R
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.progress.ProgressDialog
+import com.example.snackbar.SnackBar
 import com.mohamed.notificationbar.NotificationBar
 
 import com.uhfsolutions.carlutions.progress.ProgressIndicator
@@ -74,25 +75,11 @@ abstract class DockActivity: AppCompatActivity(), ProgressIndicator {
         )
     }
 
-    open fun showErrorMessage(activity: Activity,message: String) {
-       NotificationBar.create(activity)
-            .setIcon(R.drawable.ic_custom_cross)
-            .setTitle("Error")
-            .setTitleColor(R.color.white)
-            .setMessage(message)
-            .setBackgroundColor(R.color.error_color)
-            .setNotificationPosition(NotificationBar.TOP)
-            .show();
+    open fun showErrorMessage(message: String) {
+        SnackBar.error(findViewById(android.R.id.content), message, SnackBar.LENGTH_LONG).show()
     }
-    open fun showSuccessMessage(activity: Activity,message: String) {
-        NotificationBar.create(activity)
-            .setIcon(R.drawable.ic_custom_tick)
-            .setTitle("Success")
-            .setTitleColor(R.color.white)
-            .setMessage(message)
-            .setBackgroundColor(R.color.banner_green_color)
-            .setNotificationPosition(NotificationBar.TOP)
-            .show();
+    open fun showSuccessMessage(message: String) {
+        SnackBar.success(findViewById(android.R.id.content), message, SnackBar.LENGTH_LONG).show()
     }
     fun setPassViewListener(password: EditText, confirmPassword: EditText, warningText: TextView) {
         password.addTextChangedListener(object : TextWatcher {

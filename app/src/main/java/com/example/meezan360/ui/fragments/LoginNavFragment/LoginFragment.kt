@@ -260,11 +260,15 @@ class LoginFragment : BaseDockFragment() {
 
         myViewModel.viewModelScope.launch {
             myViewModel.loginRequest(
-                email,  Utils.encryptPass(
+                email,
+                Utils.encryptPass(
                 "23423532",
                 "1234567891011121",
                 password
-            )!!, deviceId)
+            )!!
+//                Utils.encryptPassNew(password)
+                , deviceId
+            )
         }
 
     }

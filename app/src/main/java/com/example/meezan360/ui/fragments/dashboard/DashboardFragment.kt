@@ -139,7 +139,7 @@ class DashboardFragment :
         sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
 
         // When app launch for first time
-        if (sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) == false) {
+        if (sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) != null && sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) == false) {
             val fingerprintDialog = FingerprintPermissionDialogFragment(this)
             fingerprintDialog.show(childFragmentManager, "FingerprintPermissionDialogFragment")
         }
@@ -500,7 +500,6 @@ class DashboardFragment :
             setupHeaderAndFooter(it)
 
         }
-
     }
 
     private fun setupHeaderAndFooter(index: Int) {
