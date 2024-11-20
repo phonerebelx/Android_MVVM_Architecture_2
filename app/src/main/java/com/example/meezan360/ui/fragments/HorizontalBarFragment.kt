@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -231,6 +232,9 @@ class HorizontalBarFragment(val kpiId: Int?, val tagName: String, val dataModel:
             data = mData
             description.isEnabled = false
             animateXY(1000, 800)
+            val paintShadow: Paint = renderer.paintRender
+            paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
+
             invalidate()
         }
     }

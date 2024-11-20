@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -155,27 +156,13 @@ private fun showBarChart(horizontalGraphModel: HorizontalGraphModel, barChart: B
         legend.isEnabled = false
         setTouchEnabled(false)
         data = barData
+        val paintShadow: Paint = renderer.paintRender
+        paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
+
         animateY(800)
         invalidate()
     }
 }
-
-    private fun setupLegend() {
-        val legend: Legend = binding.barChart.legend
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-        legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
-        legend.xEntrySpace = 25f
-        val l1 = LegendEntry(
-            "Increase", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#6348A0")
-        )
-        val l2 = LegendEntry(
-            "Decrease", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#E8544F")
-        )
-        val l3 = LegendEntry(
-            "Net Off", Legend.LegendForm.CIRCLE, 8f, 0f, null, Color.parseColor("#FFC400")
-        )
-        legend.setCustom(arrayOf(l1, l2, l3))
-    }
 
     private fun handleAPIResponse() {
         lifecycleScope.launch {

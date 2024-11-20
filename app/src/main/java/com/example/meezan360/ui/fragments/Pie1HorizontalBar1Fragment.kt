@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -169,6 +170,8 @@ class Pie1HorizontalBar1Fragment(
                     "Target", Legend.LegendForm.DEFAULT, 8f, 0f, null, targetColors[0]
                 )
                 legend.setCustom(arrayOf(l1, l2))
+                val paintShadow: Paint = renderer.paintRender
+                paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
 
                 animateXY(1000, 800)
                 invalidate()
@@ -211,6 +214,11 @@ class Pie1HorizontalBar1Fragment(
                 setCenterTextColor(Color.parseColor("#765CB4"))
 
                 data = PieData(pieDataSet)
+
+                val paintShadow: Paint = renderer.paintRender
+                paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
+
+
                 animateY(1000)
                 invalidate()
             }

@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.meezan360.ui.fragments.dashboard.DashboardFragment"
-        tools:layout="@layout/fragment_dashboard"
-        android:label="@string/Home">
+        tools:layout="@layout/fragment_dashboard">
 
         <action
             android:id="@+id/action_dashboard_to_change_Password_Fragment"

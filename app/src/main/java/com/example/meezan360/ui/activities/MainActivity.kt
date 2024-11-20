@@ -20,6 +20,7 @@ import android.view.View.OnClickListener
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.TextView
 
 import android.widget.Toolbar
 import androidx.annotation.IdRes
@@ -126,6 +127,8 @@ class MainActivity : DockActivity(){
         navController = findNavController(R.id.nav_host_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         actionBarMenu = menu
@@ -144,20 +147,17 @@ class MainActivity : DockActivity(){
 
         return super.onCreateOptionsMenu(menu)
     }
-    fun Context.dpToPx(dp: Float): Int {
-        val scale = resources.displayMetrics.density
-        return (dp * scale + 0.5f).toInt()
-    }
+
+
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.R)
     private fun initView() {
 
         drawerLayout = binding.drawerLayout
         setSupportActionBar(findViewById(R.id.toolBar))
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolBar)
-        val dpSizeInDp = getScreenHeight("width").toFloat()/5
-        val titleMarginStartInPx = dpToPx(dpSizeInDp)
-        toolbar.titleMarginStart = titleMarginStartInPx
+        supportActionBar?.title = ""
+        val titleTextView: TextView? = findViewById<TextView>(R.id.toolbar_title)
+
 
         contentView = binding.appBarMain.content
         navController = findNavController(R.id.nav_host_main)
@@ -187,6 +187,12 @@ class MainActivity : DockActivity(){
 
         navigateToFragment(R.id.nav_home)
         prepareSideMenu()
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+
+            val label = destination.label ?: getString(R.string.Home)
+            titleTextView?.text = label
+        }
     }
 
     private fun navigateToFragment(@IdRes id: Int, args: Bundle? = null) {

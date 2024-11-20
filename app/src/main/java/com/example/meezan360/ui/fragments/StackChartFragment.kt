@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -228,6 +229,9 @@ class StackChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Da
                 }
             }
             data = barData
+            val paintShadow: Paint = renderer.paintRender
+            paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
+
             animateY(800)
             invalidate()
             if (dataModel.isVerticalLegend == "1"){

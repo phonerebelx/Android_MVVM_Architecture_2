@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
 import android.provider.CalendarContract.Colors
@@ -117,6 +118,9 @@ class PieChartFragment() : BaseDockFragment() {
                 setTouchEnabled(false)
                 data = PieData(pieDataSet)
                 animateY(1000)
+                val paintShadow: Paint = renderer.paintRender
+                paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
+
                 invalidate()
             }
         }

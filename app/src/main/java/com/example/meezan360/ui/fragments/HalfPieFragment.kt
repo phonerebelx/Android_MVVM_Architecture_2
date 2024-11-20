@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -84,6 +85,9 @@ class HalfPieFragment(val kpiId: Int?, val tagName: String, val dataModel: DataM
             maxAngle = 180f
             legend.isEnabled = false
             data = pieData
+            val paintShadow: Paint = renderer.paintRender
+            paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
+
             invalidate()
         }
     }

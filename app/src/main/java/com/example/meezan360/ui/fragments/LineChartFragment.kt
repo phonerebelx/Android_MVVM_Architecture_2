@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -109,6 +110,9 @@ class LineChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             if (dataModel.isVerticalLegend == "1"){
                 xAxis.labelRotationAngle = -90f
             }
+            val paintShadow: Paint = renderer.paintRender
+            paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
+
             invalidate()
         }
 

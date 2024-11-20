@@ -7,7 +7,15 @@
     android:id="@+id/content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
+    <ImageView
+        android:id="@+id/overlayImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_minus18sdp"
+        android:src="@drawable/purple_curve_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <fragment
         android:id="@+id/nav_host_main"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,29 +28,60 @@
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 
-    <include
-        android:id="@+id/banner"
-        layout="@layout/banner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="5dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/purple_dark"
+        android:layout_height="@dimen/_38sdp"
+        android:background="@color/transparent"
         android:gravity="center"
+        android:paddingTop="@dimen/_4sdp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:titleMarginStart="@dimen/_70sdp"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white" >
+
+        <TextView
+            android:id="@+id/left_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_16sdp"
+            android:textStyle="bold"
+            android:layout_marginStart="@dimen/_5sdp"
+            style="@style/textViewStyle"
+            android:layout_gravity="left"/>
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+
+
+        <TextView
+            android:id="@+id/right_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:visibility="gone"
+            android:textColor="@android:color/black"
+            android:gravity="bottom"
+            android:textSize="@dimen/_12sdp"
+            android:textStyle="bold"
+            android:layout_marginEnd="@dimen/_5sdp"
+            style="@style/textViewStyle"
+            android:layout_gravity="right"/>
+    </androidx.appcompat.widget.Toolbar>
 
 
 

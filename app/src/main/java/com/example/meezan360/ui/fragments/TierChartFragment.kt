@@ -79,6 +79,7 @@ class TierChartFragment(val kpiId: Int?, val tagName: String, val dataModel: Dat
             labels().fontSize(10)
             labels().position("inside")
             credits(false)
+
         }
 
         // Display the chart

@@ -1,24 +1,25 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Shader
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
-
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+
 import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.FragmentDepositCompositionBinding
 import com.example.meezan360.model.dashboardByKpi.DataModel
-import com.example.meezan360.model.footerGraph.PieGraphModel
 import com.example.meezan360.model.footerGraph.BarGraphModel
+import com.example.meezan360.model.footerGraph.PieGraphModel
 import com.example.meezan360.model.graphs.Pie2Bar2Model
 import com.example.meezan360.network.ResponseModel
-import com.example.meezan360.progress.ProgressDialog
 import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
@@ -40,7 +41,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import com.uhfsolutions.carlutions.progress.ProgressIndicator
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -80,6 +80,7 @@ class Pie2Bar2Fragment() : BaseDockFragment() {
 
         return binding.root
     }
+
     private fun showPieChart(graph1: PieGraphModel?, pieChart: PieChart) {
 
         graph1?.let {
@@ -111,7 +112,8 @@ class Pie2Bar2Fragment() : BaseDockFragment() {
                     setTouchEnabled(false)
                     setCenterTextColor(Color.parseColor(graph1.pieChartModel.color))
                     data = PieData(pieDataSet)
-
+                    val paintShadow: Paint = renderer.paintRender
+                    paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
 
                     animateY(1000)
 
@@ -202,11 +204,14 @@ class Pie2Bar2Fragment() : BaseDockFragment() {
                     )
                 )
             )
+            val paintShadow: Paint = renderer.paintRender
+            paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
             animateXY(1000, 800)
 
             invalidate()
         }
     }
+
 
 
     private fun handleAPIResponse() {

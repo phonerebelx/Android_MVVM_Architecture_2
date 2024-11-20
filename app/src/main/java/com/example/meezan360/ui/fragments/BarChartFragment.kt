@@ -1,6 +1,7 @@
 package com.example.meezan360.ui.fragments
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -145,7 +146,7 @@ class BarChartFragment(
         val legend: Legend = combineChart.legend
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         legend.textColor = ContextCompat.getColor(requireContext(), R.color.grey2)
-//        legend.xEntrySpace = 25f
+
         val l1 = LegendEntry(
             "Target", Legend.LegendForm.SQUARE, 8f, 0f, null, colorsTarget[0]
         )
@@ -191,6 +192,9 @@ class BarChartFragment(
             axisLeft.isEnabled = false
             axisRight.isEnabled = false
             data = combineData
+
+            val paintShadow: Paint = renderer.paintRender
+            paintShadow.setShadowLayer(5F, 2F, 2F, Color.GRAY);
             animateY(800)
             invalidate()
         }
