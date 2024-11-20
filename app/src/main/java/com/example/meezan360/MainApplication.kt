@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
-
-import androidx.core.app.ActivityCompat.finishAffinity
 import com.aheaditec.talsec_security.security.api.Talsec
 import com.aheaditec.talsec_security.security.api.TalsecConfig
 import com.aheaditec.talsec_security.security.api.ThreatListener
@@ -15,8 +13,9 @@ import com.example.meezan360.di.appModule
 import com.example.meezan360.di.dataModule
 import com.example.meezan360.security.EncryptionKeyStoreImpl
 import com.example.meezan360.security.logger.SecureLogger
-import com.example.meezan360.utils.Constants
 import com.example.meezan360.utils.InternetHelper
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.tasks.Task
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -31,6 +30,10 @@ class MainApplication : Application(), ThreatListener.ThreatDetected {
     override fun onCreate() {
         super.onCreate()
 
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+
+        }
 
         SecureLogger.init(this)
         try {

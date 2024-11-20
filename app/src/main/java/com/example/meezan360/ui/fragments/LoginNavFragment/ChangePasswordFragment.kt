@@ -22,7 +22,7 @@ import com.example.meezan360.model.changenewpassword.ChangePasswordModel
 import com.example.meezan360.network.ResponseModel
 import com.example.meezan360.ui.activities.DockActivity
 import com.example.meezan360.ui.activities.LoginScreen
-import com.example.meezan360.ui.activities.LoginScreen.Companion.navController
+
 import com.example.meezan360.utils.InternetHelper
 import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
@@ -63,7 +63,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
         myDockActivity?.hideProgressIndicator()
         when (tag) {
             "Verify_Password_Data" -> {
-                myDockActivity?.showErrorMessage(myDockActivity!!,message)
+                myDockActivity?.showErrorMessage(message)
             }
         }
     }
@@ -100,11 +100,11 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
             it.cpBtnChangePassword.setOnClickListener {
                 when {
                     binding.cpEtNewPass.text?.isEmpty() == true || binding.cpEtConfirmPass.text?.isEmpty() == true -> {
-                        myDockActivity?.showErrorMessage(myDockActivity!!,"Please fill all fields!")
+                        myDockActivity?.showErrorMessage("Please fill all fields!")
                     }
 
                     binding.cpEtNewPass.text.toString() != binding.cpEtConfirmPass.text.toString() -> {
-                        myDockActivity?.showErrorMessage(myDockActivity!!,"Passwords do not match! Please make sure you enter the correct password")
+                        myDockActivity?.showErrorMessage("Passwords do not match! Please make sure you enter the correct password")
                     }
 
                     else -> {
@@ -112,7 +112,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                         myDockActivity?.hideKeyboard(requireView())
 
                         if(!internetHelper.isNetworkAvailable()){
-                            myDockActivity?.showErrorMessage(requireActivity(),"Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                            myDockActivity?.showInternetConnectionMessage("Please connect to Wi-Fi or enable mobile data.")
                         } else {
                             myViewModel.viewModelScope.launch {
                                 myDockActivity?.showProgressIndicator()
@@ -168,7 +168,7 @@ class ChangePasswordFragment : BaseDockFragment(), ApiListener {
                     is ResponseModel.Loading -> {}
 
                     is ResponseModel.Success -> {
-                        myDockActivity?.showSuccessMessage(myDockActivity!!,"Password Change Successfully")
+                        myDockActivity?.showSuccessMessage("Password Change Successfully")
                         sharedPreferencesManager.clearSharedPreferences()
                         startActivity(Intent(requireContext(), LoginScreen::class.java))
                         requireActivity().finish()

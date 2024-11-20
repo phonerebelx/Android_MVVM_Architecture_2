@@ -107,6 +107,7 @@ class MainActivity : DockActivity(){
     private var logoutJob: Job? = null
 
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -148,7 +149,7 @@ class MainActivity : DockActivity(){
         return (dp * scale + 0.5f).toInt()
     }
     @SuppressLint("SetTextI18n")
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun initView() {
 
         drawerLayout = binding.drawerLayout
@@ -254,7 +255,7 @@ class MainActivity : DockActivity(){
 //        binding.sideLayout.lvExp.divider = resources.getDrawable(R.color.grey2)
 
         binding.sideLayout.userImage.setOnClickListener {
-            showImageDialog()
+//            showImageDialog()
         }
         binding.sideLayout.lvExp.setAdapter(listAdapter as ExpListAdapter)
 
@@ -345,7 +346,7 @@ class MainActivity : DockActivity(){
 
                     is ResponseModel.Success -> {
                         sharedPreferencesManager.logout()
-                        it.message?.let { it1 -> showSuccessMessage(this@MainActivity,it1) }
+                        it.message?.let { it1 -> showSuccessMessage(it1) }
                           val intent = Intent(this@MainActivity, LoginScreen::class.java)
                           startActivity(intent)
                     }

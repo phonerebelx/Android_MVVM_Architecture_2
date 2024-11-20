@@ -4,6 +4,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven { url 'https://repo.grails.org/ui/native/core' }
         maven {
             url "https://jitpack.io" }
 
@@ -20,6 +21,7 @@ dependencyResolutionManagement {
         maven {
             jcenter()
             url "https://jitpack.io" }
+        maven { url 'https://repo.grails.org/ui/native/core' }
         maven { url "https://europe-west3-maven.pkg.dev/talsec-artifact-repository/freerasp" }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     }
@@ -29,3 +31,4 @@ dependencyResolutionManagement {
 rootProject.name = "Meezan360"
 include ':app'
 include ':WheelView'
+include ':motiontoast'

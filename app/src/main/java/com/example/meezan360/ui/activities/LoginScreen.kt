@@ -1,73 +1,87 @@
 package com.example.meezan360.ui.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Application
-import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
-import android.provider.Settings.Secure
-import android.text.TextUtils
-import android.util.Log
-import android.view.View
 import android.view.WindowManager
-import android.widget.TextView
-
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.airbnb.lottie.LottieCompositionFactory
-import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.databinding.ActivityLoginScreenBinding
-import com.example.meezan360.datamodule.local.SharedPreferencesManager
-import com.example.meezan360.network.ResponseModel
-import com.example.meezan360.utils.Utils
-import com.example.meezan360.viewmodel.LoginViewModel
-import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-
-
 class LoginScreen : DockActivity() {
 
     private lateinit var binding: ActivityLoginScreenBinding
+
     companion object {
-        lateinit var appBarConfiguration: AppBarConfiguration
+
         @SuppressLint("StaticFieldLeak")
-        lateinit var navController : NavController
-
+        lateinit var navController: NavController
     }
-
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         window.statusBarColor = Color.TRANSPARENT
         window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
         binding = ActivityLoginScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Set up custom toolbar
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        // Initialize NavController
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_login_fragment) as NavHostFragment
+        navController = navHostFragment.navController
+
+        // Set up AppBarConfiguration - Set only login_start as top level
+        val appBarConfiguration = AppBarConfiguration(setOf(R.id.login_start))
+
+        // Setup the ActionBar with NavController
+        setupActionBarWithNavController(navController, appBarConfiguration)
+
+        // Configure back navigation
+        binding.toolbar.setNavigationOnClickListener {
+            onSupportNavigateUp()
+        }
+
+        // Update toolbar title and back button based on destination
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            // Set title
+            val title = when (destination.id) {
+                R.id.login_start -> ""
+                R.id.forgetPasswordFragment -> "Forget Password"
+                R.id.OTPFragment -> "OTP Verification"
+                R.id.changePasswordFragment -> "Change Password"
+                R.id.resetPasswordFragment -> "Reset Password"
+                else -> ""
+            }
+            binding.toolbarTitle.text = title
 
 
-        navController = findNavController(R.id.nav_host_login_fragment)
+            if (destination.id == R.id.login_start) {
+                binding.toolbar.navigationIcon = null
+                binding.toolbar.setBackgroundColor(resources.getColor(R.color.transparent, theme))
+            } else {
+                binding.toolbar.setBackgroundColor(resources.getColor(R.color.purple_light, theme))
 
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.login_start
-            )
-        )
+                binding.toolbar.setNavigationIcon(R.drawable.ic_back)
+            }
 
-
+            binding.toolbar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        navController = findNavController(R.id.nav_host_login_fragment)
-        return super.onSupportNavigateUp()
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
-
 }

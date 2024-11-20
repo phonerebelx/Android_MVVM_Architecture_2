@@ -62,15 +62,15 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
                 when {
                     binding.cpEtNewPass.text?.isEmpty() == true ||
                             binding.cpEtConfirmPass.text?.isEmpty() == true -> {
-                        myDockActivity?.showErrorMessage(myDockActivity!!,"Please fill all fields!")
+                        myDockActivity?.showErrorMessage("Please fill all fields!")
                     }
                     binding.cpEtNewPass.text.toString() != binding.cpEtConfirmPass.text.toString() -> {
-                        myDockActivity?.showErrorMessage(myDockActivity!!,"Passwords do not match! Please make sure you enter the correct password")
+                        myDockActivity?.showErrorMessage("Passwords do not match! Please make sure you enter the correct password")
                     }
                     else -> {
 
                             if(!internetHelper.isNetworkAvailable()){
-                                myDockActivity?.showErrorMessage(requireActivity(),"Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                                myDockActivity?.showInternetConnectionMessage("Please connect to Wi-Fi or enable mobile data.")
                             } else {
                                 try {
                                     verifyPwdReq(
@@ -90,9 +90,9 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
 
             }
 
-            it.pressBack.setOnClickListener {
-                myDockActivity?.popFragment()
-            }
+//            it.pressBack.setOnClickListener {
+//                myDockActivity?.popFragment()
+//            }
         }
     }
 
@@ -119,7 +119,7 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
 
                         if (it.data!= null){
 
-                            myDockActivity?.showSuccessMessage(myDockActivity!!,it.data.message)
+                            myDockActivity?.showSuccessMessage(it.data.message)
                             sharedPreferencesManager.clearSharedPreferences()
                             LoginScreen.navController.navigate(R.id.action_resetPasswordFragment_to_welcome_login)
                         }
@@ -162,7 +162,7 @@ class ResetPasswordFragment : BaseDockFragment(),ApiListener {
         myDockActivity?.hideProgressIndicator()
         when (tag) {
             "Verify_Password_Data" -> {
-                myDockActivity?.showErrorMessage(myDockActivity!!,message)
+                myDockActivity?.showErrorMessage(message)
             }
         }
     }

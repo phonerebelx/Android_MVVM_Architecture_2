@@ -46,15 +46,15 @@ fun <T> DockActivity.handleErrorResponse(activity: Activity,responseModel: Respo
                 // Handle invalid JSON format
                 e.printStackTrace()
             }
-            showErrorMessage(this,errorMessage)
+            showErrorMessage(errorMessage)
 
         } else if (response.code() == 552) {
             val intent = Intent(this, ChangePasswordActivity::class.java)
             startActivity(intent)
         } else if (response.code() == 500) {
-            showErrorMessage(activity,"Internal Server Error")
-        } else if (response.code() == 1000){
-            showErrorMessage(activity,"Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+            showInternetConnectionMessage("Internal Server Error")
+        } else if (response.code() == 1000) {
+            showInternetConnectionMessage("Please connect to Wi-Fi or enable mobile data.")
         }
 
 
@@ -65,7 +65,7 @@ fun <T> DockActivity.handleErrorResponse(activity: Activity,responseModel: Respo
                 val jsonObject = JSONObject(errorBodyString)
                 val error: String = jsonObject.getString("error")
 
-                showErrorMessage(activity,error)
+                showErrorMessage(error)
             } catch (e: JSONException) {
                 e.printStackTrace()
             }

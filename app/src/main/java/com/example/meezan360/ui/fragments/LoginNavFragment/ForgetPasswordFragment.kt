@@ -77,10 +77,7 @@ class ForgetPasswordFragment : BaseDockFragment() {
                 }
             }
 
-            pressBack.setOnClickListener {
-                LoginScreen.navController.popBackStack()
-//                myDockActivity?.popFragment()
-            }
+
         }
     }
 

@@ -15,13 +15,13 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.example.meezan360.R
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.progress.ProgressDialog
-import com.example.snackbar.SnackBar
-import com.mohamed.notificationbar.NotificationBar
-
 import com.uhfsolutions.carlutions.progress.ProgressIndicator
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 
 abstract class DockActivity: AppCompatActivity(), ProgressIndicator {
@@ -76,10 +76,36 @@ abstract class DockActivity: AppCompatActivity(), ProgressIndicator {
     }
 
     open fun showErrorMessage(message: String) {
-        SnackBar.error(findViewById(android.R.id.content), message, SnackBar.LENGTH_LONG).show()
+
+        MotionToast.createColorToast(this,
+            "Failed",
+            message,
+            MotionToastStyle.ERROR,
+            MotionToast.GRAVITY_TOP,
+            MotionToast.LONG_DURATION,
+            ResourcesCompat.getFont(this,R.font.montserrat_medium))
+
+    }
+    open fun showInternetConnectionMessage(message: String) {
+
+        MotionToast.createColorToast(this,
+            "Internet connection unavailable.",
+            message,
+            MotionToastStyle.NO_INTERNET,
+            MotionToast.GRAVITY_TOP,
+            MotionToast.LONG_DURATION,
+            ResourcesCompat.getFont(this,R.font.montserrat_medium))
+
     }
     open fun showSuccessMessage(message: String) {
-        SnackBar.success(findViewById(android.R.id.content), message, SnackBar.LENGTH_LONG).show()
+        MotionToast.createColorToast(this,
+            "success",
+            message,
+            MotionToastStyle.SUCCESS,
+            MotionToast.GRAVITY_TOP,
+            MotionToast.LONG_DURATION,
+            ResourcesCompat.getFont(this,R.font.montserrat_medium))
+
     }
     fun setPassViewListener(password: EditText, confirmPassword: EditText, warningText: TextView) {
         password.addTextChangedListener(object : TextWatcher {

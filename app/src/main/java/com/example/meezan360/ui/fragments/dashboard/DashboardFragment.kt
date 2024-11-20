@@ -267,7 +267,7 @@ class DashboardFragment :
             binding.viewpager.adapter = viewPagerAdapter
 
         } else {
-            myDockActivity?.showErrorMessage(myDockActivity!!, "Footer Data is Empty")
+            myDockActivity?.showErrorMessage( "Footer Data is Empty")
         }
     }
 
@@ -454,8 +454,7 @@ class DashboardFragment :
         }
 
 
-        //Abdul Ali Grab the isDefault kpi from icon map and insert into 0 index of icon map
-
+        //Abdul Ali:: Grab the isDefault kpi from icon map and insert into 0 index of icon map
         val iconPlacementList = icons.entries.toMutableList()
         if (selectedKpiIndex in iconPlacementList.indices) {
 
@@ -719,7 +718,6 @@ class DashboardFragment :
                         myDockActivity?.runOnUiThread {
                             Log.i("xxResult_Success", result.toString())
                             myDockActivity!!.showSuccessMessage(
-                                myDockActivity!!,
                                 "Fingerprint Enabled Successfully"
                             )
                         }
