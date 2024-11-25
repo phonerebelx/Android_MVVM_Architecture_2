@@ -65,6 +65,7 @@ import com.example.meezan360.ui.fragments.StackChartFragment
 import com.example.meezan360.ui.fragments.StepProgressBarFragment
 import com.example.meezan360.ui.fragments.TierChartFragment
 import com.example.meezan360.utils.Constants
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
 import com.example.meezan360.viewmodel.DashboardViewModel
 import com.example.meezan360.viewmodel.SearchFragViewModel
@@ -78,6 +79,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.sujanpoudel.wheelview.ImageArc
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.lang.Math.abs
@@ -104,7 +106,7 @@ class DashboardFragment :
     private var icons: MutableMap<Int, String> = mutableMapOf()
     private lateinit var iconsData: ArrayList<Int>
     private var pieChartAngleDegree: HashMap<String, Float> = HashMap<String, Float>()
-    private lateinit var sharedPreferencesManager: SharedPreferencesManager
+    private val sharedPreferenceManager: SharedPreferencesManager by inject()
     private lateinit var getSetFilterModel: GetSetFilterDataResponseModel
 
     //for top header
@@ -136,10 +138,10 @@ class DashboardFragment :
         binding = FragmentDashboardBinding.inflate(layoutInflater)
         val sharedPreferences =
             myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
-        sharedPreferencesManager = sharedPreferences?.let { SharedPreferencesManager(it) }!!
 
         // When app launch for first time
-        if (sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) != null && sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) == false) {
+        if (sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) == null ||
+            (sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) != null && sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) == false)) {
             val fingerprintDialog = FingerprintPermissionDialogFragment(this)
             fingerprintDialog.show(childFragmentManager, "FingerprintPermissionDialogFragment")
         }
@@ -557,7 +559,7 @@ class DashboardFragment :
                 startActivity(intent)
             }
             it.ivLogout.setOnClickListener {
-                sharedPreferencesManager.logout()
+                sharedPreferenceManager.logout()
                 val intent = Intent(requireContext(), LoginScreen::class.java)
                 startActivity(intent)
             }
@@ -669,6 +671,30 @@ class DashboardFragment :
             }
 
         }
+
+        resetPassJob = lifecycleScope.launch {
+            myDockActivity?.hideProgressIndicator()
+            myViewModel.registerFingerResponse.collect {
+                when (it) {
+                    is ResponseModel.Error -> {
+                        myDockActivity?.hideProgressIndicator()
+                        myDockActivity?.handleErrorResponse(myDockActivity!!, it)
+                        sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
+                    }
+
+                    is ResponseModel.Idle -> {}
+                    is ResponseModel.Loading -> {}
+                    is ResponseModel.Success -> {
+                        myDockActivity?.hideProgressIndicator()
+                        sharedPreferenceManager.put(true, Constants.IS_FINGERPRINT)
+                        myDockActivity!!.showSuccessMessage(
+                            "Biometric Linked"
+                        )
+
+                    }
+                }
+            }
+        }
     }
 
     override fun onStop() {
@@ -695,7 +721,7 @@ class DashboardFragment :
                     "Cancel", executor
                 ) { _, _ ->
                     myDockActivity?.runOnUiThread {
-                        sharedPreferencesManager.put(false, Constants.IS_FINGERPRINT)
+//                        sharedPreferencesManager.put<Boolean>(false, Constants.IS_FINGERPRINT)
                     }
                 }.build()
         }
@@ -716,10 +742,16 @@ class DashboardFragment :
                     override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                         super.onAuthenticationSucceeded(result)
                         myDockActivity?.runOnUiThread {
-                            Log.i("xxResult_Success", result.toString())
-                            myDockActivity!!.showSuccessMessage(
-                                "Fingerprint Enabled Successfully"
-                            )
+
+                            val deviceId = Utils.getDeviceId(requireContext())
+                            val fingerprint_key = Utils.encryptedSharedPref(requireContext(), "device_id_key", deviceId).toString()
+
+
+                            myViewModel.viewModelScope.launch {
+                                myViewModel.registerFingerPrint(fingerprint_key,deviceId)
+                            }
+
+
                         }
                     }
 
@@ -738,7 +770,7 @@ class DashboardFragment :
 
     private fun setFingerprintDisabled() {
         Handler(Looper.getMainLooper()).postDelayed({
-            sharedPreferencesManager.put(false, Constants.IS_FINGERPRINT)
+            sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
         }, 0)
     }
 
@@ -748,7 +780,7 @@ class DashboardFragment :
         when (type) {
             "From_Fingerprint_Dialog" -> {
                 if (checked == true) {
-                    sharedPreferencesManager.put(true, Constants.IS_FINGERPRINT)
+
                     initFingerprint()
                 }
             }

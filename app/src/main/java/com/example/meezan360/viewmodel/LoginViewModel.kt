@@ -28,6 +28,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.google.gson.Gson
+import com.google.gson.JsonElement
+
 class LoginViewModel(private var dataRepo: DataRepository?,private val connectivityRepository: ConnectivityRepository) : ViewModel() {
     var apiListener: ApiListener? = null
     @RequiresApi(Build.VERSION_CODES.N)
@@ -38,6 +40,17 @@ class LoginViewModel(private var dataRepo: DataRepository?,private val connectiv
     val changePasswordpData = MutableStateFlow<ResponseModel<ChangePasswordResponse>>(ResponseModel.Idle("Idle State"))
     val verifyPasswordData = MutableStateFlow<ResponseModel<VerifyPassResponse>>(ResponseModel.Idle("Idle State"))
     val logoutData = MutableStateFlow<ResponseModel<Response<LogoutResponse>>>(ResponseModel.Idle("Idle State"))
+
+    suspend fun loginFingerPrint(finger_print_id: String,device_id: String) {
+
+        loginData.emit(ResponseModel.Loading())
+        dataRepo?.loginFingerPrint(finger_print_id,device_id)?.collect {
+            viewModelScope.launch {
+                if (it.isSuccessful) loginData.emit(ResponseModel.Success(it))
+                else loginData.emit(ResponseModel.Error(it.message(),it))
+            }
+        }
+    }
 
 
     suspend fun loginRequest(loginId: String, password: String, deviceId: String) {

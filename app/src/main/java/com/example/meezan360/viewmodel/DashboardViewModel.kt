@@ -23,6 +23,19 @@ class DashboardViewModel(private var dataRepo: DataRepository?) : ViewModel() {
 
     val checkVersioning = MutableStateFlow<ResponseModel<Response<KPIModel>>>(ResponseModel.Idle("Idle State"))
 
+    val registerFingerResponse  = MutableStateFlow<ResponseModel<Response<JsonElement>>>(ResponseModel.Idle("Idle State"))
+
+    suspend fun registerFingerPrint(finger_print_id: String,device_id: String) {
+
+        registerFingerResponse.emit(ResponseModel.Loading())
+        dataRepo?.registerFingerPrint(finger_print_id,device_id)?.collect {
+            viewModelScope.launch {
+                if (it.isSuccessful) registerFingerResponse.emit(ResponseModel.Success(it))
+                else registerFingerResponse.emit(ResponseModel.Error(it.message(),it))
+            }
+        }
+    }
+
     suspend fun checkVersioning() {
 
         checkVersioning.emit(ResponseModel.Loading())

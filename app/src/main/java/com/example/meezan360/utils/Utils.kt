@@ -4,11 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.provider.Settings
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import android.text.TextUtils
 import android.util.Base64
 import android.util.Log
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
+import java.security.KeyStore
 import java.security.SecureRandom
 import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -19,6 +26,8 @@ class Utils {
         private val CIPHER_NAME = "AES/CBC/PKCS5PADDING"
         private val CIPHER_KEY_LEN = 16 //128 bits
         private val CIPHER_NAME_NEW ="AES/GCM/NoPadding"
+        private val alias = "device_id_key"
+
 
         fun encryptPass(key: String, iv: String, data: String): String? {
             var key = key
@@ -93,6 +102,120 @@ class Utils {
                 context.contentResolver,
                 Settings.Secure.ANDROID_ID
             )
+        }
+
+        //for fingerprint work
+
+
+        //secure shared preference
+
+
+        fun encryptedSharedPref(context: Context, alias: String, data: String): String {
+
+            initializeEncryptionKey(alias)
+
+
+            val (iv, encryptedData) = encryptData(alias, data)
+
+
+            val sharedPreferences = EncryptedSharedPreferences.create(
+                "secure_prefs",
+                MasterKey.DEFAULT_MASTER_KEY_ALIAS,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+            val encryptedBase64Data = Base64.encodeToString(encryptedData, Base64.DEFAULT)
+            // Save encrypted data and IV as Base64 strings
+            sharedPreferences.edit()
+                .putString("encrypted_data", encryptedBase64Data)
+                .putString("iv", Base64.encodeToString(iv, Base64.DEFAULT))
+                .apply()
+
+            return encryptedBase64Data
+        }
+
+        fun getEncryptedKey(context: Context): String? {
+            // Initialize the EncryptedSharedPreferences
+            val sharedPreferences = EncryptedSharedPreferences.create(
+                "secure_prefs",
+                MasterKey.DEFAULT_MASTER_KEY_ALIAS,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+            // Retrieve the encrypted data from shared preferences
+            return sharedPreferences.getString("encrypted_data", null)
+        }
+
+        fun retrieveDecryptedData(context: Context, alias: String): String? {
+            val sharedPreferences = EncryptedSharedPreferences.create(
+                "secure_prefs",
+                MasterKey.DEFAULT_MASTER_KEY_ALIAS,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+            val encryptedData = Base64.decode(sharedPreferences.getString("encrypted_data", null), Base64.DEFAULT)
+            val iv = Base64.decode(sharedPreferences.getString("iv", null), Base64.DEFAULT)
+
+
+            return decryptData(alias, iv, encryptedData)
+        }
+
+
+        fun generateKey(alias: String) {
+            val keyGenerator = KeyGenerator.getInstance(
+                KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore"
+            )
+            val keyGenParameterSpec = KeyGenParameterSpec.Builder(
+                alias,
+                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+            )
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                .build()
+            keyGenerator.init(keyGenParameterSpec)
+            keyGenerator.generateKey()
+        }
+
+        fun encryptData(alias: String, data: String): Pair<ByteArray, ByteArray> {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+
+            val secretKey = keyStore.getKey(alias, null) as SecretKey
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+
+            val iv = cipher.iv // Initialization vector
+            val encryptedData = cipher.doFinal(data.toByteArray())
+
+            return Pair(iv, encryptedData)
+        }
+
+        fun decryptData(alias: String, iv: ByteArray, encryptedData: ByteArray): String {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+
+            val secretKey = keyStore.getKey(alias, null) as SecretKey
+            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+            val spec = GCMParameterSpec(128, iv)
+            cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
+
+            val decryptedData = cipher.doFinal(encryptedData)
+            return String(decryptedData)
+        }
+
+        fun initializeEncryptionKey(alias: String) {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+
+            if (!keyStore.containsAlias(alias)) {
+                generateKey(alias)
+            }
         }
     }
 

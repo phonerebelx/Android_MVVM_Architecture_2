@@ -250,6 +250,39 @@ class DataRepository(private var networkModule: NetworkModule) {
         }
     }
 
+    suspend fun registerFingerPrint(finger_print_id: String,device_id: String): Flow<Response<JsonElement>> {
+        return flow {
+            try {
+                val response = networkModule.sourceOfNetwork().registerFingerPrint(finger_print_id, device_id)
+                emit(response)
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
+        }
+    }
+
+    suspend fun loginFingerPrint(finger_print_id: String,device_id: String): Flow<Response<LoginModel>> {
+        return flow {
+            try {
+                val response = networkModule.sourceOfNetwork().loginFingerPrint(finger_print_id, device_id)
+                emit(response)
+            }catch (e: NoInternetException) {
+                val errorResponseBody = ResponseBody.create(null, "Internet connection unavailable. Please connect to Wi-Fi or enable mobile data to proceed.")
+                emit(Response.error(1000, errorResponseBody))
+            } catch (e: IOException) {
+                // Handle the IOException here
+                val errorResponseBody = ResponseBody.create(null, "Unable to resolve host")
+                emit(Response.error(500, errorResponseBody))
+            }
+        }
+    }
+
+
     suspend fun verifyOtp(
         otpModel: OtpModel
     ): Flow<Response<OtpResponse>> {

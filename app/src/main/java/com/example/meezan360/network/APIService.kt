@@ -122,4 +122,18 @@ interface APIService {
     ): Call<ResponseBody>
     @POST("auth/logout")
     suspend fun logoutRequest():Response<LogoutResponse>
+
+    @POST("auth/registerFingerPrint")
+    suspend fun registerFingerPrint(
+        @Query("finger_print_id") finger_print_id: String,
+        @Query("device_id") device_id: String,
+    ): Response<JsonElement>
+
+
+    @POST("loginWithFinger")
+    suspend fun loginFingerPrint(
+        @Query("finger_print_id") finger_print_id: String,
+        @Query("device_id") device_id: String,
+    ): Response<LoginModel>
+
 }

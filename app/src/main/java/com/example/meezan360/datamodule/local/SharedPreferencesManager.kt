@@ -100,13 +100,13 @@ class SharedPreferencesManager( @PublishedApi internal val sharedPreferences: Sh
         return if (get<Boolean>(Constants.IS_FINGERPRINT) != null && get<Boolean>(Constants.IS_FINGERPRINT)!!) {
             return try {
                 // AMMAR - Gets login data
-                val fingerprintLoginData: FingerprintLoginData = getFingerprintLoginData()
+//                val fingerprintLoginData: FingerprintLoginData = getFingerprintLoginData()
                 // AMMAR - Clears everything from shared prefs
                 sharedPreferences.edit().clear().commit()
 //                sharedPreferences.edit().commit()
 
                 // AMMAR - Re-inserts login data into shared prefs
-                setFingerprintLoginData(FingerprintLoginData(fingerprintLoginData.user_id, fingerprintLoginData.password))
+//                setFingerprintLoginData(FingerprintLoginData(fingerprintLoginData.user_id, fingerprintLoginData.password))
                 put(true, Constants.IS_FINGERPRINT)
                 true
             } catch (e: Exception) {

@@ -1,11 +1,8 @@
 package com.example.meezan360.ui.fragments.LoginNavFragment
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.Typeface
 import android.hardware.biometrics.BiometricPrompt
 import android.os.Build
@@ -14,23 +11,18 @@ import android.os.CancellationSignal
 import android.provider.Settings
 import android.text.InputType
 import android.text.TextUtils
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 
 import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieCompositionFactory
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
-import com.example.meezan360.databinding.ActivityLoginScreenBinding
 import com.example.meezan360.databinding.FragmentLoginBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
 import com.example.meezan360.network.ResponseModel
@@ -44,7 +36,6 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.uhfsolutions.sfts.model.fingerprintLoginData.FingerprintLoginData
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.Executor
@@ -60,6 +51,7 @@ class LoginFragment : BaseDockFragment() {
     private var isAuthenticated = false
     private var firstTime = false
     lateinit var executor: Executor
+    lateinit var fingerprintData: FingerprintLoginData
     lateinit var bmPrompt: BiometricPrompt
     private var resetPassJob: Job? = null
 
@@ -159,26 +151,11 @@ class LoginFragment : BaseDockFragment() {
 
                     is ResponseModel.Success -> {
                         if (it.data?.body()?.twoFactor == "yes") {
-                            val fingerprintData: FingerprintLoginData =
-                                sharedPreferenceManager.getFingerprintLoginData()
+
                             val bundle = Bundle()
-                            bundle.putString("LOGIN_ID",
-                                (if (binding.etEmail.text.isEmpty()) {
-                                    fingerprintData.user_id
-                                }else {
-                                    binding.etEmail.text
-                                }).toString()
-                                )
-                            bundle.putString("USER_EMAIL", (if (binding.etEmail.text.isEmpty()) {
-                                fingerprintData.user_id
-                            }else {
-                                binding.etEmail.text
-                            }).toString())
-                            bundle.putString("USER_NAME",  (if (binding.etEmail.text.isEmpty()) {
-                                fingerprintData.user_id
-                            }else {
-                                binding.etEmail.text
-                            }).toString())
+                            bundle.putString("LOGIN_ID", binding.etEmail.text.toString())
+                            bundle.putString("USER_EMAIL", binding.etEmail.text.toString())
+                            bundle.putString("USER_NAME", binding.etEmail.text.toString())
                             bundle.putString("COME_FROM", "COME_FROM_LOGIN_SCREEN")
                             bundle.putBoolean("RESET_PASSWORD", false)
 
@@ -194,33 +171,36 @@ class LoginFragment : BaseDockFragment() {
                                 R.id.action_nav_login_fragment_to_OTP_Fragment,
                                 bundle
                             )
+
                         } else {
                             sharedPreferenceManager.saveToken(it.data?.body()?.token)
-                            sharedPreferenceManager.saveLoginId(binding.etEmail.text.toString())
+                            sharedPreferenceManager.saveLoginId(it.data?.body()?.user?.fullName)
                             sharedPreferenceManager.saveUserEmail(it.data?.body()?.user?.emailAddress)
                             sharedPreferenceManager.saveUserName(it.data?.body()?.user?.fullName)
                             val intent = Intent(requireContext(), MainActivity::class.java)
                             startActivity(intent)
                             requireActivity().finish();
                         }
-                        try {
-                            if (!isAuthenticated) {
-                                val fingerprintData: FingerprintLoginData =
-                                    sharedPreferenceManager.getFingerprintLoginData()
-                                val checkEmail = fingerprintData.user_id
-                                if (email != checkEmail) {
-                                    sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
-                                }
-                            }
-                        } catch (E: Exception) {
-                        }
-                        // AMMAR - Saves email and password in sharedPrefManager
-                        sharedPreferenceManager.setFingerprintLoginData(
-                            FingerprintLoginData(
-                                email,
-                                password
-                            )
-                        )
+
+                        // check for fingerprint flow. that's why its
+//                        try {
+//                            if (!isAuthenticated) {
+//                                val fingerprintData: FingerprintLoginData =
+//                                    sharedPreferenceManager.getFingerprintLoginData()
+//                                val checkEmail = fingerprintData.user_id
+//                                if (email != checkEmail) {
+//                                    sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
+//                                }
+//                            }
+//                        } catch (E: Exception) {
+//                        }
+//                        // AMMAR - Saves email and password in sharedPrefManager
+//                        sharedPreferenceManager.setFingerprintLoginData(
+//                            FingerprintLoginData(
+//                                email,
+//                                password
+//                            )
+//                        )
 
                     }
                 }
@@ -303,24 +283,30 @@ class LoginFragment : BaseDockFragment() {
         if (sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) != null &&
             sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT)!! && isAuthenticated
         ) {
-            val fingerprintData: FingerprintLoginData =
-                sharedPreferenceManager.getFingerprintLoginData()
-            email = fingerprintData.user_id
-            password = fingerprintData.password
+
+            val deviceId = Utils.getDeviceId(requireContext())
+            val fingerprintKey = Utils.getEncryptedKey(requireContext()).toString()
+            myViewModel.viewModelScope.launch {
+                myViewModel.loginFingerPrint(fingerprintKey,deviceId)
+            }
         }
 
-        myViewModel.viewModelScope.launch {
-            myViewModel.loginRequest(
-                email,
-                Utils.encryptPass(
-                    "23423532",
-                    "1234567891011121",
-                    password
-                )!!
-//                Utils.encryptPassNew(password)
-                , deviceId
-            )
+        else {
+            myViewModel.viewModelScope.launch {
+                myViewModel.loginRequest(
+                    email,
+//                Utils.encryptPass(
+//                    "23423532",
+//                    "1234567891011121",
+//                    password
+//                )!!
+                    Utils.encryptPassNew(password)
+                    , deviceId
+                )
+            }
         }
+
+
 
     }
 
