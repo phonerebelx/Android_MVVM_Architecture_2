@@ -238,7 +238,6 @@ class MainActivity : DockActivity(){
         val icons = ArrayList<Int>()
 
 
-
         listDataHeader.add(Constants.DASHBOARD) //0
 
         listDataHeader.add(Constants.CHANGE_PASSWORD) //1
@@ -257,17 +256,14 @@ class MainActivity : DockActivity(){
 
         binding.sideLayout.lvExp.setGroupIndicator(null)
         binding.sideLayout.lvExp.setChildIndicator(null)
-//        binding.sideLayout.lvExp.setChildDivider(resources.getDrawable(R.color.grey))
-//        binding.sideLayout.lvExp.divider = resources.getDrawable(R.color.grey2)
+
 
         binding.sideLayout.userImage.setOnClickListener {
 //            showImageDialog()
         }
         binding.sideLayout.lvExp.setAdapter(listAdapter as ExpListAdapter)
 
-//        binding.sideLayout.lvExp.setOnGroupExpandListener { groupPosition: Int ->
-//            fragmentClickEvent(listDataHeader[groupPosition])
-//        }
+
         binding.sideLayout.lvExp.setOnGroupClickListener { parent, v, groupPosition, id ->
             fragmentClickEvent(listDataHeader[groupPosition])
             true

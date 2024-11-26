@@ -744,9 +744,9 @@ class DashboardFragment :
                         myDockActivity?.runOnUiThread {
 
                             val deviceId = Utils.getDeviceId(requireContext())
-                            val fingerprint_key = Utils.encryptedSharedPref(requireContext(), "device_id_key", deviceId).toString()
+                            val fingerprint_key = Utils.encryptedSharedPref(requireContext(), deviceId).toString()
 
-
+                            Timber.tag("fingerprint").d(fingerprint_key)
                             myViewModel.viewModelScope.launch {
                                 myViewModel.registerFingerPrint(fingerprint_key,deviceId)
                             }

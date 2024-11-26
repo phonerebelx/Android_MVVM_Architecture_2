@@ -11,6 +11,7 @@ import android.util.Base64
 import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import timber.log.Timber
 import java.security.KeyStore
 import java.security.SecureRandom
 import javax.crypto.Cipher
@@ -25,7 +26,7 @@ class Utils {
     companion object {
         private val CIPHER_NAME = "AES/CBC/PKCS5PADDING"
         private val CIPHER_KEY_LEN = 16 //128 bits
-        private val CIPHER_NAME_NEW ="AES/GCM/NoPadding"
+        private val CIPHER_NAME_NEW = "AES/GCM/NoPadding"
         private val alias = "device_id_key"
 
 
@@ -59,7 +60,7 @@ class Utils {
 
         fun encryptPassNew(plainText: String): String {
             try {
-                val key  = "1234567890123456"
+                val key = "1234567890123456"
                 val secretKey = SecretKeySpec(key.toByteArray(), "AES")
                 val iv = ByteArray(12)
                 SecureRandom().nextBytes(iv)
@@ -69,7 +70,8 @@ class Utils {
                 cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec)
 
                 val cipherTextWithTag = cipher.doFinal(plainText.toByteArray())
-                val cipherText = cipherTextWithTag.copyOfRange(0, cipherTextWithTag.size - 16) // Ciphertext
+                val cipherText =
+                    cipherTextWithTag.copyOfRange(0, cipherTextWithTag.size - 16) // Ciphertext
                 val tag = cipherTextWithTag.copyOfRange(
                     cipherTextWithTag.size - 16,
                     cipherTextWithTag.size
@@ -80,12 +82,13 @@ class Utils {
                 val encodedTag = java.util.Base64.getEncoder().encodeToString(tag)
 
                 return "$encodedCipherText:$encodedIV:$encodedTag"
-            } catch (e:Exception){
+            } catch (e: Exception) {
                 e.printStackTrace()
                 return ""
             }
 
         }
+
         fun parseColorSafely(colorString: String?): Int {
             if (!TextUtils.isEmpty(colorString)) {
                 try {
@@ -96,6 +99,7 @@ class Utils {
             }
             return Constants.defaultColor
         }
+
         @SuppressLint("HardwareIds")
         fun getDeviceId(context: Context): String {
             return Settings.Secure.getString(
@@ -110,13 +114,10 @@ class Utils {
         //secure shared preference
 
 
-        fun encryptedSharedPref(context: Context, alias: String, data: String): String {
+        fun encryptedSharedPref(context: Context, data: String): String {
+            val ENCRYPTION_KEY = "Ytr0ngS3cur3K3y!"
 
-            initializeEncryptionKey(alias)
-
-
-            val (iv, encryptedData) = encryptData(alias, data)
-
+            val (iv, encryptedData) = encryptData(ENCRYPTION_KEY, data)
 
             val sharedPreferences = EncryptedSharedPreferences.create(
                 "secure_prefs",
@@ -127,7 +128,6 @@ class Utils {
             )
 
             val encryptedBase64Data = Base64.encodeToString(encryptedData, Base64.DEFAULT)
-            // Save encrypted data and IV as Base64 strings
             sharedPreferences.edit()
                 .putString("encrypted_data", encryptedBase64Data)
                 .putString("iv", Base64.encodeToString(iv, Base64.DEFAULT))
@@ -159,7 +159,8 @@ class Utils {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
 
-            val encryptedData = Base64.decode(sharedPreferences.getString("encrypted_data", null), Base64.DEFAULT)
+            val encryptedData =
+                Base64.decode(sharedPreferences.getString("encrypted_data", null), Base64.DEFAULT)
             val iv = Base64.decode(sharedPreferences.getString("iv", null), Base64.DEFAULT)
 
 
@@ -182,26 +183,30 @@ class Utils {
             keyGenerator.generateKey()
         }
 
-        fun encryptData(alias: String, data: String): Pair<ByteArray, ByteArray> {
-            val keyStore = KeyStore.getInstance("AndroidKeyStore")
-            keyStore.load(null)
+        fun encryptData(key: String, data: String): Pair<ByteArray, ByteArray> {
+            try {
 
-            val secretKey = keyStore.getKey(alias, null) as SecretKey
-            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+                val secretKey = SecretKeySpec(key.toByteArray(Charsets.UTF_8), "AES")
 
-            val iv = cipher.iv // Initialization vector
-            val encryptedData = cipher.doFinal(data.toByteArray())
+                val iv = key.toByteArray(Charsets.UTF_8).copyOfRange(0, 12)
 
-            return Pair(iv, encryptedData)
+                val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+                val gcmSpec = GCMParameterSpec(128, iv)
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey, gcmSpec)
+
+                val encryptedData = cipher.doFinal(data.toByteArray(Charsets.UTF_8))
+
+                return Pair(iv, encryptedData)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                throw RuntimeException("Encryption failed: ${e.message}")
+            }
         }
 
-        fun decryptData(alias: String, iv: ByteArray, encryptedData: ByteArray): String {
-            val keyStore = KeyStore.getInstance("AndroidKeyStore")
-            keyStore.load(null)
 
-            val secretKey = keyStore.getKey(alias, null) as SecretKey
-            val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        fun decryptData(key: String, iv: ByteArray, encryptedData: ByteArray): String {
+            val secretKey = SecretKeySpec(key.toByteArray(), "AES")
+            val cipher = Cipher.getInstance(CIPHER_NAME_NEW)
             val spec = GCMParameterSpec(128, iv)
             cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
 
@@ -209,16 +214,22 @@ class Utils {
             return String(decryptedData)
         }
 
-        fun initializeEncryptionKey(alias: String) {
-            val keyStore = KeyStore.getInstance("AndroidKeyStore")
-            keyStore.load(null)
 
-            if (!keyStore.containsAlias(alias)) {
-                generateKey(alias)
-            }
+    }
+
+
+    fun initializeEncryptionKey(alias: String) {
+        val keyStore = KeyStore.getInstance("AndroidKeyStore")
+        keyStore.load(null)
+
+        if (!keyStore.containsAlias(alias)) {
+            generateKey(alias)
         }
     }
 
 
 
 }
+
+
+

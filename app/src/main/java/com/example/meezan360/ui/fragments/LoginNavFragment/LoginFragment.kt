@@ -90,7 +90,6 @@ class LoginFragment : BaseDockFragment() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun initViews() {
-        fingerprintPrompt()
         setOnCLickListener()
     }
 
@@ -130,6 +129,7 @@ class LoginFragment : BaseDockFragment() {
     }
 
     private fun handleAPIResponse() {
+        resetPassJob?.cancel()
         resetPassJob = lifecycleScope.launch {
             myDockActivity?.hideProgressIndicator()
             myViewModel.loginData.collect {
@@ -325,11 +325,15 @@ class LoginFragment : BaseDockFragment() {
             firstTime = true
         }
     }
+    override fun onResume() {
+        super.onResume()
 
+        handleAPIResponse()
+    }
     override fun onStop() {
         super.onStop()
         resetPassJob?.cancel()
-        myViewModel.loginData.value = ResponseModel.Idle("Idle State")
+//        myViewModel.loginData.value = ResponseModel.Idle("Idle State")
 
     }
 }
