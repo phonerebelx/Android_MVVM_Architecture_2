@@ -13,4 +13,6 @@ object Constants {
     const val IS_FINGERPRINT: String = "IS_FINGERPRINT"
     const val FINGERPRINT_LOGIN_DATA = "fingerprint_login_data"
     const val FIRST_TIME = "first_time"
+    const val LINKED_FINGERPRINT = "Linked Fingerprint"
+    const val UNLINKED_FINGERPRINT = "Unlinked Fingerprint"
 }

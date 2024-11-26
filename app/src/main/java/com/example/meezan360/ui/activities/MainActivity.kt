@@ -5,87 +5,52 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.util.TypedValue
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.Window
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
-
-import android.widget.Toolbar
 import androidx.annotation.IdRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.SwitchCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.ButterKnife
 import butterknife.Unbinder
-import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.adapter.ExpListAdapter
-import com.example.meezan360.adapter.FragmentPagerAdapter
-import com.example.meezan360.adapter.TopBoxesAdapter
-import com.example.meezan360.base.BaseDockFragment
 import com.example.meezan360.databinding.ActivityMainBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
-import com.example.meezan360.model.Kpi
-import com.example.meezan360.model.dashboardByKpi.DataModel
-import com.example.meezan360.model.dashboardByKpi.FooterModel
+import com.example.meezan360.events.Event_Class
 import com.example.meezan360.network.ResponseModel
-import com.example.meezan360.progress.ProgressDialog
-import com.example.meezan360.ui.activities.ChangePasswordActivity.ChangePasswordActivity
-import com.example.meezan360.ui.fragments.BarChartFragment
-import com.example.meezan360.ui.fragments.HalfPieFragment
-import com.example.meezan360.ui.fragments.HorizontalBarFragment
-import com.example.meezan360.ui.fragments.InvertedBarChartFragment
-import com.example.meezan360.ui.fragments.LineChartFragment
-import com.example.meezan360.ui.fragments.Pie1HorizontalBar1Fragment
-import com.example.meezan360.ui.fragments.Pie2Bar2Fragment
-import com.example.meezan360.ui.fragments.StackChartFragment
-import com.example.meezan360.ui.fragments.StepProgressBarFragment
-import com.example.meezan360.ui.fragments.TierChartFragment
+import com.example.meezan360.ui.dialog.FingerprintPermissionDialog.FingerprintPermissionDialogFragment
 import com.example.meezan360.utils.Constants
+import com.example.meezan360.utils.Utils
 import com.example.meezan360.utils.handleErrorResponse
-import com.example.meezan360.viewmodel.DashboardViewModel
 import com.example.meezan360.viewmodel.LoginViewModel
-import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.ArrayList
-import java.util.HashMap
 
 
-class MainActivity : DockActivity(){
+class MainActivity : DockActivity() {
     companion object {
         @SuppressLint("StaticFieldLeak")
         private lateinit var unbinder: Unbinder
@@ -95,6 +60,7 @@ class MainActivity : DockActivity(){
         const val GALLERY_CODE: Int = 212
 
     }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var sharedPreferencesManager: SharedPreferencesManager
     private lateinit var contentView: ConstraintLayout
@@ -106,7 +72,7 @@ class MainActivity : DockActivity(){
     lateinit var listDataHeader: ArrayList<String>
     private val myViewModel: LoginViewModel by viewModel()
     private var logoutJob: Job? = null
-
+    private var is_fingerprint_linked = false
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,6 +89,7 @@ class MainActivity : DockActivity(){
         imageDialog.setContentView(R.layout.picture_dialog)
         handleAPIResponse()
     }
+
     override fun onSupportNavigateUp(): Boolean {
         navController = findNavController(R.id.nav_host_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
@@ -152,7 +119,7 @@ class MainActivity : DockActivity(){
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.R)
     private fun initView() {
-
+        checkFingerprintSetup()
         drawerLayout = binding.drawerLayout
         setSupportActionBar(findViewById(R.id.toolBar))
         supportActionBar?.title = ""
@@ -195,6 +162,13 @@ class MainActivity : DockActivity(){
         }
     }
 
+    private fun checkFingerprintSetup() {
+        is_fingerprint_linked = false
+        if (sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) == true) {
+            is_fingerprint_linked = true
+        }
+    }
+
     private fun navigateToFragment(@IdRes id: Int, args: Bundle? = null) {
 
         closeDrawer()
@@ -206,9 +180,11 @@ class MainActivity : DockActivity(){
         // navigation drawer
         navController.navigate(id)
     }
+
     fun closeDrawer() {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
     }
+
     private fun animateNavigationDrawer(drawerLayout: DrawerLayout) {
 
         drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
@@ -242,7 +218,13 @@ class MainActivity : DockActivity(){
 
         listDataHeader.add(Constants.CHANGE_PASSWORD) //1
 
-        listDataHeader.add(Constants.LOGOUT)
+        if (is_fingerprint_linked) {
+            listDataHeader.add(Constants.UNLINKED_FINGERPRINT) //2
+        } else {
+            listDataHeader.add(Constants.LINKED_FINGERPRINT) //2
+        }
+
+        listDataHeader.add(Constants.LOGOUT) //3
 
 
         val listAdapter = ExpListAdapter(
@@ -305,10 +287,23 @@ class MainActivity : DockActivity(){
         when (itemString) {
             Constants.DASHBOARD -> {
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+                closeDrawer()
             }
+
             Constants.CHANGE_PASSWORD -> {
                 navigateToFragment(R.id.action_dashboard_to_change_Password_Fragment)
             }
+
+            Constants.LINKED_FINGERPRINT -> {
+                EventBus.getDefault().post(Event_Class.linked_fingerprint(is_fingerprint_linked))
+                closeDrawer()
+            }
+
+            Constants.UNLINKED_FINGERPRINT -> {
+                EventBus.getDefault().post(Event_Class.linked_fingerprint(is_fingerprint_linked))
+                closeDrawer()
+            }
+
 
             Constants.LOGOUT -> {
                 showLogOutAlert()
@@ -324,20 +319,21 @@ class MainActivity : DockActivity(){
         alertDialog.setPositiveButton(
             "Yes"
         ) { dialog, which ->
-                logout()
+            logout()
         }
         alertDialog.setNegativeButton(
             "No"
         ) { dialog: DialogInterface, which: Int -> dialog.cancel() }
         alertDialog.show()
     }
+
     private fun handleAPIResponse() {
         logoutJob = lifecycleScope.launch {
             myViewModel.logoutData.collect {
                 hideProgressIndicator()
                 when (it) {
                     is ResponseModel.Error -> {
-                        this@MainActivity.handleErrorResponse(this@MainActivity,it)
+                        this@MainActivity.handleErrorResponse(this@MainActivity, it)
                     }
 
                     is ResponseModel.Idle -> {
@@ -349,8 +345,8 @@ class MainActivity : DockActivity(){
                     is ResponseModel.Success -> {
                         sharedPreferencesManager.logout()
                         it.message?.let { it1 -> showSuccessMessage(it1) }
-                          val intent = Intent(this@MainActivity, LoginScreen::class.java)
-                          startActivity(intent)
+                        val intent = Intent(this@MainActivity, LoginScreen::class.java)
+                        startActivity(intent)
                     }
                 }
 
@@ -366,4 +362,21 @@ class MainActivity : DockActivity(){
             myViewModel.logoutRequest()
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onFingerprintEvent(event: Event_Class.update_sidebar) {
+        checkFingerprintSetup()
+        prepareSideMenu()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
 }

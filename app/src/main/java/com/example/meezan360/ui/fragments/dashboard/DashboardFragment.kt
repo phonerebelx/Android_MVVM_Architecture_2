@@ -3,8 +3,6 @@ package com.example.meezan360.ui.fragments.dashboard
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -17,27 +15,24 @@ import android.os.CancellationSignal
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.caverock.androidsvg.SVG
-import me.sujanpoudel.wheelview.WheelView
 import com.example.meezan360.R
 import com.example.meezan360.adapter.FragmentPagerAdapter
 import com.example.meezan360.adapter.TopBoxesAdapter
 import com.example.meezan360.base.BaseDockFragment
-import com.example.meezan360.databinding.ActivityMainBinding
 import com.example.meezan360.databinding.FragmentDashboardBinding
 import com.example.meezan360.datamodule.local.SharedPreferencesManager
+import com.example.meezan360.events.Event_Class
 import com.example.meezan360.interfaces.OnTypeItemClickListener
 import com.example.meezan360.model.Kpi
 import com.example.meezan360.model.SearchFilterModel.GetSetFilterModel.GetSetFilterDataResponseModel
@@ -50,7 +45,6 @@ import com.example.meezan360.ui.activities.LoginScreen
 import com.example.meezan360.ui.activities.MainFragActivity
 import com.example.meezan360.ui.activities.ReportLevel1Activity
 import com.example.meezan360.ui.activities.ReportLevel2Activity
-import com.example.meezan360.ui.dialog.CardLevelDialog.CardLevelDialogFragment
 import com.example.meezan360.ui.dialog.FingerprintPermissionDialog.FingerprintPermissionDialogFragment
 import com.example.meezan360.ui.fragments.BarChartFragment
 import com.example.meezan360.ui.fragments.HalfPieFragment
@@ -78,14 +72,15 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import me.sujanpoudel.wheelview.ImageArc
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import java.lang.Math.abs
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import kotlin.math.min
+
 
 class DashboardFragment :
     BaseDockFragment(),
@@ -690,6 +685,8 @@ class DashboardFragment :
                         myDockActivity!!.showSuccessMessage(
                             "Biometric Linked"
                         )
+                        sideBarFingerLinkedUpdate()
+
 
                     }
                 }
@@ -697,14 +694,7 @@ class DashboardFragment :
         }
     }
 
-    override fun onStop() {
-        super.onStop()
 
-
-//        resetPassJob?.cancel()
-//        myViewModel.checkVersioning.value = ResponseModel.Idle("Idle State")
-//        myViewModel.dashboardByKPI.value = ResponseModel.Idle("Idle State")
-    }
 
     @RequiresApi(Build.VERSION_CODES.P)
     private fun initFingerprint() {
@@ -787,5 +777,33 @@ class DashboardFragment :
         }
     }
 
+    private fun sideBarFingerLinkedUpdate() {
+        EventBus.getDefault().post(Event_Class.update_sidebar())
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onFingerprintEvent(event: Event_Class.linked_fingerprint?) {
+        if (event!!.islinked) {
+            sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
+            Utils.clearEncryptedSharedPref(requireContext())
+            sideBarFingerLinkedUpdate()
+            myDockActivity!!.showSuccessMessage(
+                "Biometric Unlinked"
+            )
+
+        } else {
+            val fingerprintDialog = FingerprintPermissionDialogFragment(this)
+            fingerprintDialog.show(childFragmentManager, "FingerprintPermissionDialogFragment")
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
 }

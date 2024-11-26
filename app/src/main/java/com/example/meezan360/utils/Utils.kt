@@ -136,6 +136,20 @@ class Utils {
             return encryptedBase64Data
         }
 
+        fun clearEncryptedSharedPref(context: Context) {
+            val sharedPreferences = EncryptedSharedPreferences.create(
+                "secure_prefs",
+                MasterKey.DEFAULT_MASTER_KEY_ALIAS,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+            // Clear all stored preferences
+            sharedPreferences.edit().clear().apply()
+        }
+
+
         fun getEncryptedKey(context: Context): String? {
             // Initialize the EncryptedSharedPreferences
             val sharedPreferences = EncryptedSharedPreferences.create(
