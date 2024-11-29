@@ -6,11 +6,16 @@ import android.graphics.Color
 import android.provider.Settings
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
 import android.util.Base64
 import android.util.Log
+import androidx.core.content.ContextCompat
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.example.meezan360.R
 import timber.log.Timber
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -109,15 +114,15 @@ class Utils {
         }
 
         //for fingerprint work
-
-
         //secure shared preference
 
-
-        fun encryptedSharedPref(context: Context, data: String): String {
+        fun encryptedSharedPref(context: Context, data: String, userId: String): String {
             val ENCRYPTION_KEY = "Ytr0ngS3cur3K3y!"
 
-            val (iv, encryptedData) = encryptData(ENCRYPTION_KEY, data)
+
+            val (ivData, encryptedData) = encryptData(ENCRYPTION_KEY, data)
+            val (ivUsername, encryptedUsername) = encryptUserName(ENCRYPTION_KEY, userId)
+
 
             val sharedPreferences = EncryptedSharedPreferences.create(
                 "secure_prefs",
@@ -128,9 +133,13 @@ class Utils {
             )
 
             val encryptedBase64Data = Base64.encodeToString(encryptedData, Base64.DEFAULT)
+            val encryptedBase64Username = Base64.encodeToString(encryptedUsername, Base64.DEFAULT)
+
             sharedPreferences.edit()
                 .putString("encrypted_data", encryptedBase64Data)
-                .putString("iv", Base64.encodeToString(iv, Base64.DEFAULT))
+                .putString("iv_data", Base64.encodeToString(ivData, Base64.DEFAULT))
+                .putString("encrypted_username", encryptedBase64Username)
+                .putString("iv_username", Base64.encodeToString(ivUsername, Base64.DEFAULT))
                 .apply()
 
             return encryptedBase64Data
@@ -144,14 +153,12 @@ class Utils {
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
-
-            // Clear all stored preferences
             sharedPreferences.edit().clear().apply()
         }
 
 
         fun getEncryptedKey(context: Context): String? {
-            // Initialize the EncryptedSharedPreferences
+
             val sharedPreferences = EncryptedSharedPreferences.create(
                 "secure_prefs",
                 MasterKey.DEFAULT_MASTER_KEY_ALIAS,
@@ -160,11 +167,13 @@ class Utils {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
 
-            // Retrieve the encrypted data from shared preferences
+
             return sharedPreferences.getString("encrypted_data", null)
         }
 
-        fun retrieveDecryptedData(context: Context, alias: String): String? {
+        fun retrieveDecryptedUserId(context: Context): String? {
+            val ENCRYPTION_KEY = "Ytr0ngS3cur3K3y!"
+
             val sharedPreferences = EncryptedSharedPreferences.create(
                 "secure_prefs",
                 MasterKey.DEFAULT_MASTER_KEY_ALIAS,
@@ -173,29 +182,30 @@ class Utils {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
 
-            val encryptedData =
-                Base64.decode(sharedPreferences.getString("encrypted_data", null), Base64.DEFAULT)
-            val iv = Base64.decode(sharedPreferences.getString("iv", null), Base64.DEFAULT)
+            val encryptedUsername = sharedPreferences.getString("encrypted_username", null)?.let {
+                Base64.decode(it, Base64.DEFAULT)
+            } ?: return null
 
+            val ivUsername = sharedPreferences.getString("iv_username", null)?.let {
+                Base64.decode(it, Base64.DEFAULT)
+            } ?: return null
 
-            return decryptData(alias, iv, encryptedData)
+            return decryptData(ENCRYPTION_KEY, ivUsername, encryptedUsername)
         }
 
 
-        fun generateKey(alias: String) {
-            val keyGenerator = KeyGenerator.getInstance(
-                KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore"
-            )
-            val keyGenParameterSpec = KeyGenParameterSpec.Builder(
-                alias,
-                KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
-            )
-                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                .build()
-            keyGenerator.init(keyGenParameterSpec)
-            keyGenerator.generateKey()
+        fun encryptUserName(key: String, data: String): Pair<ByteArray, ByteArray> {
+            val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+            val secretKeySpec = SecretKeySpec(key.toByteArray(), "AES")
+            val iv = ByteArray(16)
+            SecureRandom().nextBytes(iv)
+            val ivSpec = IvParameterSpec(iv)
+
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivSpec)
+            val encryptedData = cipher.doFinal(data.toByteArray())
+            return Pair(iv, encryptedData)
         }
+
 
         fun encryptData(key: String, data: String): Pair<ByteArray, ByteArray> {
             try {
@@ -219,29 +229,27 @@ class Utils {
 
 
         fun decryptData(key: String, iv: ByteArray, encryptedData: ByteArray): String {
-            val secretKey = SecretKeySpec(key.toByteArray(), "AES")
-            val cipher = Cipher.getInstance(CIPHER_NAME_NEW)
-            val spec = GCMParameterSpec(128, iv)
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
+            val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
+            val secretKeySpec = SecretKeySpec(key.toByteArray(), "AES")
+            val ivSpec = IvParameterSpec(iv)
 
-            val decryptedData = cipher.doFinal(encryptedData)
-            return String(decryptedData)
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivSpec)
+            return String(cipher.doFinal(encryptedData))
         }
 
 
-    }
-
-
-    fun initializeEncryptionKey(alias: String) {
-        val keyStore = KeyStore.getInstance("AndroidKeyStore")
-        keyStore.load(null)
-
-        if (!keyStore.containsAlias(alias)) {
-            generateKey(alias)
+        // Abdul Ali:: This function is create to change the color of text for fingerprint dialog
+        fun changeDescriptionColor(context: Context, text: String): SpannableString {
+            val description = SpannableString(text)
+            description.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(context, R.color.white)),
+                0,
+                description.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            return description
         }
     }
-
-
 
 }
 

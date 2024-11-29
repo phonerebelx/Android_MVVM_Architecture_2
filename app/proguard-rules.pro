@@ -34,6 +34,8 @@
 -keep class com.github.mikephil.charting.** { *; }
 # Keep Your Specific App Classes
 -keep class com.example.meezan360.model** { *; }
+-keep class com.example.meezan360.utils** { *; }
+-keep class com.example.meezan360.utils { *; }
 -keep class com.example.meezan360.model{ *; }
 -keep class com.example.meezan360.network.network** { *; }
 -keep class com.example.meezan360.network** { *; }
@@ -44,6 +46,7 @@
 -keep class com.aheaditec.talsec_security { *; }
 -keep class com.aheaditec.talsec_security.security.api { *; }
 -keep class com.aheaditec.talsec_security.security.api.TalsecConfig { *; }
+
 
 # Remove Logging (Android Log)
 -assumenosideeffects class android.util.Log {

@@ -10,16 +10,17 @@ import android.os.Bundle
 import android.os.CancellationSignal
 import android.provider.Settings
 import android.text.InputType
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
-import com.airbnb.lottie.LottieCompositionFactory
 import com.example.meezan360.BuildConfig
 import com.example.meezan360.R
 import com.example.meezan360.base.BaseDockFragment
@@ -63,11 +64,6 @@ class LoginFragment : BaseDockFragment() {
 
         binding = FragmentLoginBinding.inflate(layoutInflater)
 
-        LottieCompositionFactory.fromRawRes(requireContext(), R.raw.fingerprint)
-            .addListener { composition ->
-                binding.lottieAnimationView.setComposition(composition)
-                binding.lottieAnimationView.playAnimation()
-            }
 
         montserratFont =
             ResourcesCompat.getFont(requireContext(), R.font.montserrat_regular) ?: Typeface.DEFAULT
@@ -75,7 +71,7 @@ class LoginFragment : BaseDockFragment() {
         binding.etPassword.inputType =
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         binding.etPassword.typeface = Typeface.create(montserratFont, Typeface.BOLD)
-        binding.togglePasswordVisibility.setImageResource(R.drawable.eye_closed) // Set closed eye icon initially
+        binding.togglePasswordVisibility.setImageResource(R.drawable.eye_closed)
 
         handleAPIResponse()
 
@@ -123,7 +119,7 @@ class LoginFragment : BaseDockFragment() {
             LoginScreen.navController.navigate(R.id.action_nav_login_fragment_to_nav_forget_pass_fragment)
         }
 
-        binding.lottieAnimationView.setOnClickListener {
+        binding.IVfingerpint.setOnClickListener {
             fingerprintPrompt()
         }
     }
@@ -177,6 +173,7 @@ class LoginFragment : BaseDockFragment() {
                             sharedPreferenceManager.saveLoginId(it.data?.body()?.user?.fullName)
                             sharedPreferenceManager.saveUserEmail(it.data?.body()?.user?.emailAddress)
                             sharedPreferenceManager.saveUserName(it.data?.body()?.user?.fullName)
+                            sharedPreferenceManager.saveUserId(it.data?.body()?.user?.userId)
                             val intent = Intent(requireContext(), MainActivity::class.java)
                             startActivity(intent)
                             requireActivity().finish();
@@ -210,8 +207,11 @@ class LoginFragment : BaseDockFragment() {
 
     }
 
+
+
     @SuppressLint("NewApi")
     private fun checkForFingerPrint() {
+
         executor = Executors.newSingleThreadExecutor()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
             requireContext().getPackageManager()
@@ -219,8 +219,8 @@ class LoginFragment : BaseDockFragment() {
             requireContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_FACE)
         ) {
             bmPrompt = BiometricPrompt.Builder(requireContext())
-                .setTitle("Login")
-                .setDescription("Please scan your fingerprint")
+                .setTitle(Utils.changeDescriptionColor(requireContext(),"Login"))
+                .setDescription(Utils.changeDescriptionColor(requireContext(),"Please scan your fingerprint"))
                 .setNegativeButton("Cancel", executor,
                     { dialogInterface, i -> isAuthenticated = false }).build()
         }
@@ -318,22 +318,25 @@ class LoginFragment : BaseDockFragment() {
             } else if (firstTime) {
                 myDockActivity?.showErrorMessage("Fingerprint is not enabled!")
             } else {
+                myDockActivity?.showErrorMessage("Fingerprint is not enabled!")
+
                 firstTime = true
             }
         } catch (E: Exception) {
+            myDockActivity?.showErrorMessage("Fingerprint is not enabled!")
             sharedPreferenceManager.put(false, Constants.IS_FINGERPRINT)
             firstTime = true
         }
     }
+
     override fun onResume() {
         super.onResume()
-
         handleAPIResponse()
     }
     override fun onStop() {
         super.onStop()
         resetPassJob?.cancel()
-//        myViewModel.loginData.value = ResponseModel.Idle("Idle State")
+        myViewModel.loginData.value = ResponseModel.Idle("Idle State")
 
     }
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="button_curve_small">@dimen/_2sdp</dimen>
     <dimen name="button_curve">@dimen/_8sdp</dimen>
     <dimen name="padding_default">@dimen/_10sdp</dimen>
 

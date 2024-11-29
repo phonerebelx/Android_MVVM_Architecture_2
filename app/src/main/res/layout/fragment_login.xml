@@ -14,7 +14,7 @@
         android:id="@+id/ivLogo"
         android:layout_width="@dimen/_200sdp"
         android:layout_height="@dimen/_100sdp"
-        android:layout_marginTop="@dimen/_60sdp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:src="@drawable/logo_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -78,41 +78,39 @@
         android:id="@+id/tvForgetPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_medium"
         android:layout_marginTop="@dimen/_5sdp"
         android:text="@string/forget_password"
-        android:textColor="@color/golden"
-        android:textSize="@dimen/_12ssp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10sdp"
          />
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLogin"
         android:layout_width="@dimen/_100sdp"
-        android:layout_height="@dimen/_38sdp"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_35sdp"
         android:background="@drawable/custom_login_button"
+        android:fontFamily="@font/montserrat_medium"
         android:gravity="center"
         android:text="Login"
+        android:textSize="@dimen/_10sdp"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llForgetPassword" />
 
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottieAnimationView"
-        android:layout_width="@dimen/_150sdp"
-        android:layout_height="@dimen/_150sdp"
-        android:layout_gravity="center"
-        android:scaleType="fitXY"
+    <ImageView
+        android:id="@+id/IVfingerpint"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:src="@drawable/fingerprint_check"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_renderMode="hardware" />
-
-
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -156,15 +156,18 @@ class MainActivity : DockActivity() {
         prepareSideMenu()
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-
-            val label = destination.label ?: getString(R.string.Home)
+            val label = when (destination.id) {
+                R.id.changePasswordFragment -> "Change Password"
+                else -> destination.label?.toString() ?: getString(R.string.Home)
+            }
             titleTextView?.text = label
         }
     }
 
     private fun checkFingerprintSetup() {
         is_fingerprint_linked = false
-        if (sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) == true) {
+        if (sharedPreferencesManager.get<Boolean>(Constants.IS_FINGERPRINT) == true &&
+            checkNewUserForFingerPrint()) {
             is_fingerprint_linked = true
         }
     }
@@ -206,6 +209,15 @@ class MainActivity : DockActivity() {
             }
         })
     }
+    private fun checkNewUserForFingerPrint(): Boolean {
+        val username = sharedPreferencesManager.getUserId()
+        val decryptedUsername = try {
+            Utils.retrieveDecryptedUserId(this)
+        } catch (e: Exception) {
+            null
+        }
+        return username != null && decryptedUsername != null && username == decryptedUsername
+    }
 
     private fun prepareSideMenu() {
 
@@ -219,9 +231,13 @@ class MainActivity : DockActivity() {
         listDataHeader.add(Constants.CHANGE_PASSWORD) //1
 
         if (is_fingerprint_linked) {
+
             listDataHeader.add(Constants.UNLINKED_FINGERPRINT) //2
+
         } else {
+            checkFingerprintSetup()
             listDataHeader.add(Constants.LINKED_FINGERPRINT) //2
+
         }
 
         listDataHeader.add(Constants.LOGOUT) //3

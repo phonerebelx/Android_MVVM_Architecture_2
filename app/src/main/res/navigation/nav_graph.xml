@@ -22,7 +22,7 @@
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.example.meezan360.ui.fragments.LoginNavFragment.ChangePasswordFragment"
-        android:label="@string/change_pass"
+        android:label=""
         tools:layout="@layout/fragment_change_password" />
 
 </navigation>

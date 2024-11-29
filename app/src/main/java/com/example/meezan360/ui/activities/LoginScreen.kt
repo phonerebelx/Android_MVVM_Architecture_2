@@ -68,7 +68,7 @@ class LoginScreen : DockActivity() {
 
             if (destination.id == R.id.login_start) {
                 binding.toolbar.navigationIcon = null
-                binding.toolbar.setBackgroundColor(resources.getColor(R.color.transparent, theme))
+                binding.toolbar.setBackgroundColor(Color.TRANSPARENT)
             } else {
                 binding.toolbar.setBackgroundColor(resources.getColor(R.color.purple_light, theme))
 

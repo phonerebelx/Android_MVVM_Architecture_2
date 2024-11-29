@@ -294,6 +294,7 @@ class OTPFragment : BaseDockFragment() {
                             sharedPreferencesManager.saveUserEmail(
                                 userName
                             )
+                            sharedPreferencesManager.saveUserId(it.data?.body()?.user_id)
                             val intent = Intent(
                                 requireContext(),
                                 MainActivity::class.java

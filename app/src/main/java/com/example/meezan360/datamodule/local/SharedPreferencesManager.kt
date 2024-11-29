@@ -14,6 +14,7 @@ class SharedPreferencesManager( @PublishedApi internal val sharedPreferences: Sh
     companion object {
         private const val KEY_TOKEN = "token"
         private const val KEY_LOGIN_ID = "login_id"
+        private const val KEY_USER_ID = "user_id"
         private const val KEY_USER_NAME = "user_name"
         private const val KEY_USER_EMAIL = "user_emaill"
         private const val KEY_VALUE_CALLED = "Value_called"
@@ -27,6 +28,13 @@ class SharedPreferencesManager( @PublishedApi internal val sharedPreferences: Sh
     }
     fun getLoginId(): String?  {
         return sharedPreferences.getString(KEY_LOGIN_ID, null)
+    }
+
+    fun saveUserId(userId: String?) {
+        sharedPreferences.edit().putString(KEY_USER_ID, userId).apply()
+    }
+    fun getUserId(): String?  {
+        return sharedPreferences.getString(KEY_USER_ID, null)
     }
     fun saveUserName(userName: String?){
         sharedPreferences.edit().putString(KEY_USER_NAME, userName).apply()
@@ -100,24 +108,26 @@ class SharedPreferencesManager( @PublishedApi internal val sharedPreferences: Sh
         return if (get<Boolean>(Constants.IS_FINGERPRINT) != null && get<Boolean>(Constants.IS_FINGERPRINT)!!) {
             return try {
                 // AMMAR - Gets login data
-//                val fingerprintLoginData: FingerprintLoginData = getFingerprintLoginData()
                 // AMMAR - Clears everything from shared prefs
                 sharedPreferences.edit().clear().commit()
 //                sharedPreferences.edit().commit()
 
                 // AMMAR - Re-inserts login data into shared prefs
-//                setFingerprintLoginData(FingerprintLoginData(fingerprintLoginData.user_id, fingerprintLoginData.password))
-                put(true, Constants.IS_FINGERPRINT)
+               put(true, Constants.IS_FINGERPRINT)
+                put(false, Constants.IS_FINGERPRINT_FIRST_TIME)
                 true
             } catch (e: Exception) {
                 // AMMAR - Handles situation if no login data is found for any reason
-                put(false, Constants.IS_FINGERPRINT)
+                put(true, Constants.IS_FINGERPRINT)
+                put(false, Constants.IS_FINGERPRINT_FIRST_TIME)
                 true
             }
         } else {
             // AMMAR - Clears everything from shared prefs
-            sharedPreferences.edit().clear().commit()
 
+            sharedPreferences.edit().clear().commit()
+            put(null, Constants.IS_FINGERPRINT_FIRST_TIME)
+            put(false, Constants.IS_FINGERPRINT)
             true
         }
     }

@@ -402,8 +402,8 @@ class WheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet?
     }
 
     private fun onClickOnWheel(event: MotionEvent) {
-        if (!event.inside(centerCircle.cx, centerCircle.cy, bgCircle.radius)) return // exclude clicks outside the large circle
-        if (event.inside(centerCircle.cx, centerCircle.cy, centerCircle.radius)) { // check for the center circle first
+        if (!event.inside(centerCircle.cx, centerCircle.cy, bgCircle.radius)) return
+        if (event.inside(centerCircle.cx, centerCircle.cy, centerCircle.radius)) {
             centerClickListener?.let { it() }
             return
         }

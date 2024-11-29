@@ -134,11 +134,10 @@ class DashboardFragment :
         val sharedPreferences =
             myDockActivity?.getSharedPreferences("Meezan360", Context.MODE_PRIVATE)
 
-        // When app launch for first time
-        if (sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) == null ||
-            (sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) != null && sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT) == false)) {
-            val fingerprintDialog = FingerprintPermissionDialogFragment(this)
-            fingerprintDialog.show(childFragmentManager, "FingerprintPermissionDialogFragment")
+        // When app launch for first time or cache removed
+        val isFingerprintFirstTime = sharedPreferenceManager.get<Boolean>(Constants.IS_FINGERPRINT_FIRST_TIME)
+        if (isFingerprintFirstTime == null) {
+            initFingerprintPermissionDialogFragment()
         }
 
 
@@ -166,6 +165,11 @@ class DashboardFragment :
         binding.ivSearch.setOnClickListener(this)
         setOnClickListener()
         return binding.root
+    }
+
+    private fun initFingerprintPermissionDialogFragment() {
+        val fingerprintDialog = FingerprintPermissionDialogFragment(this)
+        fingerprintDialog.show(childFragmentManager, "FingerprintPermissionDialogFragment")
     }
 
 
@@ -705,8 +709,8 @@ class DashboardFragment :
             requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_FACE)
         ) {
             bmPrompt = BiometricPrompt.Builder(requireContext())
-                .setTitle("Fingerprint Authentication")
-                .setDescription("Please scan your fingerprint")
+                .setTitle(Utils.changeDescriptionColor(requireContext(),"Fingerprint Authentication"))
+                .setDescription(Utils.changeDescriptionColor(requireContext(),"Please scan your fingerprint"))
                 .setNegativeButton(
                     "Cancel", executor
                 ) { _, _ ->
@@ -734,9 +738,12 @@ class DashboardFragment :
                         myDockActivity?.runOnUiThread {
 
                             val deviceId = Utils.getDeviceId(requireContext())
-                            val fingerprint_key = Utils.encryptedSharedPref(requireContext(), deviceId).toString()
+                            val fingerprint_key = Utils.encryptedSharedPref(
+                                requireContext(),
+                                deviceId ,
+                                sharedPreferenceManager.getUserId() ?: ""
+                            )
 
-                            Timber.tag("fingerprint").d(fingerprint_key)
                             myViewModel.viewModelScope.launch {
                                 myViewModel.registerFingerPrint(fingerprint_key,deviceId)
                             }
@@ -792,8 +799,7 @@ class DashboardFragment :
             )
 
         } else {
-            val fingerprintDialog = FingerprintPermissionDialogFragment(this)
-            fingerprintDialog.show(childFragmentManager, "FingerprintPermissionDialogFragment")
+            initFingerprintPermissionDialogFragment()
         }
     }
 
