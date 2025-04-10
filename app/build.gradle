@@ -114,9 +114,9 @@ dependencies {
     implementation "com.github.skydoves:powerspinner:1.2.7"
     implementation 'com.github.emreesen27:Android-Nested-Progress:v1.0.2'
     //pinView for OTP
-    implementation 'com.chaos.view:pinview:1.4.2'
+    implementation 'io.github.chaosleung:pinview:1.4.4'
 
-    implementation 'com.tapadoo.android:alerter:6.1.0'
+    implementation 'com.github.tapadoo:alerter:7.2.4'
     implementation 'com.google.code.gson:gson:2.8.8'
 
     //Circular Image View
