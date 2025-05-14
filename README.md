@@ -11,56 +11,162 @@ This project demonstrates a scalable Android architecture based on MVVM, leverag
 - **Retrofit**: Efficient HTTP client for networking and API interaction.
 - **Coroutines**: Manages background tasks asynchronously with minimal boilerplate.
 - **Navigation Components**: Simplifies fragment-based navigation using a navigation graph.
+- **Talsec Security**: Detects root, emulator, and other security risks.
 
 ---
 
 ## 🔑 Core Components
 
 ### 🧠 Dependency Injection with Koin
-Koin is used to inject ViewModels, repositories, and API services, reducing coupling and making unit testing easier.
+- Injects ViewModels, repositories, and API services.
+- Simplifies object graph management and promotes modularity.
 
 ### 🔄 Networking with Retrofit & GSON
-Retrofit handles all API interactions, with GSON for JSON serialization and deserialization. Logging is managed via an HTTP interceptor for debugging.
+- Retrofit manages RESTful API calls.
+- GSON handles JSON parsing.
+- OkHttp interceptor provides HTTP request/response logging.
 
 ### 🧵 Asynchronous Tasks with Coroutines
-Coroutines power all background operations, such as network calls and data processing, in a lifecycle-aware and efficient way.
+- Used for I/O-bound operations like API calls or database access.
+- Ensures smooth main-thread UI performance.
 
 ### 📦 ViewModel & Lifecycle Management
-ViewModels handle business logic and retain data during configuration changes. Lifecycle-aware components prevent memory leaks.
+- ViewModels hold and manage UI-related data.
+- Lifecycle-aware components help avoid memory leaks.
 
 ### 🧭 Navigation
-Navigation Components are used for fragment transitions, back stack management, and safe-arg passing between destinations.
+- Navigation Component provides safe and structured screen transitions.
 
 ---
 
-## 🧩 Modularity
+## 🔐 Root Detection & App Security
 
-The project is designed with modularity in mind:
-- Features and utilities can be separated into independent modules.
-- Easily maintainable and scalable for growing codebases.
+### 🔒 Talsec Security
+Talsec is used to enhance the security of the app by detecting:
+- Rooted devices
+- Emulators
+- Debugging attempts
+- Repackaged apps
 
----
-
-## ✅ Highlights
-
-- Clean separation of UI and business logic.
-- Testable and lightweight DI setup.
-- Reactive data updates via ViewModel and LiveData/StateFlow.
-- Secure and debuggable networking layer.
-- Smooth navigation handling.
+> You can use callbacks provided by Talsec to handle threats (e.g., force logout, show warning dialog, block features).
 
 ---
 
-## 🛠 Best Practices Followed
+## 🧰 ProGuard Rules
 
-- Single Source of Truth (data flows from ViewModel to UI).
-- No memory leaks (lifecycle-aware coroutines and bindings).
-- Consistent UI via centralized theme and reusable components.
-- Efficient handling of screen rotations and configuration changes.
+If you're using **ProGuard** or **R8**, make sure to add the following rules to prevent obfuscation of critical classes:
+# --------------------------------------------
+# 🛡️ General Project Rules
+# --------------------------------------------
 
----
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable,Signature,Exceptions
 
-## 📄 License
+# Preserve all exception classes
+-keep public class * extends java.lang.Exception
 
-MIT License. Open to use and modification with proper attribution.
+# --------------------------------------------
+# 🧨 Firebase Crashlytics
+# --------------------------------------------
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
 
+# --------------------------------------------
+# 🌐 Retrofit & OkHttp
+# --------------------------------------------
+
+# Retrofit core
+-keep class retrofit.** { *; }
+-dontwarn retrofit.**
+-dontwarn retrofit.appengine.UrlFetchClient
+
+# Retrofit annotations
+-keepclasseswithmembers class * {
+    @retrofit.http.* <methods>;
+}
+
+# OkHttp
+-dontwarn com.squareup.okhttp.**
+-keep class com.squareup.okhttp.** { *; }
+-keep class com.squareup.okhttp3.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+
+# --------------------------------------------
+# 📈 MPAndroidChart (if used)
+# --------------------------------------------
+-keep class com.github.mikephil.charting.** { *; }
+
+# --------------------------------------------
+# 🔐 Talsec Security
+# --------------------------------------------
+-keep class com.aheaditec.talsec_security.** { *; }
+-dontwarn com.aheaditec.talsec_security.**
+-keep class com.aheaditec.talsec_security.security.api.** { *; }
+
+# --------------------------------------------
+# 🧠 Koin (if used)
+# --------------------------------------------
+-keep class org.koin.** { *; }
+-dontwarn org.koin.**
+
+# --------------------------------------------
+# 🔧 Your App's Custom Packages
+# --------------------------------------------
+
+# Models, Network, and Activities
+-keep class com.example.meezan360.model.** { *; }
+-keep class com.example.meezan360.network.** { *; }
+-keep class com.example.meezan360.ui.activities.** { *; }
+-keep class com.example.meezan360.network.APIService { *; }
+-keep class com.example.meezan360.network.APIClient { *; }
+-keep class com.example.meezan360.ui.activities.DockActivity { *; }
+
+# SSL
+-keep class javax.net.ssl.** { *; }
+-keep class okhttp3.** { *; }
+
+# --------------------------------------------
+# 📵 Remove Logging for Release
+# --------------------------------------------
+
+# Android Log
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** w(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** e(...);
+    public static *** wtf(...);
+}
+
+# Timber (optional)
+-assumenosideeffects class timber.log.Timber {
+    public static *** d(...);
+    public static *** w(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** e(...);
+    public static *** wtf(...);
+}
+
+-assumenosideeffects class timber.log.Timber$Tree {
+    public *** d(...);
+    public *** w(...);
+    public *** v(...);
+    public *** i(...);
+    public *** e(...);
+    public *** wtf(...);
+}
+
+# --------------------------------------------
+# 🌀 Obfuscation Options
+# --------------------------------------------
+
+-renamesourcefileattribute SourceFile
+-ignorewarnings
+
+# Optional (Use only if confident)
+# -repackageclasses
+# -mergeinterfacesaggressively
+# -overloadaggressively
+# -allowaccessmodification
